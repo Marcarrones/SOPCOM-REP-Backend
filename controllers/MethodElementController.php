@@ -45,10 +45,16 @@ class MethodElementController {
     */
     public function getMethodElement($id) {
         $methodElement = $this->MethodElementModel->getMethodElementById($id);
-        //$relationsTo = $this->MethodElementModel->getMethodElementToRelations($id);
-        //$relationsFrom = $this->MethodElementModel->getMethodElementFromRelations($id);
-        header("Content-Type: application/json");
-        echo json_encode($methodElement);
+        if(count($methodElement) > 0) {
+            //$relationsTo = $this->MethodElementModel->getMethodElementToRelations($id);
+            //$relationsFrom = $this->MethodElementModel->getMethodElementFromRelations($id);
+            //$response = $this->methodElementView->buildMethodElement($methodElement, $relationsTo, $relationsFrom);
+            http_response_code(200);
+            echo json_encode($methodElement);
+        } else {
+            echo json_encode(Array("error" => "No method element found with id $id."));
+            http_response_code(404);
+        }
     }
 }
 

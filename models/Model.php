@@ -14,7 +14,7 @@
         }
         
         protected function executeSelectQuery($statement) {
-            $result = Array();
+            $result = [];
             $statement->execute();
             $result = $statement->get_result();
             while($row = $result->fetch_assoc()) {
