@@ -1,5 +1,6 @@
 <?php
 require("../vendor/autoload.php");
+include "../Controllers/MethodElementController.php";
 
 $openapi = \OpenApi\Generator::scan(['../Controllers']);
 

@@ -18,10 +18,12 @@ include $_SERVER['DOCUMENT_ROOT'] . '/SOPCOM/models/MethodElementModel.php';
 class MethodElementController {
 
     private $MethodElementModel;
+    private $MethodElementView;
 
     function __construct()
     {
         $this->MethodElementModel = new MethodElement();
+        $this->MethodElementView  = new MethodElementView();
     }
 
     /**
@@ -46,11 +48,12 @@ class MethodElementController {
     public function getMethodElement($id) {
         $methodElement = $this->MethodElementModel->getMethodElementById($id);
         if(count($methodElement) > 0) {
-            //$relationsTo = $this->MethodElementModel->getMethodElementToRelations($id);
+            $relationsTo = $this->MethodElementModel->getMethodElementToRelations($id);
             //$relationsFrom = $this->MethodElementModel->getMethodElementFromRelations($id);
-            //$response = $this->methodElementView->buildMethodElement($methodElement, $relationsTo, $relationsFrom);
+            $relationsFrom = [];
+            $response = $this->methodElementView->buildMethodElement($methodElement, $relationsTo, $relationsFrom);
             http_response_code(200);
-            echo json_encode($methodElement);
+            echo json_encode($response);
         } else {
             echo json_encode(Array("error" => "No method element found with id $id."));
             http_response_code(404);
