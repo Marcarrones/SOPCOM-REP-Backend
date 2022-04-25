@@ -44,9 +44,11 @@ class MethodElementController {
      * )
     */
     public function getMethodElement($id) {
-        $result = $this->MethodElementModel->getMethodElementById($id);
+        $methodElement = $this->MethodElementModel->getMethodElementById($id);
+        //$relationsTo = $this->MethodElementModel->getMethodElementToRelations($id);
+        //$relationsFrom = $this->MethodElementModel->getMethodElementFromRelations($id);
         header("Content-Type: application/json");
-        echo json_encode($result);
+        echo json_encode($methodElement);
     }
 }
 
