@@ -1,6 +1,7 @@
 <?php
 
     require $_SERVER['DOCUMENT_ROOT'] . '/SOPCOM/models/Model.php';
+    require $_SERVER['DOCUMENT_ROOT'] . '/SOPCOM/views/MethodElementView.php';
 
     class MethodElement extends Model{
         private $getMethodElement = "SELECT me.id as id, me.name as name, me.abstract as abstract, me.description as description, me.figure as figure FROM method_element me WHERE me.id = ?;";
