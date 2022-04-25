@@ -71,7 +71,7 @@ class MethodElementController {
      * )
     */
     public function getAllMethodElement() {
-        $type = $_GET['type'];
+        $type = isset($_GET['type']) ? $_GET['type'] : null;
         $result = $this->MethodElementModel->getAllMethodElements($type);
         header("Content-Type: application/json");
         echo json_encode($result);
