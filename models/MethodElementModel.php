@@ -8,7 +8,7 @@
 
         private $getMethodElementToMeRel = "SELECT msr.fromME, msr.rel, srt.name FROM me_struct_rel msr, struct_rel_type srt WHERE msr.toME = ? AND msr.rel = srt.id;"; 
         private $getMethodElementToActRel = "SELECT actr.fromME, actr.rel, art.name FROM activity_rel actr, activity_rel_type art WHERE actr.toME = ? AND actr.rel = art.id;"; 
-        private $getMethodElementToArtRel = "SELECT artr.fromME, artr.rel, art.name FROM artrefact_rel artr, artefact_rel_type art WHERE artr.toME = ? AND artr.rel = art.id;"; 
+        private $getMethodElementToArtRel = "SELECT artr.fromME, artr.rel, art.name FROM artefact_rel artr, artefact_rel_type art WHERE artr.toME = ? AND artr.rel = art.id;"; 
 
         public function getMethodElementById($id) {
             $statement = $this->conn->prepare($this->getMethodElement);
