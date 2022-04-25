@@ -51,7 +51,7 @@ class MethodElementController {
             $relationsTo = $this->MethodElementModel->getMethodElementToRelations($id);
             //$relationsFrom = $this->MethodElementModel->getMethodElementFromRelations($id);
             $relationsFrom = [];
-            $response = $this->methodElementView->buildMethodElement($methodElement, $relationsTo, $relationsFrom);
+            $response = $this->MethodElementView->buildMethodElement($methodElement, $relationsTo, $relationsFrom);
             http_response_code(200);
             echo json_encode($response);
         } else {
