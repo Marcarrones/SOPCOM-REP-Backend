@@ -14,7 +14,6 @@
             $statement = $this->conn->prepare($this->getMethodElement);
             $statement->bind_param('s', $id);
             $methodElement = $this->executeSelectQuery($statement);
-            $this->conn->close();
             return $methodElement;
         }
 
@@ -32,7 +31,6 @@
             $statementActRel->bind_param('s', $id);
             $relationsTo['artRel'] = $this->executeSelectQuery($statementActRel);
             
-            $this->conn->close();
             return $relationsTo;
         }
 

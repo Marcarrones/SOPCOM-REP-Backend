@@ -12,6 +12,10 @@
             $credentials = $config['database'];
             $this->conn = new mysqli($credentials['host'], $credentials['user'], $credentials['pw'], $credentials['bd']);
         }
+
+        function __destruct() {
+            $this->conn->close();
+        }
         
         protected function executeSelectQuery($statement) {
             $result = [];
