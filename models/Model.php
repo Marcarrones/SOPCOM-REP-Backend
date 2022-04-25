@@ -20,7 +20,6 @@
             while($row = $rows->fetch_assoc()) {
                 $result[] = $row;
             }
-            $this->conn->close();
             return $result;
         }
     }
