@@ -16,8 +16,8 @@
         protected function executeSelectQuery($statement) {
             $result = [];
             $statement->execute();
-            $result = $statement->get_result();
-            while($row = $result->fetch_assoc()) {
+            $rows = $statement->get_result();
+            while($row = $rows->fetch_assoc()) {
                 $result[] = $row;
             }
             $this->conn->close();
