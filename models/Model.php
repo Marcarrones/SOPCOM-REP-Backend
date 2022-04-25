@@ -1,6 +1,6 @@
 <?php
 
-    require $_SERVER['DOCUMENT_ROOT'] . '/config/config.php';
+    require $_SERVER['DOCUMENT_ROOT'] . '/SOPCOM/config/config.php';
 
     class Model {
 

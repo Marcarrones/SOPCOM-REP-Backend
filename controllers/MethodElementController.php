@@ -1,6 +1,6 @@
 <?php
 
-include $_SERVER['DOCUMENT_ROOT'] . '/models/MethodElementModel.php';
+include $_SERVER['DOCUMENT_ROOT'] . '/SOPCOM/models/MethodElementModel.php';
 
 /**
  * @OA\OpenApi(
