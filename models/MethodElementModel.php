@@ -8,9 +8,7 @@
         public function getMethodElementById($id) {
             $statement = $this->conn->prepare($this->getMethodElement);
             $statement->bind_param('s', $id);
-
             $methodElement = $this->executeSelectQuery($statement);
-
             return $methodElement;
         }
 
