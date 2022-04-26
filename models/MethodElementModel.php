@@ -10,6 +10,9 @@
         private $getMethodElementToActRel = "SELECT actr.fromME, actr.rel, art.name FROM activity_rel actr, activity_rel_type art WHERE actr.toME = ? AND actr.rel = art.id;"; 
         private $getMethodElementToArtRel = "SELECT artr.fromME, artr.rel, art.name FROM artefact_rel artr, artefact_rel_type art WHERE artr.toME = ? AND artr.rel = art.id;"; 
 
+        private $getAllMethodElements = "SELECT me.id as id, me.name as name, me.description as description FROM method_element me;";
+        private $getAllMethodElementsFilter = "SELECT me.id as id, me.name as name, me.description as description FROM method_element me WHERE type = ?;";
+
         public function getMethodElementById($id) {
             $statement = $this->conn->prepare($this->getMethodElement);
             $statement->bind_param('s', $id);
@@ -32,6 +35,14 @@
             $relationsTo['artRel'] = $this->executeSelectQuery($statementActRel);
             
             return $relationsTo;
+        }
+
+        public function getAllMethodElements($type) {
+            if(isset($type)) {
+                $statement = $this->conn->prepare($this->getAllMethodElementsFilter);
+                $statement->bind_param('i', $type);
+            } else $statement = $this->conn->prepare($this->getAllMethodElements);
+            return $this->executeSelectQuery($statement);
         }
 
     }

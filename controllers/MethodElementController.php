@@ -59,6 +59,23 @@ class MethodElementController {
             http_response_code(404);
         }
     }
+
+    /**
+     * @OA\Get(
+     *     path="/api_v1/index.php/method-element", 
+     *     tags={"Method elements"},
+     *     summary="List all method elements",
+     *     description="List all method elements",
+     *     operationId="getAllMethodElement",
+     *     @OA\Response(response="200", description="OK"),
+     * )
+    */
+    public function getAllMethodElement() {
+        $type = isset($_GET['type']) ? $_GET['type'] : null;
+        $result = $this->MethodElementModel->getAllMethodElements($type);
+        header("Content-Type: application/json");
+        echo json_encode($result);
+    }
 }
 
 ?>

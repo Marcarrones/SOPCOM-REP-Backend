@@ -10,7 +10,9 @@
             switch($method) {
                 case 'GET':
                     if(isset($uri[2])) {
-                        $controller->getMethodElement($uri[2]); # /method-element/:id
+                        $controller->getMethodElement($uri[2]); #GET /method-element/:id
+                    } else {
+                        $controller->getAllMethodElement(); #GET /method-element
                     }
                     break;
                 default:
