@@ -13,7 +13,7 @@
         private $getAllMethodElements = "SELECT me.id as id, me.name as name, me.description as description FROM method_element me;";
         private $getAllMethodElementsFilter = "SELECT me.id as id, me.name as name, me.description as description FROM method_element me WHERE type = ?;";
 
-        private $getAllMethodElementTypes = "SELECT met.id, met.name FROM method_element_type;";
+        private $getAllMethodElementTypes = "SELECT met.id, met.name FROM method_element_type met;";
 
         public function getMethodElementById($id) {
             $statement = $this->conn->prepare($this->getMethodElement);
