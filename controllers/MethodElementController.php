@@ -76,6 +76,22 @@ class MethodElementController {
         header("Content-Type: application/json");
         echo json_encode($result);
     }
+
+    /**
+     * @OA\Get(
+     *     path="/api_v1/index.php/method-element/types", 
+     *     tags={"Method elements"},
+     *     summary="List all method element types",
+     *     description="List all method element types",
+     *     operationId="getAllMethodElementTypes",
+     *     @OA\Response(response="200", description="OK"),
+     * )
+    */
+    public function getAllMethodElementTypes() {
+        $result = $this->MethodElementModel->getAllMethodElementTypes();
+        header("Content-Type: application/json");
+        echo json_encode($result);
+    }
 }
 
 ?>
