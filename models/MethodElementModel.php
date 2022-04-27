@@ -15,6 +15,8 @@
 
         private $getAllMethodElementTypes = "SELECT met.id, met.name FROM method_element_type met;";
 
+        private $deleteMethodElement = "DELETE FROM method_element WHERE id = ?;";
+
         public function getMethodElementById($id) {
             $statement = $this->conn->prepare($this->getMethodElement);
             $statement->bind_param('s', $id);
@@ -50,6 +52,12 @@
         public function getAllMethodElementTypes() {
             $statement = $this->conn->prepare($this->getAllMethodElementTypes);
             return $this->executeSelectQuery($statement);
+        }
+
+        public function deleteMethodElementById($id) {
+            $statement = $this->conn->prepare($this->deleteMethodElement);
+            $statement->bind_param('s', $id);
+            return $this->executeDeleteQuery($statement);
         }
 
     }
