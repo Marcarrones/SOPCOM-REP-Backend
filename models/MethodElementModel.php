@@ -15,6 +15,8 @@
 
         private $getAllMethodElementTypes = "SELECT met.id, met.name FROM method_element_type met;";
 
+        private $addNewMethodElement = "INSERT INTO method_element (id, name, abstract, description, figure, type) VALUES (?, ?, ?, ?, ?, ?);";
+
         public function getMethodElementById($id) {
             $statement = $this->conn->prepare($this->getMethodElement);
             $statement->bind_param('s', $id);
