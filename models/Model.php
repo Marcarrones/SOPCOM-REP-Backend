@@ -26,6 +26,16 @@
             }
             return $result;
         }
+
+        protected function executeInsertQuery($statement) {
+            $statement->execute();
+            $error = $statement->errno;
+            if($error === 0) {
+                return $statement->insert_id;
+            } else {
+                return Array('error' => "Database error");
+            }
+        }
     }
     
 ?>
