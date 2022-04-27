@@ -32,6 +32,12 @@
             $error = $statement->errno;
             return $error;
         }
+
+        protected function executeUpdateQuery($statement) {
+            $statement->execute();
+            $error = $statement->errno;
+            return $error;
+        }
     }
     
 ?>
