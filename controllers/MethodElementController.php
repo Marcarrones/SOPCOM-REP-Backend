@@ -73,6 +73,7 @@ class MethodElementController {
     public function getAllMethodElement() {
         $type = isset($_GET['type']) ? $_GET['type'] : null;
         $result = $this->MethodElementModel->getAllMethodElements($type);
+        http_response_code(200);
         header("Content-Type: application/json");
         echo json_encode($result);
     }
@@ -89,6 +90,30 @@ class MethodElementController {
     */
     public function getAllMethodElementTypes() {
         $result = $this->MethodElementModel->getAllMethodElementTypes();
+        http_response_code(200);
+        header("Content-Type: application/json");
+        echo json_encode($result);
+    }
+    
+    /**
+     * @OA\POST(
+     *     path="/api_v1/index.php/method-element", 
+     *     tags={"Method elements"},
+     *     summary="Add new method element",
+     *     description="Add new method element",
+     *     operationId="AddNewMethodELement",
+     *     @OA\Response(response="202", description="Created"),
+     * )
+    */
+    public function addNewMethodElement() {
+        $body = json_decode(file_get_contents('php://input'), true);
+        if(isset($body['id']) && isset($body['name']) && isset($body['abstract']) && isset($body['type'])) {
+            $result = $this->MethodElementModel->addNewMethodElement($body['id'], $body['name'], $body['abstract'], $body['description'], $body['figure'], $body['type']);
+            http_response_code(202);
+        } else {
+            $result = Array("Error" => "Missing required data");
+            http_response_code(400);
+        }
         header("Content-Type: application/json");
         echo json_encode($result);
     }

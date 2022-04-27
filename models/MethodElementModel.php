@@ -52,6 +52,12 @@
             return $this->executeSelectQuery($statement);
         }
 
+        public function addNewMethodElement($id, $name, $abstract, $description, $figure, $type) {
+            $statement = $this->conn->prepare($this->addNewMethodElement);
+            $statement->bind_param('ssissi', $id, $name, $abstract, $description, $figure, $type);
+            return $this->executeInsertQuery($statement);
+        }
+
     }
     
 ?>

@@ -19,6 +19,12 @@
                         $controller->getAllMethodElement(); #GET /method-element
                     }
                     break;
+                case 'POST':
+                    if(isset($uri[2])) {
+
+                    } else {
+                        $controller->addNewMethodElement();
+                    }
                 default:
                     http_response_code(404);
                     break;
