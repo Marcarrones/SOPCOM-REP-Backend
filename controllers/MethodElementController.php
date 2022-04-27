@@ -73,6 +73,7 @@ class MethodElementController {
     public function getAllMethodElement() {
         $type = isset($_GET['type']) ? $_GET['type'] : null;
         $result = $this->MethodElementModel->getAllMethodElements($type);
+        http_response_code(200);
         header("Content-Type: application/json");
         echo json_encode($result);
     }
@@ -89,15 +90,39 @@ class MethodElementController {
     */
     public function getAllMethodElementTypes() {
         $result = $this->MethodElementModel->getAllMethodElementTypes();
+        http_response_code(200);
         header("Content-Type: application/json");
         echo json_encode($result);
     }
 
+    /**
+     * @OA\Delete(
+     *     path="/index.php/method-element/{methodElementId}", 
+     *     tags={"Method elements"},
+     *     summary="Delete a method element by id",
+     *     description="Delete a method element by id",
+     *     operationId="deleteMethodElement",
+     *     @OA\Parameter(
+     *         description="Id of the method element",
+     *         in="path",
+     *         name="methodElementId",
+     *         required=true,
+     *         @OA\Schema(type="string"),
+     *         @OA\Examples(example="string", value="Chu-ReqEli-01", summary="A string value."),
+     *     ),
+     *     @OA\Response(response="204", description="No content"),
+     * )
+    */
     public function deleteMethodElement($id) {
         $result = $this->MethodElementModel->deleteMethodElementById($id);
-        $result = Array("code" => $result);
-        header("Content-Type: application/json");
-        echo json_encode($result);
+        if($result = 0) {
+            http_response_code(204);
+        } else {
+            $result = Array("code" => $result);
+            http_response_code(400);
+            header("Content-Type: application/json");
+            echo json_encode($result);
+        }
     }
 }
 
