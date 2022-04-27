@@ -26,6 +26,12 @@
             }
             return $result;
         }
+
+        protected function executeDeleteQuery($statement) {
+            $statement->execute();
+            $error = $statement->errno;
+            return $error;
+        }
     }
     
 ?>
