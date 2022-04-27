@@ -115,7 +115,7 @@ class MethodElementController {
     */
     public function deleteMethodElement($id) {
         $result = $this->MethodElementModel->deleteMethodElementById($id);
-        if($result = 0) {
+        if($result == 0) {
             http_response_code(204);
         } else {
             $result = Array("code" => $result);
