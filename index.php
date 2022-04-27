@@ -26,6 +26,13 @@
                         http_response_code(404);
                     }
                     break;
+                case 'PUT':
+                    if(isset($uri[2])) {
+                        $controller->updateMethodELement($uri[2]); #PUT /method-element/:id
+                    } else {
+                        http_response_code(404);
+                    }
+                    break;
                 default:
                     http_response_code(404);
                     break;
