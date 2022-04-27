@@ -56,6 +56,7 @@
 
         public function deleteMethodElementById($id) {
             $statement = $this->conn->prepare($this->deleteMethodElement);
+            $statement->bind_param('s', $id);
             return $this->executeDeleteQuery($statement);
         }
 
