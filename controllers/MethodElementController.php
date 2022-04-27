@@ -109,9 +109,9 @@ class MethodElementController {
         $body = json_decode(file_get_contents('php://input'), true);
         if(isset($body['id']) && isset($body['name']) && isset($body['abstract']) && isset($body['type'])) {
             $result = $this->MethodElementModel->addNewMethodElement($body['id'], $body['name'], $body['abstract'], $body['description'], $body['figure'], $body['type']);
-            http_response_code(202);
+            http_response_code(201);
         } else {
-            $result = Array("Error" => "Missing required data");
+            $result = Array("error" => "Missing required data");
             http_response_code(400);
         }
         header("Content-Type: application/json");
