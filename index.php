@@ -19,6 +19,13 @@
                         $controller->getAllMethodElement(); #GET /method-element
                     }
                     break;
+                case 'DELETE':
+                    if(isset($uri[2])) {
+                        $controller->deleteMethodElement($uri[2]); #DELETE /method-element/:id
+                    } else {
+                        http_response_code(404);
+                    }
+                    break;
                 default:
                     http_response_code(404);
                     break;

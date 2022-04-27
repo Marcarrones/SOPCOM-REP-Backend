@@ -92,6 +92,13 @@ class MethodElementController {
         header("Content-Type: application/json");
         echo json_encode($result);
     }
+
+    public function deleteMethodElement($id) {
+        $result = $this->MethodElementModel->deleteMethodElementById($id);
+        $result = Array("code" => $result);
+        header("Content-Type: application/json");
+        echo json_encode($result);
+    }
 }
 
 ?>
