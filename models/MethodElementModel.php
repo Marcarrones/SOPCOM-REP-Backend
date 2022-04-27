@@ -62,7 +62,7 @@
             return $this->executeDeleteQuery($statement);
         }
 
-        public function updateMethodElement($id) {
+        public function updateMethodElement($id, $name, $abstract, $description, $figure, $type) {
             $statement = $this->conn->prepare($this->updateMethodElement);
             $statement->bind_param('sissis', $name, $abstract, $description, $figure, $type, $id);
             return $this->executeUpdateQuery($statement);
