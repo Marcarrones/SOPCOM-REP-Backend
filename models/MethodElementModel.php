@@ -17,6 +17,10 @@
 
         private $deleteMethodElement = "DELETE FROM method_element WHERE id = ?;";
 
+        private $getAllMeStructRelTypes = "SELECT id, name FROM struct_rel_type;";
+        private $getAllActivityRelTypes = "SELECT id, name FROM activity_rel_type;";
+        private $getAllArtefactRelTypes = "SELECT id, name FROM artefact_rel_type;";
+
         public function getMethodElementById($id) {
             $statement = $this->conn->prepare($this->getMethodElement);
             $statement->bind_param('s', $id);
@@ -58,6 +62,21 @@
             $statement = $this->conn->prepare($this->deleteMethodElement);
             $statement->bind_param('s', $id);
             return $this->executeDeleteQuery($statement);
+        }
+
+        public function getAllMethodElementRelationTypes() {
+            $types = Array();
+            
+            $statementMeRel = $this->conn->prepare($this->getAllMeStructRelTypes);
+            $types['me_struct_rel'] = $this->executeSelectQuery($statementMeRel);
+            
+            $statementActivityRel = $this->conn->prepare($this->getAllActivityRelTypes);
+            $types['activity_rel'] = $this->executeSelectQuery($statementActivityRel);
+
+            $statementArtefactRel = $this->conn->prepare($this->getAllArtefactRelTypes);
+            $types['artefact_rel'] = $this->executeSelectQuery($statementArtefactRel);
+
+            return $types;
         }
 
     }

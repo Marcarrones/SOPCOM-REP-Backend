@@ -124,6 +124,23 @@ class MethodElementController {
             echo json_encode($result);
         }
     }
+
+    /**
+     * @OA\Get(
+     *     path="/api_v1/index.php/method-element/relations/types", 
+     *     tags={"Method elements"},
+     *     summary="List all method element relation types",
+     *     description="List all method element relation types",
+     *     operationId="getAllMethodElementRelationTypes",
+     *     @OA\Response(response="200", description="OK"),
+     * )
+    */
+    public function getAllMethodElementRelationTypes() {
+        $result = $this->MethodElementModel->getAllMethodElementRelationTypes();
+        http_response_code(200);
+        header("Content-Type: application/json");
+        echo json_encode($result);
+    }
 }
 
 ?>

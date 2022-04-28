@@ -12,6 +12,8 @@
                     if(isset($uri[2])) {
                         if($uri[2] == "types") {
                             $controller->getAllMethodElementTypes(); #GET /method-element/types
+                        } else if($uri[2] == "relations" && $uri[3] == "types") {
+                            $controller->getAllMethodElementRelationTypes(); #GET /method-element/relations/types
                         } else {
                             $controller->getMethodElement($uri[2]); #GET /method-element/:id
                         }
