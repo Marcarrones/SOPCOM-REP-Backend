@@ -62,7 +62,9 @@
         public function addNewMethodElement($id, $name, $abstract, $description, $figure, $type) {
             $statement = $this->conn->prepare($this->addNewMethodElement);
             $statement->bind_param('ssissi', $id, $name, $abstract, $description, $figure, $type);
-            return $this->executeInsertQuery($statement);
+            $result = $this->executeInsertQuery($statement);
+            if($result == 0) return $id;
+            else return $result;
         }
 
         public function addMethodElementMeStructRel($id, $relations) {
