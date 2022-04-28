@@ -18,9 +18,9 @@
         private $addNewMethodElement = "INSERT INTO method_element (id, name, abstract, description, figure, type) VALUES (?, ?, ?, ?, ?, ?);";
 
         private $addNewMethodElementMeRel = "INSERT INTO me_rel (fromME, toME) VALUES (?, ?);";
-        private $addNewMethodElementMeStructRel = "INSERT INTO me_struct_rel VALUES (fromME, toME, rel);";
-        private $addNewMethodElementActivityRel = "INSERT INTO activity_rel VALUES (fromME, toME, rel);";
-        private $addNewMethodElementArtefactRel = "INSERT INTO artefact_rel VALUES (fromME, toME, rel);";
+        private $addNewMethodElementMeStructRel = "INSERT INTO me_struct_rel (fromME, toME, rel) VALUES (?, ?, ?);";
+        private $addNewMethodElementActivityRel = "INSERT INTO activity_rel (fromME, toME, rel) VALUES (?, ?, ?);";
+        private $addNewMethodElementArtefactRel = "INSERT INTO artefact_rel (fromME, toME, rel) VALUES (?, ?, ?);";
 
         public function getMethodElementById($id) {
             $statement = $this->conn->prepare($this->getMethodElement);
@@ -73,17 +73,31 @@
             foreach($relations as $relation) {
                 $statementMeRel->bind_param('ss', $id, $relation['id']);
                 $this->executeInsertQuery($statementMeRel);
-                $statementMeStructRel->bind_param($id, $relation['id'], $relation['rel']);
+                $statementMeStructRel->bind_param('ssi', $id, $relation['id'], $relation['rel']);
                 $this->executeInsertQuery($statementMeStructRel);
             }
         }
 
         public function addMethodElementActivityRel($id, $relations) {
-
+            $statementMeRel = $this->conn->prepare($this->addNewMethodElementMeRel);
+            $statementActivityRel = $this->conn->prepare($this->addNewMethodElementActivityRel);
+            foreach($relations as $relation) {
+                $statementMeRel->bind_param('ss', $id, $relation['id']);
+                $this->executeInsertQuery($statementMeRel);
+                $statementActivityRel->bind_param('ssi', $id, $relation['id'], $relation['rel']);
+                $this->executeInsertQuery($statementActivityRel);
+            }
         }
 
         public function addMethodElementArtefactRel($id, $relations) {
-
+            $statementMeRel = $this->conn->prepare($this->addNewMethodElementMeRel);
+            $statementArtefactRel = $this->conn->prepare($this->addNewMethodElementArtefactRel);
+            foreach($relations as $relation) {
+                $statementMeRel->bind_param('ss', $id, $relation['id']);
+                $this->executeInsertQuery($statementMeRel);
+                $statementArtefactRel->bind_param('ssi', $id, $relation['id'], $relation['rel']);
+                $this->executeInsertQuery($statementArtefactRel);
+            }
         }
 
     }
