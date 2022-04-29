@@ -1,7 +1,4 @@
 <?php
-
-    require $_SERVER['DOCUMENT_ROOT'] . '/SOPCOM/models/Model.php';
-
     class Criterion extends Model{
         
         private $getAllCriterion = "SELECT c.id, c.name, v.id, v.name FROM criterion c, value v WHERE c.id = v.criterion;";

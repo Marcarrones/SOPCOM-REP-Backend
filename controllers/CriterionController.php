@@ -1,6 +1,7 @@
 <?php
 
 include $_SERVER['DOCUMENT_ROOT'] . '/SOPCOM/models/CriterionModel.php';
+include $_SERVER['DOCUMENT_ROOT'] . '/SOPCOM/views/ViewModel.php';
 
 class CriterionController {
 

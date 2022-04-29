@@ -1,4 +1,6 @@
 <?php
+
+    require $_SERVER['DOCUMENT_ROOT'] . '/SOPCOM/models/Model.php';
     require $_SERVER['DOCUMENT_ROOT'] . '/SOPCOM/controllers/MethodElementController.php';
     require $_SERVER['DOCUMENT_ROOT'] . '/SOPCOM/controllers/CriterionController.php';
 
