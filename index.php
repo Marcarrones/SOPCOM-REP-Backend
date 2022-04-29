@@ -1,6 +1,6 @@
 <?php
     require $_SERVER['DOCUMENT_ROOT'] . '/SOPCOM/controllers/MethodElementController.php';
-    require $_SERVER['DOCUMENT_ROOT'] . '/SOPCOM/controllers/Controller.php';
+    require $_SERVER['DOCUMENT_ROOT'] . '/SOPCOM/controllers/CriterionController.php';
 
     $uri = explode('/', parse_url($_SERVER['PATH_INFO'], PHP_URL_PATH));
 	$method = $_SERVER['REQUEST_METHOD'];
