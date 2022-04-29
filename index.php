@@ -53,6 +53,13 @@
                         http_response_code(404);
                     }
                     break;
+                case 'POST':
+                    if(isset($uri[2])) {
+
+                    } else {
+                        $controller->addNewCriterion();
+                    }
+                    break;
             }
             break;
         default:
