@@ -67,7 +67,7 @@ class CriterionController {
         if(isset($body['name']) && isset($body['values']) && count($body['values']) > 2) {
             $id = $this->CriterionModel->addNewCriterion($body['name']);
             foreach($body['values'] as $value) {
-                $this->CriterionModel->addNewValueToCriterion($id, $value['name']);
+                $this->CriterionModel->addNewValueToCriterion($id, $value);
             }
         } else if(!isset($body['name'])) {
             http_response_code(400);
