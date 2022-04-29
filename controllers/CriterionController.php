@@ -62,6 +62,22 @@ class CriterionController {
         }
     }
 
+    public function addNewCriterion() {
+        $body = json_decode(file_get_contents('php://input'), true);
+        if(isset($body['name']) && isset($body['values']) && count($body['values']) > 2) {
+            $id = $this->CriterionModel->addNewCriterion($body['name']);
+            foreach($body['values'] as $value) {
+                $this->CriterionModel->addNewValueToCriterion($id, $value['name']);
+            }
+        } else if(!isset($body['name'])) {
+            http_response_code(400);
+            echo(json_encode(Array('error' => "Missing name body parameter")));
+        } else if(!isset($body['values']) || count($body['values']) < 2) {
+            http_response_code(400);
+            echo(json_encode(Array('error' => "A criterion must have at least 2 values")));
+        }
+    }
+
 }
 
 ?>
