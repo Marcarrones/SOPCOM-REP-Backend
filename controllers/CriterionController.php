@@ -32,6 +32,36 @@ class CriterionController {
         echo json_encode($result);
     }
 
+    /**
+     * @OA\Delete(
+     *     path="/index.php/criterion/{criterionId}", 
+     *     tags={"Criterions"},
+     *     summary="Delete a criterion by id",
+     *     description="Delete a criterion by id",
+     *     operationId="deleteCriterion",
+     *     @OA\Parameter(
+     *         description="Id of the criterion",
+     *         in="path",
+     *         name="criterionId",
+     *         required=true,
+     *         @OA\Schema(type="int"),
+     *         @OA\Examples(example="int", value="1", summary="A integer value."),
+     *     ),
+     *     @OA\Response(response="204", description="No content"),
+     * )
+    */
+    public function deleteCriterion($id) {
+        $result = $this->CriterionModel->deleteCriterion($id);
+        if($result == 0) {
+            http_response_code(204);
+        } else {
+            $result = Array("code" => $result);
+            http_response_code(400);
+            header("Content-Type: application/json");
+            echo json_encode($result);
+        }
+    }
+
 }
 
 ?>

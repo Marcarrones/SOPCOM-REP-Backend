@@ -43,7 +43,14 @@
                     if(isset($uri[2])) {
 
                     } else {
-                        $controller->getAllCriterion();
+                        $controller->getAllCriterion(); #GET /criterion
+                    }
+                    break;
+                case 'DELETE':
+                    if(isset($uri[2])) {
+                        $controller->deleteCriterion($uri[2]); #DELETE /criterion/:id
+                    } else {
+                        http_response_code(404);
                     }
                     break;
             }
