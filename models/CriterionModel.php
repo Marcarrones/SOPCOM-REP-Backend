@@ -10,8 +10,9 @@
             return $this->executeSelectQuery($statement);
         }
 
-        public function deleteCriterion() {
+        public function deleteCriterion($id) {
             $statement = $this->conn->prepare($this->deleteCriterion);
+            $statement->bind_param('i', $id);
             return $this->executeDeleteQuery($statement);
         }
     }
