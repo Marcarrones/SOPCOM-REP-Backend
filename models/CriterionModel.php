@@ -30,7 +30,7 @@ use LDAP\Result;
 
         public function addNewValueToCriterion($id, $name) {
             $statement = $this->conn->prepare($this->addNewValueToCriterion);
-            $statement->bind_param($name, $id);
+            $statement->bind_param('si', $name, $id);
             return;
         }
     }
