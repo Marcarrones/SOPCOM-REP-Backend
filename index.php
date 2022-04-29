@@ -1,5 +1,8 @@
 <?php
+
+    require $_SERVER['DOCUMENT_ROOT'] . '/SOPCOM/models/Model.php';
     require $_SERVER['DOCUMENT_ROOT'] . '/SOPCOM/controllers/MethodElementController.php';
+    require $_SERVER['DOCUMENT_ROOT'] . '/SOPCOM/controllers/CriterionController.php';
 
     $uri = explode('/', parse_url($_SERVER['PATH_INFO'], PHP_URL_PATH));
 	$method = $_SERVER['REQUEST_METHOD'];
@@ -30,6 +33,18 @@
                     break;
                 default:
                     http_response_code(404);
+                    break;
+            }
+            break;
+        case 'criterion':
+            $controller = new CriterionController();
+            switch($method) {
+                case 'GET':
+                    if(isset($uri[2])) {
+
+                    } else {
+                        $controller->getAllCriterion();
+                    }
                     break;
             }
             break;
