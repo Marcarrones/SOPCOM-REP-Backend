@@ -69,6 +69,7 @@ class CriterionController {
             foreach($body['values'] as $value) {
                 $this->CriterionModel->addNewValueToCriterion($id, $value);
             }
+            http_response_code(201);
         } else if(!isset($body['name'])) {
             http_response_code(400);
             echo(json_encode(Array('error' => "Missing name body parameter")));
