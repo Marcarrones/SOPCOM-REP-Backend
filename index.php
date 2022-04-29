@@ -58,7 +58,7 @@
                     if(isset($uri[2])) {
 
                     } else {
-                        $controller->addNewCriterion();
+                        $controller->addNewCriterion(); #POST /criterion
                     }
                     break;
                 default:
