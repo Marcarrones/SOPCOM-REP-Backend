@@ -51,7 +51,7 @@ class CriterionController {
      * )
     */
     public function deleteCriterion($id) {
-        $result = $this->CriterionController->deleteCriterion($id);
+        $result = $this->CriterionModel->deleteCriterion($id);
         if($result == 0) {
             http_response_code(204);
         } else {
