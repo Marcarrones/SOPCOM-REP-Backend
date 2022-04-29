@@ -3,6 +3,7 @@
     require $_SERVER['DOCUMENT_ROOT'] . '/SOPCOM/models/Model.php';
     require $_SERVER['DOCUMENT_ROOT'] . '/SOPCOM/controllers/MethodElementController.php';
     require $_SERVER['DOCUMENT_ROOT'] . '/SOPCOM/controllers/CriterionController.php';
+    require $_SERVER['DOCUMENT_ROOT'] . '/SOPCOM/controllers/GoalController.php';
 
     $uri = explode('/', parse_url($_SERVER['PATH_INFO'], PHP_URL_PATH));
 	$method = $_SERVER['REQUEST_METHOD'];
@@ -59,6 +60,20 @@
                     } else {
                         $controller->addNewCriterion();
                     }
+                    break;
+                default:
+                    http_response_code(404);
+                    break;
+            }
+            break;
+        case 'goal':
+            $controller = new GoalController();
+            switch($method) {
+                case 'GET':
+                    $controller->getAllGoals(); # GET /goal
+                    break;
+                default:
+                    http_response_code(404);
                     break;
             }
             break;
