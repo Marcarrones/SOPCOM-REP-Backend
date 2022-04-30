@@ -17,7 +17,7 @@
 
         private $deleteMethodElement = "DELETE FROM method_element WHERE id = ?;";
 
-        private $updateMethodElement = "UPDATE method_element SET name = ?, abstract = ?, description = ?, figure = ?, type = ? WHERE id = ?;";
+        private $updateMethodElement = "UPDATE method_element SET name = ?, abstract = ?, description = ?, figure = ? WHERE id = ?;";
 
         public function getMethodElementById($id) {
             $statement = $this->conn->prepare($this->getMethodElement);
@@ -62,9 +62,9 @@
             return $this->executeDeleteQuery($statement);
         }
 
-        public function updateMethodElement($id, $name, $abstract, $description, $figure, $type) {
+        public function updateMethodElement($id, $name, $abstract, $description, $figure) {
             $statement = $this->conn->prepare($this->updateMethodElement);
-            $statement->bind_param('sissis', $name, $abstract, $description, $figure, $type, $id);
+            $statement->bind_param('sissis', $name, $abstract, $description, $figure, $id);
             return $this->executeUpdateQuery($statement);
         }
 

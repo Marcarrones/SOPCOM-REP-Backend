@@ -146,7 +146,7 @@ class MethodElementController {
     */
     public function updateMethodElement($id) {
         $body = json_decode(file_get_contents('php://input'), true);
-        $result = $this->MethodElementModel->updateMethodElement($id, $body['name'], $body['abstract'], $body['description'], $body['figure'], $body['type']);
+        $result = $this->MethodElementModel->updateMethodElement($id, $body['name'], $body['abstract'], $body['description'], $body['figure']);
         if($result == 0) {
             http_response_code(201);
         } else {
