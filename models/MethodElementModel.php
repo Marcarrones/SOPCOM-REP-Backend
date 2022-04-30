@@ -21,6 +21,10 @@
         private $addNewMethodElementMeStructRel = "INSERT INTO me_struct_rel (fromME, toME, rel) VALUES (?, ?, ?);";
         private $addNewMethodElementActivityRel = "INSERT INTO activity_rel (fromME, toME, rel) VALUES (?, ?, ?);";
         private $addNewMethodElementArtefactRel = "INSERT INTO artefact_rel (fromME, toME, rel) VALUES (?, ?, ?);";
+        private $addNewTool = "INSERT INTO tool (id) VALUES (?)";
+        private $addNewArtefact = "INSERT INTO artefact (id) VALUES (?)";
+        private $addNewActivity = "INSERT INTO activity (id) VALUES (?)";
+        private $addNewRole = "INSERT INTO role (id) VALUES (?)";
 
         public function getMethodElementById($id) {
             $statement = $this->conn->prepare($this->getMethodElement);
@@ -63,7 +67,31 @@
             $statement = $this->conn->prepare($this->addNewMethodElement);
             $statement->bind_param('ssissi', $id, $name, $abstract, $description, $figure, $type);
             $result = $this->executeInsertQuery($statement);
-            if($result == 0) return $id;
+            if($result == 0) {
+                switch($type) {
+                    case 1:
+                        $statementTool = $this->conn->prepare($this->addNewTool);
+                        $statementTool->bind_param('s', $id);
+                        $this->executeInsertQuery($statementTool);
+                        break;
+                    case 2:
+                        $statementArt = $this->conn->prepare($this->addNewArtefact);
+                        $statementArt->bind_param('s', $id);
+                        $this->executeInsertQuery($statementArt);
+                        break;
+                    case 3;
+                        $statementAct = $this->conn->prepare($this->addNewActivity);
+                        $statementAct->bind_param('s', $id);
+                        $this->executeInsertQuery($statementAct);
+                        break;
+                    case 4:
+                        $statementRole = $this->conn->prepare($this->addNewRole);
+                        $statementRole->bind_param('s', $id);
+                        $this->executeInsertQuery($statementRole);
+                        break;
+                }
+                return $id;
+            }
             else return $result;
         }
 

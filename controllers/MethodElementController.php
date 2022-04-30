@@ -107,7 +107,7 @@ class MethodElementController {
     */
     public function addNewMethodElement() {
         $body = json_decode(file_get_contents('php://input'), true);
-        if(isset($body['id']) && isset($body['name']) && isset($body['abstract']) && isset($body['type'])) {
+        if(isset($body['id']) && isset($body['name']) && isset($body['abstract']) && isset($body['type']) && $body['type'] <= 4 && $body['type'] >= 1) {
             $id = $this->MethodElementModel->addNewMethodElement($body['id'], $body['name'], $body['abstract'], $body['description'], $body['figure'], $body['type']);
             if(isset($body['me_struct_rel'])) {
                 $this->MethodElementModel->addMethodElementMeStructRel($id, $body['me_struct_rel']);
