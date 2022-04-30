@@ -64,7 +64,7 @@
 
         public function updateMethodElement($id, $name, $abstract, $description, $figure) {
             $statement = $this->conn->prepare($this->updateMethodElement);
-            $statement->bind_param('sissis', $name, $abstract, $description, $figure, $id);
+            $statement->bind_param('sisss', $name, $abstract, $description, $figure, $id);
             return $this->executeUpdateQuery($statement);
         }
 
