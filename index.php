@@ -25,6 +25,13 @@
                         $controller->getAllMethodElement(); #GET /method-element
                     }
                     break;
+                case 'POST':
+                    if(isset($uri[2])) {
+
+                    } else {
+                        $controller->addNewMethodElement();
+                    }
+                    break;
                 case 'DELETE':
                     if(isset($uri[2])) {
                         $controller->deleteMethodElement($uri[2]); #DELETE /method-element/:id
