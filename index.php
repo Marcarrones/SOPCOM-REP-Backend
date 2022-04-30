@@ -72,6 +72,9 @@
                 case 'GET':
                     $controller->getAllGoals(); # GET /goal
                     break;
+                case 'POST':
+                    $controller->addNewGoal(); #POST /goal
+                    break;
                 default:
                     http_response_code(404);
                     break;

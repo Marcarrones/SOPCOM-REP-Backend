@@ -27,4 +27,15 @@ class GoalController {
         header("Content-Type: application/json");
         echo json_encode($result);
     }
+
+    public function addNewGoal() {
+        $body = json_decode(file_get_contents('php://input'), true);
+        if(isset($body['name'])) {
+            $this->GoalModel->addNewGoal($body['name']);
+            http_response_code(201);
+        } else {
+            http_response_code(400);
+            echo(json_encode(Array('error' => "Missing name body parameter")));
+        }
+    }
 }
