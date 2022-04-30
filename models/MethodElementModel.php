@@ -14,6 +14,8 @@
 
         private $deleteMethodElement = "DELETE FROM method_element WHERE id = ?;";
 
+        private $updateMethodElement = "UPDATE method_element SET name = ?, abstract = ?, description = ?, figure = ? WHERE id = ?;";
+
         private $getAllMeStructRelTypes = "SELECT id, name FROM struct_rel_type;";
         private $getAllActivityRelTypes = "SELECT id, name FROM activity_rel_type;";
         private $getAllArtefactRelTypes = "SELECT id, name FROM artefact_rel_type;";
@@ -150,6 +152,12 @@
                 $statementArtefactRel->bind_param('ssi', $id, $relation['id'], $relation['rel']);
                 $this->executeInsertQuery($statementArtefactRel);
             }
+        }
+
+        public function updateMethodElement($id, $name, $abstract, $description, $figure) {
+            $statement = $this->conn->prepare($this->updateMethodElement);
+            $statement->bind_param('sisss', $name, $abstract, $description, $figure, $id);
+            return $this->executeUpdateQuery($statement);
         }
 
     }

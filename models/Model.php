@@ -42,6 +42,12 @@
                 return Array('error' => "Database error");
             }
         }
+
+        protected function executeUpdateQuery($statement) {
+            $statement->execute();
+            $error = $statement->errno;
+            return $error;
+        }
     }
     
 ?>

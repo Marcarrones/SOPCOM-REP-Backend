@@ -175,6 +175,38 @@ class MethodElementController {
         header("Content-Type: application/json");
         echo json_encode($result);
     }
+
+    /**
+     * @OA\Put(
+     *     path="/index.php/method-element/{methodElementId}", 
+     *     tags={"Method elements"},
+     *     summary="Update a method element by id",
+     *     description="Update a method element by id",
+     *     operationId="updateMethodElement",
+     *     @OA\Parameter(
+     *         description="Id of the method element",
+     *         in="path",
+     *         name="methodElementId",
+     *         required=true,
+     *         @OA\Schema(type="string"),
+     *         @OA\Examples(example="string", value="Chu-ReqEli-01", summary="A string value."),
+     *     ),
+     *     @OA\Response(response="201", description="Created"),
+     *     @OA\Response(response="404", description="Not found")
+     * )
+    */
+    public function updateMethodElement($id) {
+        $body = json_decode(file_get_contents('php://input'), true);
+        $result = $this->MethodElementModel->updateMethodElement($id, $body['name'], $body['abstract'], $body['description'], $body['figure']);
+        if($result == 0) {
+            http_response_code(201);
+        } else {
+            $result = Array("code" => $result);
+            http_response_code(404);
+            header("Content-Type: application/json");
+            echo json_encode($result);
+        }
+    }
 }
 
 ?>
