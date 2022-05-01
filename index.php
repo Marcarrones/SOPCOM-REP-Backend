@@ -56,6 +56,11 @@
             $controller = new MethodChunkController();
             switch($method) {
                 case 'GET':
+                        if(isset($uri[2])){
+                            $controller->getMethodChunk($uri[2]); #GET /method-chunk/:id
+                        } else {
+
+                        }
                     break;
                 default:
                     http_response_code(404);
