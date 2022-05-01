@@ -4,6 +4,7 @@
     require $_SERVER['DOCUMENT_ROOT'] . '/SOPCOM/controllers/MethodElementController.php';
     require $_SERVER['DOCUMENT_ROOT'] . '/SOPCOM/controllers/CriterionController.php';
     require $_SERVER['DOCUMENT_ROOT'] . '/SOPCOM/controllers/GoalController.php';
+    require $_SERVER['DOCUMENT_ROOT'] . '/SOPCOM/controllers/MethodChunkController.php';
 
     $uri = explode('/', parse_url($_SERVER['PATH_INFO'], PHP_URL_PATH));
 	$method = $_SERVER['REQUEST_METHOD'];
@@ -45,6 +46,16 @@
                     } else {
                         http_response_code(404);
                     }
+                    break;
+                default:
+                    http_response_code(404);
+                    break;
+            }
+            break;
+        case 'method-chunk':
+            $controller = new MethodChunkController();
+            switch($method) {
+                case 'GET':
                     break;
                 default:
                     http_response_code(404);
