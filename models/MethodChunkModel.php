@@ -7,7 +7,7 @@
         public function getMethodChunk($id) {
             $statement = $this->conn->prepare($this->getMethodChunk);
             $statement->bind_param('s', $id);
-            return $this->executeInsertQuery($statement);
+            return $this->executeSelectQuery($statement);
         }
         
 
