@@ -62,6 +62,12 @@
 
                     }
                     break;
+                case 'POST':
+                    if(isset($ur[2])){
+
+                    } else {
+                        $controller->addNewMethodChunk(); #POST /method-chunk
+                    }
                 case 'DELETE':
                     if(isset($uri[2])) {
                         $controller->deleteMethodChunk($uri[2]);
