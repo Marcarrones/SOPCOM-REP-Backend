@@ -49,7 +49,8 @@ class MethodChunkController {
     public function getMethodChunk($id) {
         $methodChunk = $this->MethodChunkModel->getMethodChunk($id);
         if(count($methodChunk) > 0) {
-            $response = $this->MethodChunkView->buildMethodChunk($methodChunk);
+            $intention = $this->MethodChunkModel->getMethodChunkIntention($id);
+            $response = $this->MethodChunkView->buildMethodChunk($methodChunk, $intention);
             http_response_code(200);
             echo json_encode($response);
         } else {
