@@ -55,7 +55,8 @@ class MethodChunkController {
             $activity = $this->MethodChunkModel->getMethodChunkActivity($id);
             $roles = $this->MethodChunkModel->getMethodChunkRoles($id);
             $contextCriteria = $this->MethodChunkModel->getMethodChunkContextCriteria($id);
-            $response = $this->MethodChunkView->buildMethodChunk($methodChunk, $intention, $tools, $artefacts, $activity, $roles, $contextCriteria);
+            $relations = $this->MethodChunkModel->getMethodChunkRelations($id);
+            $response = $this->MethodChunkView->buildMethodChunk($methodChunk, $intention, $tools, $artefacts, $activity, $roles, $contextCriteria, $relations);
             http_response_code(200);
             echo json_encode($response);
         } else {
