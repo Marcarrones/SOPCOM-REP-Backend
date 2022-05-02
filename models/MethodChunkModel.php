@@ -125,6 +125,12 @@
             return $this->executeDeleteQuery($statement);
         }
 
+        public function updateMethodChunk($id, $name, $description, $activity, $intention) {
+            $statement = $this->conn->prepare($this->updateMethodChunk);
+            $statement->bind_param('sssis', $name, $description, $activity, $intention, $id);
+            return $this->executeUpdateQuery($statement);
+        }
+
     }
 
 ?>
