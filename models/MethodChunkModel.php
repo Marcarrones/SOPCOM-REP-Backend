@@ -43,6 +43,8 @@
         private $getMeStructRel = "SELECT * FROM me_struct_rel msr WHERE msr.fromME = ? AND msr.toME = ?;";
         private $getActRel = "SELECT * FROM activity_rel ar WHERE ar.fromME = ? AND ar.toME = ?;";
 
+        private $deleteMethodChunk = "DELETE FROM method_chunk WHERE id = ?;";
+
         public function getMethodChunk($id) {
             $statement = $this->conn->prepare($this->getMethodChunk);
             $statement->bind_param('s', $id);
