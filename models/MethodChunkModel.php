@@ -26,7 +26,7 @@
                                             FROM method_element me
                                             RIGHT JOIN method_chunk mc ON mc.activity = me.id
                                             WHERE me.id IS NOT NULL AND mc.id = ?;";
-        private $getMethodChunkIncludesRolesQuery = "SELECT me.id, me.name, me.description, me.figure, mcir.isSet
+        private $getMethodChunkRoles = "SELECT me.id, me.name, me.description, me.figure, mcir.isSet
                                                 FROM method_element me
                                                 RIGHT JOIN role r ON me.id = r.id 
                                                 RIGHT JOIN method_chunk_includes_role mcir ON r.id = mcir.idME
