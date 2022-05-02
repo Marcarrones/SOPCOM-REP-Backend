@@ -4,6 +4,7 @@ require "../models/Model.php";
 include "../controllers/MethodElementController.php";
 include "../controllers/CriterionController.php";
 include "../controllers/GoalController.php";
+include "../controllers/MethodChunkController.php";
 
 $openapi = \OpenApi\Generator::scan(['../Controllers']);
 
