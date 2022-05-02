@@ -32,6 +32,12 @@
                                                 RIGHT JOIN method_chunk_includes_role mcir ON r.id = mcir.idME
                                                 RIGHT JOIN method_chunk mc ON mcir.idMC = mc.id
                                                 WHERE me.id IS NOT NULL AND mc.id = ?;";
+        private $getMethodChunkContextCriteria = "SELECT c.name as criterion, v.name as value 
+                                                FROM assign_method_chunk_value amcv 
+                                                RIGHT JOIN method_chunk mc ON amcv.idMC = mc.id 
+                                                LEFT JOIN criterion c ON amcv.criterion = c.id
+                                                LEFT JOIN value v ON amcv.value = v.id
+                                                WHERE c.name IS NOT NULL and v.name IS NOT NULL AND mc.id = ?;";
 
         public function getMethodChunk($id) {
             $statement = $this->conn->prepare($this->getMethodChunk);
@@ -70,6 +76,12 @@
 
         public function getMethodChunkRoles($id) {
             $statement = $this->conn->prepare($this->getMethodChunkRoles);
+            $statement->bind_param('s', $id);
+            return $this->executeSelectQuery($statement);
+        }
+
+        public function getMethodChunkContextCriteria($id) {
+            $statement = $this->conn->prepare($this->getMethodChunkContextCriteria);
             $statement->bind_param('s', $id);
             return $this->executeSelectQuery($statement);
         }
