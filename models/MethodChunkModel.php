@@ -22,6 +22,10 @@
                                             RIGHT JOIN method_chunk_produces_artefact mcpa ON a.id = mcpa.idME
                                             RIGHT JOIN method_chunk mc ON mcpa.idMC = mc.id
                                             WHERE me.id IS NOT NULL AND mc.id = ?;";
+        private $getMethodChunkActivity = "SELECT me.id, me.name, me.abstract, me.description, me.figure 
+                                            FROM method_element me
+                                            RIGHT JOIN method_chunk mc ON mc.activity = me.id
+                                            WHERE me.id IS NOT NULL AND mc.id = ?;";
 
         public function getMethodChunk($id) {
             $statement = $this->conn->prepare($this->getMethodChunk);
@@ -50,6 +54,12 @@
             $statementProduced->bind_param('s', $id);
             $response['produced'] = $this->executeSelectQuery($statementProduced);
             return $response;
+        }
+
+        public function getMethodChunkActivity($id) {
+            $statement = $this->conn->prepare($this->getMethodChunkActivity);
+            $statement->bind_param('s', $id);
+            return $this->executeSelectQuery($statement);
         }
 
     }
