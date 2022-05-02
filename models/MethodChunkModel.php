@@ -117,6 +117,12 @@
             return $result;
         }
 
+        public function deleteMethodChunk($id) {
+            $statement = $this->conn->prepare($this->deleteMethodChunk);
+            $statement->bind_param('s', $id);
+            return $this->executeDeleteQuery($statement);
+        }
+
     }
 
 ?>
