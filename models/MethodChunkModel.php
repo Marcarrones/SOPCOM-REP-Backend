@@ -45,6 +45,18 @@
 
         private $deleteMethodChunk = "DELETE FROM method_chunk WHERE id = ?;";
 
+        private $addNewMethodChunk = "INSERT INTO method_chunk (id, name, description, activity, intention) VALUES (?, ?, ?, ?, ?);";
+        private $addNewMethodChunkTool = "INSERT INTO method_chunk_uses_tool (idMC, idME) VALUES (?, ?);";
+        private $addNewMethodChunkConsumedArtefact = "INSERT INTO method_chunk_consumes_artefact (idMC, idME) VALUES (?, ?);";
+        private $addNewMethodChunkProducedArtefact = "INSERT INTO method_chunk_produces_artefact (idMC, idME) VALUES (?, ?);";
+        private $addNewMethodChunkRole = "INSERT INTO method_chunk_includes_role (idMC, idME, isSet) VALUES (?, ?, ?);";
+        private $addAssignMethodChunk = "INSERT INTO assign_method_chunk (idMC, criterion) VALUES (?, ?);";
+        private $addAssignMethodChunkValue = "INSERT INTO assign_method_chunk_value (idMC, criterion, value) VALUES (?, ?, ?);";
+        private $addChunkRel = "INSERT INTO chunk_rel (fromMC, toMC, fromME, toME) VALUES (?, ?, ?, ?);";
+        private $getProcessPartRelations = "SELECT mr.fromME, mr.toME FROM me_rel mr WHERE mr.fromME = ? OR mr.toME = ?;";
+        private $getMethodChunkIdFromActivity = "SELECT mc.id FROM method_chunk mc WHERE mc.activity = ?;";
+
+
         public function getMethodChunk($id) {
             $statement = $this->conn->prepare($this->getMethodChunk);
             $statement->bind_param('s', $id);
@@ -123,6 +135,83 @@
             $statement = $this->conn->prepare($this->deleteMethodChunk);
             $statement->bind_param('s', $id);
             return $this->executeDeleteQuery($statement);
+        }
+
+        public function addNewMethodChunk($id, $name, $description, $activity, $intention) {
+            $statement = $this->conn->prepare($this->addNewMethodChunk);
+            $statement->bind_param('ssssi', $id, $name, $description, $activity, $intention);
+            $result = $this->executeInsertQuery($statement);
+            if($result == 0) {
+                $statementRelations = $this->conn->prepare($this->getProcessPartRelations);
+                $statementRelations->bind_param('ss', $id, $id);
+                $relations = $this->executeSelectQuery($statementRelations);
+                $statementIdRel = $this->conn->prepare($this->getMethodChunkIdFromActivity);
+                $statementChunkRel = $this->conn->prepare($this->addChunkRel);
+                foreach($relations as $relation) {
+                    if($relation['fromME'] == $activity) {
+                        $statementIdRel->bind_param('s', $relation['toME']);
+                        $idRel = $this->executeSelectQuery($statementIdRel)[0]['id'];
+                        $statementChunkRel->bind_param('ssss', $id, $idRel, $activity, $relation['toME']);
+                        $this->executeInsertQuery($statementChunkRel);
+                    } else if($relation['toME'] == $activity) {
+                        $statementIdRel->bind_param('s', $relation['fromME']);
+                        $idRel = $this->executeSelectQuery($statementIdRel)[0]['id'];
+                        $statementChunkRel->bind_param('ssss', $idRel, $id, $relation['fromME'], $activity);
+                        $this->executeInsertQuery($statementChunkRel);
+                    }
+                }
+                $result = $id;
+            }
+            return $result;
+        }
+
+        public function addNewMethodChunkTools($id, $tools) {
+            $statement = $this->conn->prepare($this->addNewMethodChunkTool);
+            foreach($tools as $tool){
+                $statement->bind_param('ss', $id, $tool);
+                $this->executeInsertQuery($statement);
+            }
+            return;
+        }
+
+        public function addNewMethodChunkConsumedArtefacts($id, $artefacts) {
+            $statement = $this->conn->prepare($this->addNewMethodChunkConsumedArtefact);
+            foreach($artefacts as $artefact){
+                $statement->bind_param('ss', $id, $artefact);
+                $this->executeInsertQuery($statement);
+            }
+            return;
+        }
+
+        public function addNewMethodChunkProducedArtefacts($id, $artefacts) {
+            $statement = $this->conn->prepare($this->addNewMethodChunkProducedArtefact);
+            foreach($artefacts as $artefact){
+                $statement->bind_param('ss', $id, $artefact);
+                $this->executeInsertQuery($statement);
+            }
+            return;
+        }
+
+        public function addNewMethodChunkRoles($id, $roles) {
+            $statement = $this->conn->prepare($this->addNewMethodChunkRole);
+            foreach($roles as $role){
+                $statement->bind_param('ssi', $id, $role['id'], $role['isSet']);
+                $this->executeInsertQuery($statement);
+            }
+            return;
+        }
+
+        public function addMethodChunkContextCriteria($id, $context) {
+            $statementAMC = $this->conn->prepare($this->addAssignMethodChunk);
+            $statementAMCV = $this->conn->prepare($this->addAssignMethodChunkValue);
+            foreach($context as $cnt) {
+                $statementAMC->bind_param('si', $id, $cnt['criterionId']);
+                $this->executeInsertQuery($statementAMC);
+                foreach($cnt['value'] as $val) {
+                    $statementAMCV->bind_param('sii', $id, $cnt['criterionId'], $val);
+                    $this->executeInsertQuery($statementAMCV);
+                }
+            }
         }
 
     }

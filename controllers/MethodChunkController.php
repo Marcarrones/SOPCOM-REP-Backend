@@ -76,6 +76,24 @@ class MethodChunkController {
             echo json_encode($result);
         }
     }
+
+    public function addNewMethodChunk() {
+        $body = json_decode(file_get_contents('php://input'), true);
+        if(isset($body['id']) && isset($body['name']) && isset($body['activity']) && $body['intention']) {
+            $result = $this->MethodChunkModel->addNewMethodChunk($body['id'], $body['name'], $body['description'], $body['activity'], $body['intention']);
+            if(isset($body['tools'])) $this->MethodChunkModel->addNewMethodChunkTools($body['id'], $body['tools']);
+            if(isset($body['consumedArtefacts'])) $this->MethodChunkModel->addNewMethodChunkConsumedArtefacts($body['id'], $body['consumedArtefacts']);
+            if(isset($body['producedArtefacts'])) $this->MethodChunkModel->addNewMethodChunkProducedArtefacts($body['id'], $body['producedArtefacts']);
+            if(isset($body['roles'])) $this->MethodChunkModel->addNewMethodChunkRoles($body['id'], $body['roles']);
+            if(isset($body['contextCriteria'])) $this->MethodChunkModel->addMethodChunkContextCriteria($body['id'], $body['contextCriteria']);
+            http_response_code(201);
+        } else {
+            $result = Array("error" => "Missing required data");
+            http_response_code(400);
+        }
+        header("Content-Type: application/json");
+        echo json_encode($result);
+    }
 }
 
 ?>
