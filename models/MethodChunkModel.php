@@ -52,6 +52,9 @@
         private $addNewMethodChunkRole = "INSERT INTO method_chunk_includes_role (idMC, idME, isSet) VALUES (?, ?, ?);";
         private $addAssignMethodChunk = "INSERT INTO assign_method_chunk (idMC, criterion) VALUES (?, ?);";
         private $addAssignMethodChunkValue = "INSERT INTO assign_method_chunk_value (idMC, criterion, value) VALUES (?, ?, ?);";
+        private $addChunkRel = "INSERT INTO chunk_rel (fromMC, toMC, fromME, toME) VALUES (?, ?, ?, ?);";
+        private $getProcessPartRelations = "SELECT mr.fromME, mr.toME FROM me_rel mr WHERE mr.fromME = ? OR mr.toME = ?;";
+        private $getMethodChunkIdFromActivity = "SELECT mc.id FROM method_chunk mc WHERE mc.activity = ?;";
 
 
         public function getMethodChunk($id) {
@@ -138,6 +141,24 @@
             $statement = $this->conn->prepare($this->addNewMethodChunk);
             $statement->bind_param('ssssi', $id, $name, $description, $activity, $intention);
             $result = $this->executeInsertQuery($statement);
+            $statementRelations = $this->conn->prepare($this->getProcessPartRelations);
+            $statementRelations->bind_param('ss', $id, $id);
+            $relations = $this->executeSelectQuery($statementRelations);
+            $statementIdRel = $this->conn->prepare($this->getMethodChunkIdFromActivity);
+            $statementChunkRel = $this->conn->prepare($this->addChunkRel);
+            foreach($relations as $relation) {
+                if($relation['fromME'] == $activity) {
+                    $statementIdRel->bind_param('s', $relation['toME']);
+                    $idRel = $this->executeSelectQuery($statementIdRel)[0]['id'];
+                    $statementIdRel->bind_param('ssss', $result, $idRel, $activity, $relation['to']);
+                    $this->executeInsertQuery($statementIdRel);
+                } else if($relation['toME'] == $activity) {
+                    $statementIdRel->bind_param('s', $relation['fromME']);
+                    $idRel = $this->executeSelectQuery($statementIdRel)[0]['id'];
+                    $statementIdRel->bind_param('ssss', $idRel, $result, $relation['to'], $activity);
+                    $this->executeInsertQuery($statementIdRel);
+                }
+            }
             if($result == 0) $result = $id;
             return $result;
         }
