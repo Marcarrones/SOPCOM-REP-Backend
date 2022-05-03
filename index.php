@@ -59,7 +59,7 @@
                     if(isset($uri[2])){
                         $controller->getMethodChunk($uri[2]); #GET /method-chunk/:id
                     } else {
-
+                        $controller->getAllMethodChunk(); #GET /method-chunk
                     }
                     break;
                 case 'POST':

@@ -107,6 +107,13 @@ class MethodChunkController {
             echo json_encode($result);
         }
     }
+
+    public function getAllMethodChunk() {
+        $result = $this->MethodChunkModel->getAllMethodChunk();
+        http_response_code(200);
+        header("Content-Type: application/json");
+        echo json_encode($result);
+    }
 }
 
 ?>
