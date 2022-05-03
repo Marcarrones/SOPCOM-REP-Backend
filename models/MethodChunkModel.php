@@ -50,6 +50,9 @@
         private $addNewMethodChunkConsumedArtefact = "INSERT INTO method_chunk_consumes_artefact (idMC, idME) VALUES (?, ?);";
         private $addNewMethodChunkProducedArtefact = "INSERT INTO method_chunk_produces_artefact (idMC, idME) VALUES (?, ?);";
         private $addNewMethodChunkRole = "INSERT INTO method_chunk_includes_role (idMC, idME, isSet) VALUES (?, ?, ?);";
+        private $addAssignMethodChunk = "INSERT INTO assign_method_chunk (idMC, criterion) VALUES (?, ?);";
+        private $addAssignMethodChunkValue = "INSERT INTO assign_method_chunk_value (idMC, criterion, value) VALUES (?, ?, ?);";
+
 
         public function getMethodChunk($id) {
             $statement = $this->conn->prepare($this->getMethodChunk);
@@ -171,6 +174,18 @@
                 $this->executeInsertQuery($statement);
             }
             return;
+        }
+
+        public function addMethodChunkContextCriteria($id, $context) {
+            $statementAMC = $this->conn->prepare($this->addAssignMethodChunk);
+            $statementAMCV = $this->conn->prepare($this->addAssignMethodChunkValue);
+            foreach($context as $cnt) {
+                $statementAMC->bind_param('si', $id, $cnt['criterionId']);
+                $this->executeInsertQuery($statementAMC);
+                foreach($cnt['value'] as $val) {
+                    $statementAMCV->bind_param('sii', $id, $cnt['criterionId'], $val);
+                }
+            }
         }
 
     }
