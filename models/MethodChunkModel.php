@@ -58,6 +58,7 @@
         private $getProcessPartRelations = "SELECT mr.fromME, mr.toME FROM me_rel mr WHERE mr.fromME = ? OR mr.toME = ?;";
         private $getMethodChunkIdFromActivity = "SELECT mc.id FROM method_chunk mc WHERE mc.activity = ?;";
 
+        private $getAllMethodChunks = "SELECT mc.id, mc.name, mc.description, mc.activity, mc.intention FROM method_chunk mc;";
 
         public function getMethodChunk($id) {
             $statement = $this->conn->prepare($this->getMethodChunk);
@@ -131,6 +132,11 @@
                 $result['to']['activity_rel'][] = $this->executeSelectQuery($statementActRel);
             }
             return $result;
+        }
+
+        public function getAllMethodChunk() {
+            $statement = $this->conn->prepare($this->getAllMethodChunks);
+            return $this->executeSelectQuery($statement);
         }
 
         public function deleteMethodChunk($id) {
