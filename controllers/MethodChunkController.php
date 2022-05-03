@@ -79,7 +79,7 @@ class MethodChunkController {
 
     public function updateMethodChunk($id) {
         $body = json_decode(file_get_contents('php://input'), true);
-        $result = $this->MethodElementModel->updateMethodElement($id, $body['name'], $body['description'], $body['activity'], $body['intention']);
+        $result = $this->MethodChunkModel->updateMethodChunk($id, $body['name'], $body['description'], $body['activity'], $body['intention']);
         if($result == 0) {
             http_response_code(201);
         } else {

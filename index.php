@@ -68,6 +68,7 @@
                     } else {
                         http_response_code(404);
                     }
+                    break;
                 case 'DELETE':
                     if(isset($uri[2])) {
                         $controller->deleteMethodChunk($uri[2]);
