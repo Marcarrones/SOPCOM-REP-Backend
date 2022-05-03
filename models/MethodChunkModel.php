@@ -184,6 +184,7 @@
                 $this->executeInsertQuery($statementAMC);
                 foreach($cnt['value'] as $val) {
                     $statementAMCV->bind_param('sii', $id, $cnt['criterionId'], $val);
+                    $this->executeInsertQuery($statementAMCV);
                 }
             }
         }
