@@ -45,6 +45,8 @@
 
         private $deleteMethodChunk = "DELETE FROM method_chunk WHERE id = ?;";
 
+        private $updateMethodChunk = "UPDATE method_chunk SET name = ?, description = ?, activity = ?, intention = ? WHERE id = ?;";
+
         private $addNewMethodChunk = "INSERT INTO method_chunk (id, name, description, activity, intention) VALUES (?, ?, ?, ?, ?);";
         private $addNewMethodChunkTool = "INSERT INTO method_chunk_uses_tool (idMC, idME) VALUES (?, ?);";
         private $addNewMethodChunkConsumedArtefact = "INSERT INTO method_chunk_consumes_artefact (idMC, idME) VALUES (?, ?);";
@@ -135,6 +137,12 @@
             $statement = $this->conn->prepare($this->deleteMethodChunk);
             $statement->bind_param('s', $id);
             return $this->executeDeleteQuery($statement);
+        }
+
+        public function updateMethodChunk($id, $name, $description, $activity, $intention) {
+            $statement = $this->conn->prepare($this->updateMethodChunk);
+            $statement->bind_param('sssis', $name, $description, $activity, $intention, $id);
+            return $this->executeUpdateQuery($statement);
         }
 
         public function addNewMethodChunk($id, $name, $description, $activity, $intention) {

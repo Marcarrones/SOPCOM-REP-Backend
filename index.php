@@ -69,6 +69,13 @@
                         $controller->addNewMethodChunk(); #POST /method-chunk
                     }
                     break;
+                case 'PUT':
+                    if(isset($uri[2])) {
+                        $controller->updateMethodChunk($uri[2]); #PUT /method-chunk/:id
+                    } else {
+                        http_response_code(404);
+                    }
+                    break;
                 case 'DELETE':
                     if(isset($uri[2])) {
                         $controller->deleteMethodChunk($uri[2]);
