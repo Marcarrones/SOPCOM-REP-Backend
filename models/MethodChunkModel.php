@@ -48,7 +48,8 @@
         private $addNewMethodChunk = "INSERT INTO method_chunk (id, name, description, activity, intention) VALUES (?, ?, ?, ?, ?);";
         private $addNewMethodChunkTool = "INSERT INTO method_chunk_uses_tool (idMC, idME) VALUES (?, ?);";
         private $addNewMethodChunkConsumedArtefact = "INSERT INTO method_chunk_consumes_artefact (idMC, idME) VALUES (?, ?);";
-        private $addNewMethodChunkProducedArtefacts = "INSERT INTO method_chunk_produces_artefact (idMC, idME) VALUES (?, ?);";
+        private $addNewMethodChunkProducedArtefact = "INSERT INTO method_chunk_produces_artefact (idMC, idME) VALUES (?, ?);";
+        private $addNewMethodChunkRole = "INSERT INTO method_chunk_includes_role (idMC, idME, isSet) VALUES (?, ?, ?);";
 
         public function getMethodChunk($id) {
             $statement = $this->conn->prepare($this->getMethodChunk);
@@ -158,6 +159,15 @@
             $statement = $this->conn->prepare($this->addNewMethodChunkProducedArtefact);
             foreach($artefacts as $artefact){
                 $statement->bind_param('ss', $id, $artefact);
+                $this->executeInsertQuery($statement);
+            }
+            return;
+        }
+
+        public function addNewMethodChunkRoles($id, $roles) {
+            $statement = $this->conn->prepare($this->addNewMethodChunkRole);
+            foreach($roles as $role){
+                $statement->bind_param('ssi', $id, $role['id'], $role['isSet']);
                 $this->executeInsertQuery($statement);
             }
             return;
