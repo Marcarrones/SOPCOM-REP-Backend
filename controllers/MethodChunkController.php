@@ -81,6 +81,7 @@ class MethodChunkController {
         $body = json_decode(file_get_contents('php://input'), true);
         if(isset($body['id']) && isset($body['name']) && isset($body['activity']) && $body['intention']) {
             $result = $this->MethodChunkModel->addNewMethodChunk($body['id'], $body['name'], $body['description'], $body['activity'], $body['intention']);
+            if(isset($body['tools'])) $this->MethodChunkModel->addNewMethodChunkTools($body['id'], $body['tools']);
         } else {
             $result = Array("error" => "Missing required data");
             http_response_code(400);

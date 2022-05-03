@@ -46,6 +46,7 @@
         private $deleteMethodChunk = "DELETE FROM method_chunk WHERE id = ?;";
 
         private $addNewMethodChunk = "INSERT INTO method_chunk (id, name, description, activity, intention) VALUES (?, ?, ?, ?, ?);";
+        private $addNewMethodChunkTool = "INSERT INTO method_chunk_uses_tool (idMC, idME) VALUES (?, ?);";
 
         public function getMethodChunk($id) {
             $statement = $this->conn->prepare($this->getMethodChunk);
@@ -131,6 +132,15 @@
             $statement = $this->conn->prepare($this->addNewMethodChunk);
             $statement->bind_param('ssssi', $id, $name, $description, $activity, $intention);
             return $this->executeInsertQuery($statement);
+        }
+
+        public function addNewMethodChunkTools($id, $tools) {
+            $statement = $this->conn->prepare($this->addNewMethodChunkTool);
+            foreach($tools as $tool){
+                $statement->bind_param('ss', $id, $tool);
+                $this->executeInsertQuery($statement);
+            }
+            return;
         }
 
     }
