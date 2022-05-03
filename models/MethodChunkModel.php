@@ -45,6 +45,8 @@
 
         private $deleteMethodChunk = "DELETE FROM method_chunk WHERE id = ?;";
 
+        private $updateMethodChunk = "UPDATE method_chunk SET name = ?, description = ?, activity = ?, intention = ?;";
+
         public function getMethodChunk($id) {
             $statement = $this->conn->prepare($this->getMethodChunk);
             $statement->bind_param('s', $id);
