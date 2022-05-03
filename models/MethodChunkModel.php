@@ -48,6 +48,7 @@
         private $addNewMethodChunk = "INSERT INTO method_chunk (id, name, description, activity, intention) VALUES (?, ?, ?, ?, ?);";
         private $addNewMethodChunkTool = "INSERT INTO method_chunk_uses_tool (idMC, idME) VALUES (?, ?);";
         private $addNewMethodChunkConsumedArtefact = "INSERT INTO method_chunk_consumes_artefact (idMC, idME) VALUES (?, ?);";
+        private $addNewMethodChunkProducedArtefacts = "INSERT INTO method_chunk_produces_artefact (idMC, idME) VALUES (?, ?);";
 
         public function getMethodChunk($id) {
             $statement = $this->conn->prepare($this->getMethodChunk);
@@ -146,6 +147,15 @@
 
         public function addNewMethodChunkConsumedArtefacts($id, $artefacts) {
             $statement = $this->conn->prepare($this->addNewMethodChunkConsumedArtefact);
+            foreach($artefacts as $artefact){
+                $statement->bind_param('ss', $id, $artefact);
+                $this->executeInsertQuery($statement);
+            }
+            return;
+        }
+
+        public function addNewMethodChunkProducedArtefacts($id, $artefacts) {
+            $statement = $this->conn->prepare($this->addNewMethodChunkProducedArtefact);
             foreach($artefacts as $artefact){
                 $statement->bind_param('ss', $id, $artefact);
                 $this->executeInsertQuery($statement);

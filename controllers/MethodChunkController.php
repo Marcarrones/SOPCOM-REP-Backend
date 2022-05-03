@@ -83,6 +83,7 @@ class MethodChunkController {
             $result = $this->MethodChunkModel->addNewMethodChunk($body['id'], $body['name'], $body['description'], $body['activity'], $body['intention']);
             if(isset($body['tools'])) $this->MethodChunkModel->addNewMethodChunkTools($body['id'], $body['tools']);
             if(isset($body['consumedArtefacts'])) $this->MethodChunkModel->addNewMethodChunkConsumedArtefacts($body['id'], $body['consumedArtefacts']);
+            if(isset($body['producedArtefacts'])) $this->MethodChunkModel->addNewMethodChunkProducedArtefacts($body['id'], $body['producedArtefacts']);
         } else {
             $result = Array("error" => "Missing required data");
             http_response_code(400);
