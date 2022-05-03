@@ -137,7 +137,9 @@
         public function addNewMethodChunk($id, $name, $description, $activity, $intention) {
             $statement = $this->conn->prepare($this->addNewMethodChunk);
             $statement->bind_param('ssssi', $id, $name, $description, $activity, $intention);
-            return $this->executeInsertQuery($statement);
+            $result = $this->executeInsertQuery($statement);
+            if($result == 0) $result = $id;
+            return $result;
         }
 
         public function addNewMethodChunkTools($id, $tools) {

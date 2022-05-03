@@ -86,6 +86,7 @@ class MethodChunkController {
             if(isset($body['producedArtefacts'])) $this->MethodChunkModel->addNewMethodChunkProducedArtefacts($body['id'], $body['producedArtefacts']);
             if(isset($body['roles'])) $this->MethodChunkModel->addNewMethodChunkRoles($body['id'], $body['roles']);
             if(isset($body['contextCriteria'])) $this->MethodChunkModel->addMethodChunkContextCriteria($body['id'], $body['contextCriteria']);
+            http_response_code(201);
         } else {
             $result = Array("error" => "Missing required data");
             http_response_code(400);
