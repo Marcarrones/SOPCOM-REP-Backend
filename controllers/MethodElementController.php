@@ -3,19 +3,6 @@
 include $_SERVER['DOCUMENT_ROOT'] . '/SOPCOM/models/MethodElementModel.php';
 require $_SERVER['DOCUMENT_ROOT'] . '/SOPCOM/views/MethodElementView.php';
 
-/**
- * @OA\OpenApi(
- *     @OA\Server(
- *         url="localhost",
- *         description="API server"
- *     ),
- *     @OA\Info(
- *         version="1.0.0",
- *         title="SOPCOM",
- *         description="SOPCOM REST API",
- *     ),
- * )
- */
 class MethodElementController {
 
     private $MethodElementModel;
