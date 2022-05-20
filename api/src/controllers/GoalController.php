@@ -1,6 +1,6 @@
 <?php
 
-include $_SERVER['DOCUMENT_ROOT'] . '/SOPCOM/models/GoalModel.php';
+include $_SERVER['DOCUMENT_ROOT'] . '/models/GoalModel.php';
 
 class GoalController {
 
@@ -13,7 +13,7 @@ class GoalController {
 
     /**
      * @OA\Get(
-     *     path="/SOPCOM/index.php/goal", 
+     *     path="/index.php/goal", 
      *     tags={"Goals"},
      *     summary="List all goals",
      *     description="List all goals",
@@ -56,7 +56,7 @@ class GoalController {
 
     /**
      * @OA\POST(
-     *     path="/SOPCOM/index.php/goal", 
+     *     path="/index.php/goal", 
      *     tags={"Goals"},
      *     summary="Add new goal",
      *     description="Add new goal",

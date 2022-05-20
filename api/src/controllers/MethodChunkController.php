@@ -1,7 +1,7 @@
 <?php
 
-include $_SERVER['DOCUMENT_ROOT'] . '/SOPCOM/models/MethodChunkModel.php';
-require $_SERVER['DOCUMENT_ROOT'] . '/SOPCOM/views/MethodChunkView.php';
+include $_SERVER['DOCUMENT_ROOT'] . '/models/MethodChunkModel.php';
+require $_SERVER['DOCUMENT_ROOT'] . '/views/MethodChunkView.php';
 
 /**
  * @OA\OpenApi(
@@ -29,7 +29,7 @@ class MethodChunkController {
 
     /**
      * @OA\Get(
-     *     path="/SOPCOM/index.php/method-chunk/{methodChunkId}", 
+     *     path="/index.php/method-chunk/{methodChunkId}", 
      *     tags={"Method chunks"},
      *     summary="Find a method chunk by id",
      *     description="Find a method chunk by id",
@@ -58,6 +58,7 @@ class MethodChunkController {
             $relations = $this->MethodChunkModel->getMethodChunkRelations($id);
             $response = $this->MethodChunkView->buildMethodChunk($methodChunk, $intention, $tools, $artefacts, $activity, $roles, $contextCriteria, $relations);
             http_response_code(200);
+            header("Content-Type: application/json");
             echo json_encode($response);
         } else {
             echo json_encode(Array("error" => "No method chunk found with id $id."));
@@ -67,7 +68,7 @@ class MethodChunkController {
 
     /**
      * @OA\Delete(
-     *     path="/SOPCOM/index.php/method-chunk/{methodChunkId}", 
+     *     path="/index.php/method-chunk/{methodChunkId}", 
      *     tags={"Method chunks"},
      *     summary="Delete a method chunk by id",
      *     description="Delete a method chunk by id",
@@ -97,7 +98,7 @@ class MethodChunkController {
 
     /**
      * @OA\POST(
-     *     path="/SOPCOM/index.php/method-chunk", 
+     *     path="/index.php/method-chunk", 
      *     tags={"Method chunks"},
      *     summary="Add new method chunk",
      *     description="Add new method chunk",
@@ -152,7 +153,7 @@ class MethodChunkController {
 
     /**
      * @OA\Put(
-     *     path="/SOPCOM/index.php/method-chunk/{methodChunkId}", 
+     *     path="/index.php/method-chunk/{methodChunkId}", 
      *     tags={"Method chunks"},
      *     summary="Update a method chunk by id",
      *     description="Update a method chunk by id",
@@ -184,7 +185,7 @@ class MethodChunkController {
 
     /**
      * @OA\Get(
-     *     path="/SOPCOM/index.php/method-chunk", 
+     *     path="/index.php/method-chunk", 
      *     tags={"Method chunks"},
      *     summary="List all method chunks",
      *     description="List all method chunks",

@@ -10,7 +10,7 @@ services:
     networks: 
       - database
     environment:
-      MYSQL_DATABASE: tfg_test
+      MYSQL_DATABASE: sopcom_mysql
       MYSQL_USER: admin
       MYSQL_PASSWORD: adg6pMtxO
       MYSQL_ROOT_PASSWORD: example

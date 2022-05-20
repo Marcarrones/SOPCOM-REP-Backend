@@ -1,7 +1,7 @@
 <?php
 
-include $_SERVER['DOCUMENT_ROOT'] . '/SOPCOM/models/MethodElementModel.php';
-require $_SERVER['DOCUMENT_ROOT'] . '/SOPCOM/views/MethodElementView.php';
+include $_SERVER['DOCUMENT_ROOT'] . '/models/MethodElementModel.php';
+require $_SERVER['DOCUMENT_ROOT'] . '/views/MethodElementView.php';
 
 class MethodElementController {
 
@@ -16,7 +16,7 @@ class MethodElementController {
 
     /**
      * @OA\Get(
-     *     path="/SOPCOM/index.php/method-element/{methodElementId}", 
+     *     path="/index.php/method-element/{methodElementId}", 
      *     tags={"Method elements"},
      *     summary="Find a method element by id",
      *     description="Find a method element by id",
@@ -50,7 +50,7 @@ class MethodElementController {
 
     /**
      * @OA\Get(
-     *     path="/SOPCOM/index.php/method-element", 
+     *     path="/index.php/method-element", 
      *     tags={"Method elements"},
      *     summary="List all method elements",
      *     description="List all method elements",
@@ -68,7 +68,7 @@ class MethodElementController {
 
     /**
      * @OA\Get(
-     *     path="/SOPCOM/index.php/method-element/types", 
+     *     path="/index.php/method-element/types", 
      *     tags={"Method elements"},
      *     summary="List all method element types",
      *     description="List all method element types",
@@ -85,7 +85,7 @@ class MethodElementController {
 
     /**
      * @OA\Delete(
-     *     path="/SOPCOM/index.php/method-element/{methodElementId}", 
+     *     path="/index.php/method-element/{methodElementId}", 
      *     tags={"Method elements"},
      *     summary="Delete a method element by id",
      *     description="Delete a method element by id",
@@ -115,7 +115,7 @@ class MethodElementController {
 
     /**
      * @OA\Get(
-     *     path="/SOPCOM/index.php/method-element/relations/types", 
+     *     path="/index.php/method-element/relations/types", 
      *     tags={"Method elements"},
      *     summary="List all method element relation types",
      *     description="List all method element relation types",
@@ -132,7 +132,7 @@ class MethodElementController {
     
     /**
      * @OA\POST(
-     *     path="/SOPCOM/index.php/method-element", 
+     *     path="/index.php/method-element", 
      *     tags={"Method elements"},
      *     summary="Add new method element",
      *     description="Add new method element",
@@ -253,7 +253,7 @@ class MethodElementController {
 
     /**
      * @OA\Put(
-     *     path="/SOPCOM/index.php/method-element/{methodElementId}", 
+     *     path="/index.php/method-element/{methodElementId}", 
      *     tags={"Method elements"},
      *     summary="Update a method element by id",
      *     description="Update a method element by id",

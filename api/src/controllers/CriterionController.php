@@ -1,7 +1,7 @@
 <?php
 
-include $_SERVER['DOCUMENT_ROOT'] . '/SOPCOM/models/CriterionModel.php';
-include $_SERVER['DOCUMENT_ROOT'] . '/SOPCOM/views/CriterionView.php';
+include $_SERVER['DOCUMENT_ROOT'] . '/models/CriterionModel.php';
+include $_SERVER['DOCUMENT_ROOT'] . '/views/CriterionView.php';
 
 class CriterionController {
 
@@ -16,7 +16,7 @@ class CriterionController {
 
     /**
      * @OA\Get(
-     *     path="/SOPCOM/index.php/criterion", 
+     *     path="/index.php/criterion", 
      *     tags={"Criterions"},
      *     summary="List all criterions and its values",
      *     description="List all criterions and its values",
@@ -74,7 +74,7 @@ class CriterionController {
 
     /**
      * @OA\Delete(
-     *     path="/SOPCOM/index.php/criterion/{criterionId}", 
+     *     path="/index.php/criterion/{criterionId}", 
      *     tags={"Criterions"},
      *     summary="Delete a criterion by id",
      *     description="Delete a criterion by id",
@@ -104,7 +104,7 @@ class CriterionController {
 
     /**
      * @OA\POST(
-     *     path="/SOPCOM/index.php/criterion", 
+     *     path="/index.php/criterion", 
      *     tags={"Criterions"},
      *     summary="Add new criterion",
      *     description="Add new criterion",

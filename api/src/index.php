@@ -1,10 +1,11 @@
 <?php
 
-    require $_SERVER['DOCUMENT_ROOT'] . '/SOPCOM/models/Model.php';
-    require $_SERVER['DOCUMENT_ROOT'] . '/SOPCOM/controllers/MethodElementController.php';
-    require $_SERVER['DOCUMENT_ROOT'] . '/SOPCOM/controllers/CriterionController.php';
-    require $_SERVER['DOCUMENT_ROOT'] . '/SOPCOM/controllers/GoalController.php';
-    require $_SERVER['DOCUMENT_ROOT'] . '/SOPCOM/controllers/MethodChunkController.php';
+    header('Access-Control-Allow-Origin: *');
+    require "/var/www/html/models/Model.php";
+    require $_SERVER['DOCUMENT_ROOT'] . '/controllers/MethodElementController.php';
+    require $_SERVER['DOCUMENT_ROOT'] . '/controllers/CriterionController.php';
+    require $_SERVER['DOCUMENT_ROOT'] . '/controllers/GoalController.php';
+    require $_SERVER['DOCUMENT_ROOT'] . '/controllers/MethodChunkController.php';
 
     $uri = explode('/', parse_url($_SERVER['PATH_INFO'], PHP_URL_PATH));
 	$method = $_SERVER['REQUEST_METHOD'];
@@ -135,6 +136,5 @@
             http_response_code(404);
             break;
     }
-    header("Content-Type: application/json");
     exit;
 ?>

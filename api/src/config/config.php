@@ -2,9 +2,9 @@
 
 $config = Array(
     'database' => Array(
-        'host' => "localhost",
-        'bd' => "tfg_test",
-        'user' => "Admin",
+        'host' => "mysql",
+        'bd' => "sopcom_mysql",
+        'user' => "admin",
         'pw' => "adg6pMtxO",
     ) 
 );
