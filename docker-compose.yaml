@@ -1,0 +1,47 @@
+version: '2.4.1'
+
+services:
+  mysql:
+    container_name: sopcom-mysql
+    image: mysql
+    restart: on-failure
+    ports:
+      - "3306:3306"
+    networks: 
+      - database
+    environment:
+      MYSQL_DATABASE: tfg_test
+      MYSQL_USER: admin
+      MYSQL_PASSWORD: adg6pMtxO
+      MYSQL_ROOT_PASSWORD: example
+  
+  myadmin:
+    container_name: sopcom-myadmin
+    image: phpmyadmin
+    restart: always
+    depends_on:
+        - mysql
+    ports:
+        - "9090:80"
+    networks: 
+        - database
+    environment: 
+        PMA_HOST: sopcom-mysql
+        PMA_PORT: 3306
+        PMA_USER: admin
+        PMA_PASSWORD: adg6pMtxO
+  
+  backend:
+    build:
+      context: api
+    container_name: sopcom-backend
+    restart: always
+    ports:
+      - 3000:80
+    networks: 
+      - database
+
+networks:
+  database:
+    name: database
+    driver: bridge
