@@ -16,12 +16,52 @@ class CriterionController {
 
     /**
      * @OA\Get(
-     *     path="/api_v1/index.php/criterion", 
+     *     path="/SOPCOM/index.php/criterion", 
      *     tags={"Criterions"},
      *     summary="List all criterions and its values",
      *     description="List all criterions and its values",
      *     operationId="getAllCriterions",
-     *     @OA\Response(response="200", description="OK"),
+     *     @OA\Response(
+     *          response="200", 
+     *          description="OK",
+     *          @OA\JsonContent(
+     *              @OA\Schema(
+     *                  type="array",
+     *                  @OA\Items(
+     *                      @OA\Property(
+     *                          property="name",
+     *                          type="string"
+     *                      ),
+     *                      @OA\Property(
+     *                          property="values",
+     *                          type="array",
+     *                          @OA\Items(
+     *                              type="string"
+     *                          )
+     *                      ),
+     *                  )
+     *                  
+     *              ),
+     *              example={
+     *                  {
+                            "name": "Stakeholders expertise",
+                            "values": {
+                                "High",
+                                "Medium",
+                                "Basic"
+                            }
+                        },
+                        {
+                            "name": "Stakeholders other things",
+                            "values": {
+                                "High",
+                                "Medium",
+                                "Basic"
+                            }
+                        }
+                    }
+     *          )
+     *     ),
      * )
     */
     public function getAllCriterion() {
@@ -34,7 +74,7 @@ class CriterionController {
 
     /**
      * @OA\Delete(
-     *     path="/index.php/criterion/{criterionId}", 
+     *     path="/SOPCOM/index.php/criterion/{criterionId}", 
      *     tags={"Criterions"},
      *     summary="Delete a criterion by id",
      *     description="Delete a criterion by id",
@@ -44,8 +84,8 @@ class CriterionController {
      *         in="path",
      *         name="criterionId",
      *         required=true,
-     *         @OA\Schema(type="int"),
-     *         @OA\Examples(example="int", value="1", summary="A integer value."),
+     *         @OA\Schema(type="integer"),
+     *         @OA\Examples(example="integer", value="1", summary="A integer value."),
      *     ),
      *     @OA\Response(response="204", description="No content"),
      * )
@@ -62,6 +102,42 @@ class CriterionController {
         }
     }
 
+    /**
+     * @OA\POST(
+     *     path="/SOPCOM/index.php/criterion", 
+     *     tags={"Criterions"},
+     *     summary="Add new criterion",
+     *     description="Add new criterion",
+     *     operationId="AddNewCriterion",
+     *     @OA\RequestBody(
+     *         @OA\MediaType(
+     *             mediaType="application/json",
+     *             @OA\Schema(
+     *                 @OA\Property(
+     *                     property="name",
+     *                     type="string"
+     *                 ),
+     *                 @OA\Property(
+     *                     property="values",
+     *                     type="array",
+     *                     @OA\Items(
+     *                          type="string"
+     *                     )
+     *                 ),
+     *             ),
+     *             example={
+                        "name": "Stakeholders expertise",
+                        "values": {
+                            "High",
+                            "Medium",
+                            "Basic"
+                        }
+                    }
+     *         )
+     *     ),
+     *     @OA\Response(response="202", description="Created"),
+     * )
+    */
     public function addNewCriterion() {
         $body = json_decode(file_get_contents('php://input'), true);
         if(isset($body['name']) && isset($body['values']) && count($body['values']) > 2) {

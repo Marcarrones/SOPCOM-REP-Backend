@@ -16,7 +16,7 @@ class MethodElementController {
 
     /**
      * @OA\Get(
-     *     path="/index.php/method-element/{methodElementId}", 
+     *     path="/SOPCOM/index.php/method-element/{methodElementId}", 
      *     tags={"Method elements"},
      *     summary="Find a method element by id",
      *     description="Find a method element by id",
@@ -50,7 +50,7 @@ class MethodElementController {
 
     /**
      * @OA\Get(
-     *     path="/api_v1/index.php/method-element", 
+     *     path="/SOPCOM/index.php/method-element", 
      *     tags={"Method elements"},
      *     summary="List all method elements",
      *     description="List all method elements",
@@ -68,7 +68,7 @@ class MethodElementController {
 
     /**
      * @OA\Get(
-     *     path="/api_v1/index.php/method-element/types", 
+     *     path="/SOPCOM/index.php/method-element/types", 
      *     tags={"Method elements"},
      *     summary="List all method element types",
      *     description="List all method element types",
@@ -85,7 +85,7 @@ class MethodElementController {
 
     /**
      * @OA\Delete(
-     *     path="/index.php/method-element/{methodElementId}", 
+     *     path="/SOPCOM/index.php/method-element/{methodElementId}", 
      *     tags={"Method elements"},
      *     summary="Delete a method element by id",
      *     description="Delete a method element by id",
@@ -115,7 +115,7 @@ class MethodElementController {
 
     /**
      * @OA\Get(
-     *     path="/api_v1/index.php/method-element/relations/types", 
+     *     path="/SOPCOM/index.php/method-element/relations/types", 
      *     tags={"Method elements"},
      *     summary="List all method element relation types",
      *     description="List all method element relation types",
@@ -132,11 +132,99 @@ class MethodElementController {
     
     /**
      * @OA\POST(
-     *     path="/api_v1/index.php/method-element", 
+     *     path="/SOPCOM/index.php/method-element", 
      *     tags={"Method elements"},
      *     summary="Add new method element",
      *     description="Add new method element",
      *     operationId="AddNewMethodELement",
+     *     @OA\RequestBody(
+     *         @OA\MediaType(
+     *             mediaType="application/json",
+     *             @OA\Schema(
+     *                 @OA\Property(
+     *                     property="id",
+     *                     type="string"
+     *                 ),
+     *                 @OA\Property(
+     *                     property="name",
+     *                     type="string"
+     *                 ),
+     *                 @OA\Property(
+     *                     property="description",
+     *                     type="string"
+     *                 ),
+     *                 @OA\Property(
+     *                     property="figure",
+     *                     type="string"
+     *                 ),
+     *                 @OA\Property(
+     *                     property="type",
+     *                     type="integer",
+     *                 ),
+     *                 @OA\Property(
+     *                     property="me_struct_rel",
+     *                     type="array",
+     *                     @OA\Items(
+     *                          type="object",
+     *                          @OA\Property(
+     *                              property="id",
+     *                              type="string",
+     *                          ),
+     *                          @OA\Property(
+     *                              property="rel",
+     *                              type="integer",
+     *                          ),
+     *                     )
+     *                 ),
+     *                 @OA\Property(
+     *                     property="activity_rel",
+     *                     type="array",
+     *                     @OA\Items(
+     *                          type="object",
+     *                          @OA\Property(
+     *                              property="id",
+     *                              type="string",
+     *                          ),
+     *                          @OA\Property(
+     *                              property="rel",
+     *                              type="integer",
+     *                          ),
+     *                     )
+     *                 ),
+     *                 @OA\Property(
+     *                     property="artefact_rel",
+     *                     type="array",
+     *                     @OA\Items(
+     *                          type="object",
+     *                          @OA\Property(
+     *                              property="id",
+     *                              type="string",
+     *                          ),
+     *                          @OA\Property(
+     *                              property="rel",
+     *                              type="integer",
+     *                          ),
+     *                     )
+     *                 ),
+     *                 example={
+                            "id": "Act-ElRq-03",
+                            "name": "Elicit Requirements from survey",
+                            "abstract": false,
+                            "description": "Elaborate survey, select stakeholders to whom send the survey, obtain responses and extract requirements from responses.",
+                            "figure": null,
+                            "type": 3,
+                            "me_struct_rel": {
+                                {
+                                    "id": "Act-ElRq-01",
+                                    "rel": 1
+                                },
+                            },
+                            "activity_rel": {},
+                            "artefact_rel": {}
+                        }
+     *             )
+     *         )
+     *     ),
      *     @OA\Response(response="202", description="Created"),
      * )
     */
@@ -165,7 +253,7 @@ class MethodElementController {
 
     /**
      * @OA\Put(
-     *     path="/index.php/method-element/{methodElementId}", 
+     *     path="/SOPCOM/index.php/method-element/{methodElementId}", 
      *     tags={"Method elements"},
      *     summary="Update a method element by id",
      *     description="Update a method element by id",

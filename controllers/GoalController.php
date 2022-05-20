@@ -13,12 +13,38 @@ class GoalController {
 
     /**
      * @OA\Get(
-     *     path="/api_v1/index.php/goal", 
+     *     path="/SOPCOM/index.php/goal", 
      *     tags={"Goals"},
      *     summary="List all goals",
      *     description="List all goals",
      *     operationId="getAllGoals",
-     *     @OA\Response(response="200", description="OK"),
+     *     @OA\Response(response="200", description="OK",
+     *          @OA\JsonContent(
+     *              @OA\Schema(
+     *                  @OA\Property(
+     *                      property="result",
+     *                      type="array",
+     *                      @OA\Items(
+     *                          type="object",
+*                               @OA\Property(
+     *                              property="id",
+     *                              type="integer",
+     *                          ),
+     *                          @OA\Property(
+     *                              property="name",
+     *                              type="string",
+     *                          ),
+     *                      )
+     *                  )
+     *              ),
+     *              example={
+                       {
+                           "id": "Goal id",
+                           "name": "Goal name"
+                       },
+                    },
+     *          )
+     *     ),
      * )
     */
     public function getAllGoals() {
@@ -28,6 +54,28 @@ class GoalController {
         echo json_encode($result);
     }
 
+    /**
+     * @OA\POST(
+     *     path="/SOPCOM/index.php/goal", 
+     *     tags={"Goals"},
+     *     summary="Add new goal",
+     *     description="Add new goal",
+     *     operationId="addNewGoal",
+     *     @OA\RequestBody(
+     *         @OA\MediaType(
+     *             mediaType="application/json",
+     *             @OA\Schema(
+     *                 @OA\Property(
+     *                     property="name",
+     *                     type="string"
+     *                 ),
+     *                 example={"name": "Goal name"}
+     *             )
+     *         )
+     *     ),
+     *     @OA\Response(response="201", description="Created"),
+     * )
+    */
     public function addNewGoal() {
         $body = json_decode(file_get_contents('php://input'), true);
         if(isset($body['name'])) {

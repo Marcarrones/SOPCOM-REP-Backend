@@ -29,7 +29,7 @@ class MethodChunkController {
 
     /**
      * @OA\Get(
-     *     path="/index.php/method-chunk/{methodChunk}", 
+     *     path="/SOPCOM/index.php/method-chunk/{methodChunkId}", 
      *     tags={"Method chunks"},
      *     summary="Find a method chunk by id",
      *     description="Find a method chunk by id",
@@ -65,6 +65,24 @@ class MethodChunkController {
         }
     }
 
+    /**
+     * @OA\Delete(
+     *     path="/SOPCOM/index.php/method-chunk/{methodChunkId}", 
+     *     tags={"Method chunks"},
+     *     summary="Delete a method chunk by id",
+     *     description="Delete a method chunk by id",
+     *     operationId="deleteMethodChunk",
+     *     @OA\Parameter(
+     *         description="Id of the method chunk",
+     *         in="path",
+     *         name="methodChunkId",
+     *         required=true,
+     *         @OA\Schema(type="string"),
+     *         @OA\Examples(example="string", value="Chu-ReqEli-01", summary="A string value."),
+     *     ),
+     *     @OA\Response(response="204", description="No content"),
+     * )
+    */
     public function deleteMethodChunk($id) {
         $result = $this->MethodChunkModel->deleteMethodChunk($id);
         if($result == 0) {
@@ -77,6 +95,43 @@ class MethodChunkController {
         }
     }
 
+    /**
+     * @OA\POST(
+     *     path="/SOPCOM/index.php/method-chunk", 
+     *     tags={"Method chunks"},
+     *     summary="Add new method chunk",
+     *     description="Add new method chunk",
+     *     operationId="AddNewMethodChunk",
+     *     @OA\RequestBody(
+     *         @OA\MediaType(
+     *             mediaType="application/json",
+     *             @OA\Schema(
+     *                 @OA\Property(
+     *                     property="id",
+     *                     type="string"
+     *                 ),
+     *                 @OA\Property(
+     *                     property="name",
+     *                     type="string"
+     *                 ),
+     *                 @OA\Property(
+     *                     property="description",
+     *                     type="string"
+     *                 ),
+     *                 @OA\Property(
+     *                     property="activity",
+     *                     type="string",
+     *                 ),
+     *                 @OA\Property(
+     *                     property="intention",
+     *                     type="integer",
+     *                 ),
+     *             )
+     *         )
+     *     ),
+     *     @OA\Response(response="202", description="Created"),
+     * )
+    */
     public function addNewMethodChunk() {
         $body = json_decode(file_get_contents('php://input'), true);
         if(isset($body['id']) && isset($body['name']) && isset($body['activity']) && $body['intention']) {
@@ -95,6 +150,25 @@ class MethodChunkController {
         echo json_encode($result);
     }
 
+    /**
+     * @OA\Put(
+     *     path="/SOPCOM/index.php/method-chunk/{methodChunkId}", 
+     *     tags={"Method chunks"},
+     *     summary="Update a method chunk by id",
+     *     description="Update a method chunk by id",
+     *     operationId="updateMethodChunk",
+     *     @OA\Parameter(
+     *         description="Id of the method chunk",
+     *         in="path",
+     *         name="methodChunkId",
+     *         required=true,
+     *         @OA\Schema(type="string"),
+     *         @OA\Examples(example="string", value="Chu-ReqEli-01", summary="A string value."),
+     *     ),
+     *     @OA\Response(response="201", description="Created"),
+     *     @OA\Response(response="404", description="Not found")
+     * )
+    */
     public function updateMethodChunk($id) {
         $body = json_decode(file_get_contents('php://input'), true);
         $result = $this->MethodChunkModel->updateMethodChunk($id, $body['name'], $body['description'], $body['activity'], $body['intention']);
@@ -108,6 +182,16 @@ class MethodChunkController {
         }
     }
 
+    /**
+     * @OA\Get(
+     *     path="/SOPCOM/index.php/method-chunk", 
+     *     tags={"Method chunks"},
+     *     summary="List all method chunks",
+     *     description="List all method chunks",
+     *     operationId="getAllMethodChunks",
+     *     @OA\Response(response="200", description="OK"),
+     * )
+    */
     public function getAllMethodChunk() {
         $result = $this->MethodChunkModel->getAllMethodChunk();
         http_response_code(200);
