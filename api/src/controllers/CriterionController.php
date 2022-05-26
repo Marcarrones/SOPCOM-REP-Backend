@@ -103,7 +103,7 @@ class CriterionController {
     }
 
     /**
-     * @OA\POST(
+     * @OA\Post(
      *     path="/index.php/criterion", 
      *     tags={"Criterions"},
      *     summary="Add new criterion",

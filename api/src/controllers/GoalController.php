@@ -55,7 +55,7 @@ class GoalController {
     }
 
     /**
-     * @OA\POST(
+     * @OA\Post(
      *     path="/index.php/goal", 
      *     tags={"Goals"},
      *     summary="Add new goal",

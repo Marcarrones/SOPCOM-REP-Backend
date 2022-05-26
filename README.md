@@ -1,4 +1,7 @@
 # SOPCOM
 
-# Build and run the api and mysql database
-docker-compose -f docker-compose.yaml up --remove-orphans -d
+# Deploy the application
+'docker-compose -f docker-compose.yaml up --remove-orphans -d'
+
+# Undeploy the aplication
+'docker-compose -f docker-compose.yaml down'

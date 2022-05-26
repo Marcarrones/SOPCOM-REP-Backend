@@ -97,7 +97,7 @@ class MethodChunkController {
     }
 
     /**
-     * @OA\POST(
+     * @OA\Post(
      *     path="/index.php/method-chunk", 
      *     tags={"Method chunks"},
      *     summary="Add new method chunk",

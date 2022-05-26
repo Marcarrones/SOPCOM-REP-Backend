@@ -131,7 +131,7 @@ class MethodElementController {
     }
     
     /**
-     * @OA\POST(
+     * @OA\Post(
      *     path="/index.php/method-element", 
      *     tags={"Method elements"},
      *     summary="Add new method element",
