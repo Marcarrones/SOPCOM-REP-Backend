@@ -274,6 +274,16 @@ class MethodElementController {
         $body = json_decode(file_get_contents('php://input'), true);
         $result = $this->MethodElementModel->updateMethodElement($id, $body['name'], $body['abstract'], $body['description'], $body['figure']);
         if($result == 0) {
+            $this->MethodElementModel->deleteAllRelationsFrom($id);
+            if(isset($body['me_struct_rel'])) {
+                $this->MethodElementModel->updateMethodElementStructRel($id, $body['me_struct_rel']);
+            }
+            if($body['type'] == 3 && isset($body['activity_rel'])) {
+                $this->MethodElementModel->updateMethodElementActivityRel($id, $body['activity_rel']);
+            }
+            if($body['type'] == 2 && isset($body['artefact_rel'])) {
+                $this->MethodElementModel->updateMethodElementArtefactRel($id, $body['artefact_rel']);
+            }
             http_response_code(201);
         } else {
             $result = Array("code" => $result);

@@ -1,6 +1,8 @@
 <?php
 
     header('Access-Control-Allow-Origin: *');
+    header("Access-Control-Allow-Methods: GET, PUT, POST, DELETE, OPTIONS");
+    header("Access-Control-Allow-Headers: Origin, X-API-KEY, X-Requested-With, Content-Type, Accept, Access-Control-Request-Method, Access-Control-Allow-Headers, Authorization, observe, enctype, Content-Length, X-Csrf-Token");
     require "/var/www/html/models/Model.php";
     require $_SERVER['DOCUMENT_ROOT'] . '/controllers/MethodElementController.php';
     require $_SERVER['DOCUMENT_ROOT'] . '/controllers/CriterionController.php';
@@ -48,6 +50,9 @@
                         http_response_code(404);
                     }
                     break;
+                case 'OPTIONS':
+                    http_response_code(200);
+                    break;
                 default:
                     http_response_code(404);
                     break;
@@ -84,6 +89,9 @@
                         http_response_code(404);
                     }
                     break;
+                case 'OPTIONS':
+                    http_response_code(200);
+                    break;
                 default:
                     http_response_code(404);
                     break;
@@ -113,6 +121,9 @@
                         $controller->addNewCriterion(); #POST /criterion
                     }
                     break;
+                case 'OPTIONS':
+                    http_response_code(200);
+                    break;
                 default:
                     http_response_code(404);
                     break;
@@ -126,6 +137,9 @@
                     break;
                 case 'POST':
                     $controller->addNewGoal(); #POST /goal
+                    break;
+                case 'OPTIONS':
+                    http_response_code(200);
                     break;
                 default:
                     http_response_code(404);

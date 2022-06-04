@@ -121,14 +121,36 @@
             else return $result;
         }
 
+        /*
+            Function to check restrictions for method element relations
+        */
+        private function checkElementRelation($idFrom, $idTo, $type) {
+            $statement = $this->conn->prepare("SELECT abstract, type FROM method_element WHERE id = ?;");
+            $statement->bind_param('s', $idFrom);
+            $from = $this->executeSelectQuery($statement);
+            $statement->bind_param('s', $idTo);
+            $to = $this->executeSelectQuery($statement);
+            if(count($from) == 0 || count($to) == 0 || $from[0]['type'] != $to[0]['type']) return false; // Elements are the same type
+            if($type == 2 && ($from[0]['type'] != 2 || $to[0]['type'] != 2)) return false; // Artefact rel both elements are type activity
+            if($type == 3 && ($from[0]['type'] != 3 || $to[0]['type'] != 3)) return false; // Activity rel both elements are type artefact
+            if($type == 1 && $to[0]['abstract'] != 1) return false; // Struct rel to element must be abstract when specification
+            $statementRel = $this->conn->prepare("SELECT * FROM me_rel WHERE fromME = ? AND toME = ?;");
+            $statementRel->bind_param('ss', $idFrom, $idTo);
+            $relations = $this->executeSelectQuery($statementRel);
+            if(count($relations) > 0) return false;
+            return true;
+        }
+
         public function addMethodElementMeStructRel($id, $relations) {
             $statementMeRel = $this->conn->prepare($this->addNewMethodElementMeRel);
             $statementMeStructRel = $this->conn->prepare($this->addNewMethodElementMeStructRel);
             foreach($relations as $relation) {
-                $statementMeRel->bind_param('ss', $id, $relation['id']);
-                $this->executeInsertQuery($statementMeRel);
-                $statementMeStructRel->bind_param('ssi', $id, $relation['id'], $relation['rel']);
-                $this->executeInsertQuery($statementMeStructRel);
+                if($this->checkElementRelation($id, $relation['id'], 1)) {
+                    $statementMeRel->bind_param('ss', $id, $relation['id']);
+                    $this->executeInsertQuery($statementMeRel);
+                    $statementMeStructRel->bind_param('ssi', $id, $relation['id'], $relation['rel']);
+                    $this->executeInsertQuery($statementMeStructRel);
+                }
             }
         }
 
@@ -136,10 +158,12 @@
             $statementMeRel = $this->conn->prepare($this->addNewMethodElementMeRel);
             $statementActivityRel = $this->conn->prepare($this->addNewMethodElementActivityRel);
             foreach($relations as $relation) {
-                $statementMeRel->bind_param('ss', $id, $relation['id']);
-                $this->executeInsertQuery($statementMeRel);
-                $statementActivityRel->bind_param('ssi', $id, $relation['id'], $relation['rel']);
-                $this->executeInsertQuery($statementActivityRel);
+                if($this->checkElementRelation($id, $relation['id'], 1)) {
+                    $statementMeRel->bind_param('ss', $id, $relation['id']);
+                    $this->executeInsertQuery($statementMeRel);
+                    $statementActivityRel->bind_param('ssi', $id, $relation['id'], $relation['rel']);
+                    $this->executeInsertQuery($statementActivityRel);
+                }
             }
         }
 
@@ -147,10 +171,12 @@
             $statementMeRel = $this->conn->prepare($this->addNewMethodElementMeRel);
             $statementArtefactRel = $this->conn->prepare($this->addNewMethodElementArtefactRel);
             foreach($relations as $relation) {
-                $statementMeRel->bind_param('ss', $id, $relation['id']);
-                $this->executeInsertQuery($statementMeRel);
-                $statementArtefactRel->bind_param('ssi', $id, $relation['id'], $relation['rel']);
-                $this->executeInsertQuery($statementArtefactRel);
+                if($this->checkElementRelation($id, $relation['id'], 1)) {
+                    $statementMeRel->bind_param('ss', $id, $relation['id']);
+                    $this->executeInsertQuery($statementMeRel);
+                    $statementArtefactRel->bind_param('ssi', $id, $relation['id'], $relation['rel']);
+                    $this->executeInsertQuery($statementArtefactRel);
+                }
             }
         }
 
@@ -158,6 +184,44 @@
             $statement = $this->conn->prepare($this->updateMethodElement);
             $statement->bind_param('sisss', $name, $abstract, $description, $figure, $id);
             return $this->executeUpdateQuery($statement);
+        }
+
+        public function deleteAllRelationsFrom($id) {
+            $statement = $this->conn->prepare($this->deleteAllRelationsFrom);
+            $statement->bind_param('s', $id);
+            return $this->executeDeleteQuery($statement);
+        }
+
+        public function updateMethodElementStructRel($id, $relations) {
+            $this->addMethodElementMeStructRel($id, $relations);
+            $this->updateChunkRel($id, $relations);
+        }
+
+        public function updateMethodElementActivityRel($id, $relations) {
+            $this->addMethodElementActivityRel($id, $relations);
+            $this->updateChunkRel($id);
+        }
+
+        public function updateMethodElementArtefactRel($id, $relations) {
+            $this->addMethodElementArtefactRel($id, $relations);
+        }
+
+        private function updateChunkRel($id) {
+            $statement = $this->conn->prepare("SELECT fromME, toME FROM me_struct_rel WHERE fromME = ?;");
+            $statement->bind_param('s', $id);
+            $relations = $this->executeSelectQuery($statement);
+            foreach($relations as $rel) {
+                $statementMC = $this->conn->prepare("SELECT id FROM method_chunk WHERE activity = ?;");
+                $statementMC->bind_param('s', $rel['fromME']);
+                $MCFrom = $this->executeSelectQuery($statementMC);
+                $statementMC->bind_param('s', $rel['toME']);
+                $MCTo = $this->executeSelectQuery($statementMC);
+                if(count($MCFrom) > 0 && count($MCTo)) {
+                    $statementInsert = $this->conn->prepare("INSERT INTO chunk_rel(fromMC, toMC, fromME, toME) VALUES (?, ?, ?, ?);");
+                    $statementInsert->bind_param('ssss', $MCFrom, $MCTo, $rel['fromME'], $rel['toME']);
+                    $this->executeInsertQuery($statementInsert);
+                }
+            }
         }
 
     }
