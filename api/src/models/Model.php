@@ -10,7 +10,13 @@
         {
             global $config;
             $credentials = $config['database'];
-            $this->conn = new mysqli($credentials['host'], $credentials['user'], $credentials['pw'], $credentials['bd']);
+            try{
+                $this->conn = new mysqli($credentials['host'], $credentials['user'], $credentials['pw'], $credentials['bd']);
+            } catch (Exception $e) {
+                echo(json_encode(Array('error' => "Database connection failed")));
+                header("Content-Type: application/json");
+                http_response_code(400);
+            }
         }
 
         function __destruct() {

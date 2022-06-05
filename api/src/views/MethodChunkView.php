@@ -3,7 +3,7 @@
     class MethodChunkView {
         
         public function buildMethodChunk($methodChunk, $intention, $tools, $artefacts, $activity, $roles, $contextCriteria, $relations) {
-            $response = $methodChunk;
+            $response = $methodChunk[0];
             $response['abstract'] = $activity[0]['abstract'];
             $response['Intention'] = $intention;
             $response['Tools'] = $tools;
