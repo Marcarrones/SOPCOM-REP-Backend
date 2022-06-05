@@ -174,6 +174,11 @@ class MethodChunkController {
         $body = json_decode(file_get_contents('php://input'), true);
         $result = $this->MethodChunkModel->updateMethodChunk($id, $body['name'], $body['description'], $body['activity'], $body['intention']);
         if($result == 0) {
+            if(isset($body['tools'])) $this->MethodChunkModel->updateMethodChunkTools($id, $body['tools']);
+            if(isset($body['consumedArtefacts'])) $this->MethodChunkModel->updateMethodChunkConsumedArtefacts($id, $body['consumedArtefacts']);
+            if(isset($body['producedArtefacts'])) $this->MethodChunkModel->updateMethodChunkProducedArtefacts($id, $body['producedArtefacts']);
+            if(isset($body['roles'])) $this->MethodChunkModel->updateMethodChunkRoles($id, $body['roles']);
+            if(isset($body['contextCriteria'])) $this->MethodChunkModel->updateMethodChunkContextCriteria($id, $body['contextCriteria']);
             http_response_code(201);
         } else {
             $result = Array("code" => $result);

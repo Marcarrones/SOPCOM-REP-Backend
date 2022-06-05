@@ -15,6 +15,6 @@ class CriterionView {
                                                 'name' => $criterion['name'])]);
             }
         }
-        return $criterions;
+        return $result;
     }
 }

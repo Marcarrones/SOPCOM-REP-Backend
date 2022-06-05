@@ -18,35 +18,51 @@
         }
         
         protected function executeSelectQuery($statement) {
-            $result = [];
-            $statement->execute();
-            $rows = $statement->get_result();
-            while($row = $rows->fetch_assoc()) {
-                $result[] = $row;
+            try {
+                $result = [];
+                $statement->execute();
+                $rows = $statement->get_result();
+                while($row = $rows->fetch_assoc()) {
+                    $result[] = $row;
+                }
+                return $result;
+            } catch (Exception $e) {
+                return Array('error' => $statement->error);
             }
-            return $result;
         }
 
         protected function executeDeleteQuery($statement) {
-            $statement->execute();
-            $error = $statement->errno;
-            return $error;
+            try {
+                $statement->execute();
+                $error = $statement->errno;
+                return $error;
+            } catch (Exception $e) {
+                return Array('error' => $statement->error);
+            }
         }
 
         protected function executeInsertQuery($statement) {
-            $statement->execute();
-            $error = $statement->errno;
-            if($error === 0) {
-                return $statement->insert_id;
-            } else {
-                return Array('error' => "Database error");
+            try {
+                $statement->execute();
+                $error = $statement->errno;
+                if($error === 0) {
+                    return $statement->insert_id;
+                } else {
+                    return Array('error' => "Database error");
+                }
+            } catch (Exception $e) {
+                return Array('error' => $statement->error);
             }
         }
 
         protected function executeUpdateQuery($statement) {
-            $statement->execute();
-            $error = $statement->errno;
-            return $error;
+            try {
+                $statement->execute();
+                $error = $statement->errno;
+                return $error;
+            } catch (Exception $e) {
+                return Array('error' => $statement->error);
+            }
         }
     }
     

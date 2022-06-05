@@ -60,6 +60,12 @@
 
         private $getAllMethodChunks = "SELECT mc.id, mc.name, mc.description, mc.activity, mc.intention FROM method_chunk mc;";
 
+        private $deleteAllMethodChunkTools = "DELETE FROM method_chunk_uses_tool WHERE idMC = ?;";
+        private $deleteAllMethodChunkConsumedArtefacts = "DELETE FROM method_chunk_consumes_artefact WHERE idMC = ?;";
+        private $deleteAllMethodChunkProducedArtefacts = "DELETE FROM method_chunk_produces_artefact WHERE idMC = ?;";
+        private $deleteAllMethodChunkRoles = "DELETE FROM method_chunk_includes_role WHERE idMC = ?;";
+        private $deleteAllMethodChunkContextCriteria = "DELETE FROM assign_method_chunk WHERE idMC = ?;";
+
         public function getMethodChunk($id) {
             $statement = $this->conn->prepare($this->getMethodChunk);
             $statement->bind_param('s', $id);
@@ -226,6 +232,41 @@
                     $this->executeInsertQuery($statementAMCV);
                 }
             }
+        }
+
+        public function updateMethodChunkTools($id, $tools) {
+            $statement = $this->conn->prepare($this->deleteAllMethodChunkTools);
+            $statement->bind_param('s', $id);
+            $this->executeDeleteQuery($statement);
+            $this->addNewMethodChunkTools($id, $tools);
+        }
+
+        public function updateMethodChunkConsumedArtefacts($id, $artefacts) {
+            $statement = $this->conn->prepare($this->deleteAllMethodChunkConsumedArtefacts);
+            $statement->bind_param('s', $id);
+            $this->executeDeleteQuery($statement);
+            $this->addNewMethodChunkProducedArtefacts($id, $artefacts);
+        }
+
+        public function updateMethodChunkProducedArtefacts($id, $artefacts) {
+            $statement = $this->conn->prepare($this->deleteAllMethodChunkProducedArtefacts);
+            $statement->bind_param('s', $id);
+            $this->executeDeleteQuery($statement);
+            $this->addNewMethodChunkProducedArtefacts($id, $artefacts);
+        }
+
+        public function updateMethodChunkRoles($id, $roles) {
+            $statement = $this->conn->prepare($this->deleteAllMethodChunkRoles);
+            $statement->bind_param('s', $id);
+            $this->executeDeleteQuery($statement);
+            $this->addNewMethodChunkRoles($id, $roles);
+        }
+
+        public function updateMethodChunkContextCriteria($id, $context) {
+            $statement = $this->conn->prepare($this->deleteAllMethodChunkContextCriteria);
+            $statement->bind_param('s', $id);
+            $this->executeDeleteQuery($statement);
+            $this->addMethodChunkContextCriteria($id, $context);
         }
 
     }
