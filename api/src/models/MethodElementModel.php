@@ -31,6 +31,12 @@
         private $addNewActivity = "INSERT INTO activity (id) VALUES (?)";
         private $addNewRole = "INSERT INTO role (id) VALUES (?)";
 
+        private $checkMethodElementRelation = "SELECT abstract, type FROM method_element WHERE id = ?;";
+        private $getRelationsFromTo = "SELECT * FROM me_rel WHERE fromME = ? AND toME = ?;";
+        private $getStructRelationsFromTo = "SELECT fromME, toME FROM me_struct_rel WHERE fromME = ?;";
+        private $getMethodChunkFromActivity = "SELECT id FROM method_chunk WHERE activity = ?;";
+        private $queryInsertChunkRel = "INSERT INTO chunk_rel(fromMC, toMC, fromME, toME) VALUES (?, ?, ?, ?);";
+
         public function getMethodElementById($id) {
             $statement = $this->conn->prepare($this->getMethodElement);
             $statement->bind_param('s', $id);
@@ -125,7 +131,7 @@
             Function to check restrictions for method element relations
         */
         private function checkElementRelation($idFrom, $idTo, $type) {
-            $statement = $this->conn->prepare("SELECT abstract, type FROM method_element WHERE id = ?;");
+            $statement = $this->conn->prepare($this->checkMethodElementRelation);
             $statement->bind_param('s', $idFrom);
             $from = $this->executeSelectQuery($statement);
             $statement->bind_param('s', $idTo);
@@ -134,7 +140,7 @@
             if($type == 2 && ($from[0]['type'] != 2 || $to[0]['type'] != 2)) return false; // Artefact rel both elements are type activity
             if($type == 3 && ($from[0]['type'] != 3 || $to[0]['type'] != 3)) return false; // Activity rel both elements are type artefact
             if($type == 1 && $to[0]['abstract'] != 1) return false; // Struct rel to element must be abstract when specification
-            $statementRel = $this->conn->prepare("SELECT * FROM me_rel WHERE fromME = ? AND toME = ?;");
+            $statementRel = $this->conn->prepare($this->getRelationsFromTo);
             $statementRel->bind_param('ss', $idFrom, $idTo);
             $relations = $this->executeSelectQuery($statementRel);
             if(count($relations) > 0) return false;
@@ -207,17 +213,17 @@
         }
 
         private function updateChunkRel($id) {
-            $statement = $this->conn->prepare("SELECT fromME, toME FROM me_struct_rel WHERE fromME = ?;");
+            $statement = $this->conn->prepare($this->getStructRelationsFromTo);
             $statement->bind_param('s', $id);
             $relations = $this->executeSelectQuery($statement);
             foreach($relations as $rel) {
-                $statementMC = $this->conn->prepare("SELECT id FROM method_chunk WHERE activity = ?;");
+                $statementMC = $this->conn->prepare($this->getMethodChunkFromActivity);
                 $statementMC->bind_param('s', $rel['fromME']);
                 $MCFrom = $this->executeSelectQuery($statementMC);
                 $statementMC->bind_param('s', $rel['toME']);
                 $MCTo = $this->executeSelectQuery($statementMC);
                 if(count($MCFrom) > 0 && count($MCTo)) {
-                    $statementInsert = $this->conn->prepare("INSERT INTO chunk_rel(fromMC, toMC, fromME, toME) VALUES (?, ?, ?, ?);");
+                    $statementInsert = $this->conn->prepare($this->queryInsertChunkRel);
                     $statementInsert->bind_param('ssss', $MCFrom, $MCTo, $rel['fromME'], $rel['toME']);
                     $this->executeInsertQuery($statementInsert);
                 }
