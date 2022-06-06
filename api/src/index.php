@@ -102,7 +102,7 @@
             switch($method) {
                 case 'GET':
                     if(isset($uri[2])) {
-
+                        $controller->getCriterion($uri[2]);
                     } else {
                         $controller->getAllCriterion(); #GET /criterion
                     }

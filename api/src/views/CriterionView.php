@@ -17,4 +17,10 @@ class CriterionView {
         }
         return $result;
     }
+
+    public function buildCriterion($criterion, $values) {
+        $result = $criterion[0];
+        $result['values'] = $values;
+        return $result;
+    }
 }

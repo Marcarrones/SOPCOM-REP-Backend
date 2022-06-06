@@ -73,6 +73,40 @@ class CriterionController {
     }
 
     /**
+     * @OA\Get(
+     *     path="/index.php/criterion/{criterionId}", 
+     *     tags={"Criterions"},
+     *     summary="Get criterion by id",
+     *     description="Get criterion by id",
+     *     operationId="getCriterion",
+     *     @OA\Parameter(
+     *         description="Id of the criterion",
+     *         in="path",
+     *         name="criterionId",
+     *         required=true,
+     *         @OA\Schema(type="integer"),
+     *         @OA\Examples(example="string", value="1", summary="An integer value."),
+     *     ),
+     *     @OA\Response(response="200", description="OK"),
+     *     @OA\Response(response="404", description="Not found")
+     * )
+    */
+    public function getCriterion($id) {
+        $criterion = $this->CriterionModel->getCriterion($id);
+        if(count($criterion) > 0) {
+            $values = $this->CriterionModel->getCriterionValues($id);
+            $result = $this->CriterionView->buildCriterion($criterion, $values);
+            http_response_code(200);
+            header("Content-Type: application/json");
+            echo json_encode($result);
+        } else {
+            header("Content-Type: application/json");
+            http_response_code(404);
+            echo json_encode(Array("error" => "No criterion found with id $id."));
+        }
+    }
+
+    /**
      * @OA\Delete(
      *     path="/index.php/criterion/{criterionId}", 
      *     tags={"Criterions"},
@@ -85,7 +119,7 @@ class CriterionController {
      *         name="criterionId",
      *         required=true,
      *         @OA\Schema(type="integer"),
-     *         @OA\Examples(example="integer", value="1", summary="A integer value."),
+     *         @OA\Examples(example="integer", value="1", summary="An integer value."),
      *     ),
      *     @OA\Response(response="204", description="No content"),
      * )

@@ -32,7 +32,7 @@
                                                 RIGHT JOIN method_chunk_includes_role mcir ON r.id = mcir.idME
                                                 RIGHT JOIN method_chunk mc ON mcir.idMC = mc.id
                                                 WHERE me.id IS NOT NULL AND mc.id = ?;";
-        private $getMethodChunkContextCriteria = "SELECT c.name as criterion, v.name as value 
+        private $getMethodChunkContextCriteria = "SELECT c.id as idCriterion, c.name as criterion, v.id as idValue, v.name as value 
                                                 FROM assign_method_chunk_value amcv 
                                                 RIGHT JOIN method_chunk mc ON amcv.idMC = mc.id 
                                                 LEFT JOIN criterion c ON amcv.criterion = c.id

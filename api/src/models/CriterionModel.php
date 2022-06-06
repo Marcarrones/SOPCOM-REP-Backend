@@ -9,8 +9,23 @@
         private $addNewCriterion = "INSERT INTO criterion (name) VALUES (?);";
         private $addNewValueToCriterion = "INSERT INTO value (name, criterion) VALUES (?, ?);";
 
+        private $getCriterion = "SELECT c.id, c.name FROM criterion c WHERE id = ?;";
+        private $getCriterionValues = "SELECT v.id, v.name FROM value v WHERE v.criterion = ?;";
+
         public function getAllCriterions() {
             $statement = $this->conn->prepare($this->getAllCriterion);
+            return $this->executeSelectQuery($statement);
+        }
+
+        public function getCriterion($id) {
+            $statement = $this->conn->prepare($this->getCriterion);
+            $statement->bind_param('s', $id);
+            return $this->executeSelectQuery($statement);
+        }
+
+        public function getCriterionValues($id) {
+            $statement = $this->conn->prepare($this->getCriterionValues);
+            $statement->bind_param('s', $id);
             return $this->executeSelectQuery($statement);
         }
 
