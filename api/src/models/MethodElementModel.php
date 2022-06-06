@@ -3,9 +3,13 @@
     class MethodElement extends Model{
         private $getMethodElement = "SELECT me.id as id, me.name as name, me.abstract as abstract, me.description as description, me.figure as figure FROM method_element me WHERE me.id = ?;";
 
-        private $getMethodElementToMeRel = "SELECT msr.fromME, msr.rel, srt.name FROM me_struct_rel msr, struct_rel_type srt WHERE msr.toME = ? AND msr.rel = srt.id;"; 
+        private $getMethodElementToMeRel = "SELECT msr.fromME, msr.rel, srt.name FROM me_struct_rel msr, struct_rel_type srt WHERE msr.toME = ? AND msr.rel = srt.id AND msr.rel <> 1;"; 
         private $getMethodElementToActRel = "SELECT actr.fromME, actr.rel, art.name FROM activity_rel actr, activity_rel_type art WHERE actr.toME = ? AND actr.rel = art.id;"; 
         private $getMethodElementToArtRel = "SELECT artr.fromME, artr.rel, art.name FROM artefact_rel artr, artefact_rel_type art WHERE artr.toME = ? AND artr.rel = art.id;"; 
+
+        private $getMethodElementFromMeRel = "SELECT msr.fromME, msr.rel, srt.name FROM me_struct_rel msr, struct_rel_type srt WHERE msr.fromME = ? AND msr.rel = srt.id;"; 
+        private $getMethodElementFromActRel = "SELECT actr.fromME, actr.rel, art.name FROM activity_rel actr, activity_rel_type art WHERE actr.fromME = ? AND actr.rel = art.id;"; 
+        private $getMethodElementFromArtRel = "SELECT artr.fromME, artr.rel, art.name FROM artefact_rel artr, artefact_rel_type art WHERE artr.fromME = ? AND artr.rel = art.id;"; 
 
         private $getAllMethodElements = "SELECT me.id as id, me.name as name, me.description as description FROM method_element me;";
         private $getAllMethodElementsFilter = "SELECT me.id as id, me.name as name, me.description as description FROM method_element me WHERE type = ?;";
@@ -32,7 +36,7 @@
         private $addNewRole = "INSERT INTO role (id) VALUES (?)";
 
         private $checkMethodElementRelation = "SELECT abstract, type FROM method_element WHERE id = ?;";
-        private $getRelationsFromTo = "SELECT * FROM me_rel WHERE fromME = ? AND toME = ?;";
+        private $getRelations = "SELECT * FROM me_rel WHERE fromME = ? AND toME = ?;";
         private $getStructRelationsFromTo = "SELECT fromME, toME FROM me_struct_rel WHERE fromME = ?;";
         private $getMethodChunkFromActivity = "SELECT id FROM method_chunk WHERE activity = ?;";
         private $queryInsertChunkRel = "INSERT INTO chunk_rel(fromMC, toMC, fromME, toME) VALUES (?, ?, ?, ?);";
@@ -55,6 +59,23 @@
             $relationsTo['actRel'] = $this->executeSelectQuery($statementActRel);
 
             $statementActRel = $this->conn->prepare($this->getMethodElementToArtRel);
+            $statementActRel->bind_param('s', $id);
+            $relationsTo['artRel'] = $this->executeSelectQuery($statementActRel);
+            
+            return $relationsTo;
+        }
+
+        public function getMethodElementFromRelations($id) {
+            $relationsTo = Array();
+            $statementMeStrRel = $this->conn->prepare($this->getMethodElementFromMeRel);
+            $statementMeStrRel->bind_param('s', $id);
+            $relationsTo['meStrRel'] = $this->executeSelectQuery($statementMeStrRel);
+
+            $statementActRel = $this->conn->prepare($this->getMethodElementFromActRel);
+            $statementActRel->bind_param('s', $id);
+            $relationsTo['actRel'] = $this->executeSelectQuery($statementActRel);
+
+            $statementActRel = $this->conn->prepare($this->getMethodElementFromArtRel);
             $statementActRel->bind_param('s', $id);
             $relationsTo['artRel'] = $this->executeSelectQuery($statementActRel);
             
@@ -140,10 +161,13 @@
             if($type == 2 && ($from[0]['type'] != 2 || $to[0]['type'] != 2)) return false; // Artefact rel both elements are type activity
             if($type == 3 && ($from[0]['type'] != 3 || $to[0]['type'] != 3)) return false; // Activity rel both elements are type artefact
             if($type == 1 && $to[0]['abstract'] != 1) return false; // Struct rel to element must be abstract when specification
-            $statementRel = $this->conn->prepare($this->getRelationsFromTo);
+            $statementRel = $this->conn->prepare($this->getRelations);
             $statementRel->bind_param('ss', $idFrom, $idTo);
             $relations = $this->executeSelectQuery($statementRel);
+            $statementRel->bind_param('ss', $idTo, $idFrom);
+            $relationsRev = $this->executeSelectQuery($statementRel);
             if(count($relations) > 0) return false;
+            if($type == 1 && count($relationsRev) > 0) return false;
             return true;
         }
 

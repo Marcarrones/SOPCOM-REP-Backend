@@ -40,8 +40,8 @@
                                                 WHERE c.name IS NOT NULL and v.name IS NOT NULL AND mc.id = ?;";
         private $getMethodChunkFromRelations = "SELECT cr.fromME, cr.toME FROM chunk_rel cr WHERE cr.fromMC = ?;";
         private $getMethodChunkToRelations = "SELECT cr.fromME, cr.toME FROM chunk_rel cr WHERE cr.toMC = ?;";
-        private $getMeStructRel = "SELECT * FROM me_struct_rel msr WHERE msr.fromME = ? AND msr.toME = ?;";
-        private $getActRel = "SELECT * FROM activity_rel ar WHERE ar.fromME = ? AND ar.toME = ?;";
+        private $getMeStructRel = "SELECT msr.fromME, msr.toME, msr.rel, srt.name FROM me_struct_rel msr, struct_rel_type srt WHERE msr.fromME = ? AND msr.toME = ? AND msr.rel = srt.id;";
+        private $getActRel = "SELECT ar.fromME, ar.toME, ar.rel, art.name FROM activity_rel ar, activity_rel_type art WHERE ar.fromME = ? AND ar.toME = ? AND ar.rel = art.id;";
 
         private $deleteMethodChunk = "DELETE FROM method_chunk WHERE id = ?;";
 
@@ -133,7 +133,8 @@
             $result['to'] = [];
             foreach($relationsTo as $rel) {
                 $statementMeStructRel->bind_param('ss', $rel['fromME'], $rel['toME']);
-                $result['to']['me_struct_rel'][] = $this->executeSelectQuery($statementMeStructRel);
+                $rels = $this->executeSelectQuery($statementMeStructRel);
+                $result['to']['me_struct_rel'][] = array_filter($rels, function($rel) { return $rel['rel'] != 1;});
                 $statementActRel->bind_param('ss', $rel['fromME'], $rel['toME']);
                 $result['to']['activity_rel'][] = $this->executeSelectQuery($statementActRel);
             }

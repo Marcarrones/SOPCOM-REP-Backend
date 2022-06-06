@@ -37,12 +37,13 @@ class MethodElementController {
         $methodElement = $this->MethodElementModel->getMethodElementById($id);
         if(count($methodElement) > 0) {
             $relationsTo = $this->MethodElementModel->getMethodElementToRelations($id);
-            //$relationsFrom = $this->MethodElementModel->getMethodElementFromRelations($id);
-            $relationsFrom = [];
+            $relationsFrom = $this->MethodElementModel->getMethodElementFromRelations($id);
             $response = $this->MethodElementView->buildMethodElement($methodElement, $relationsTo, $relationsFrom);
+            header("Content-Type: application/json");
             http_response_code(200);
             echo json_encode($response);
         } else {
+            header("Content-Type: application/json");
             echo json_encode(Array("error" => "No method element found with id $id."));
             http_response_code(404);
         }
