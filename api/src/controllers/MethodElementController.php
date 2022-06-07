@@ -249,7 +249,7 @@ class MethodElementController {
             http_response_code(400);
         }
         header("Content-Type: application/json");
-        echo json_encode($result);
+        echo json_encode(Array('id' => $result));
     }
 
     /**

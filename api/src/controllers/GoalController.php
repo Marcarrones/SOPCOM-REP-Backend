@@ -79,7 +79,8 @@ class GoalController {
     public function addNewGoal() {
         $body = json_decode(file_get_contents('php://input'), true);
         if(isset($body['name'])) {
-            $this->GoalModel->addNewGoal($body['name']);
+            $result = $this->GoalModel->addNewGoal($body['name']);
+            echo(json_encode(Array('id' => $result)));
             http_response_code(201);
         } else {
             http_response_code(400);

@@ -143,12 +143,12 @@ class MethodChunkController {
             if(isset($body['roles'])) $this->MethodChunkModel->addNewMethodChunkRoles($body['id'], $body['roles']);
             if(isset($body['contextCriteria'])) $this->MethodChunkModel->addMethodChunkContextCriteria($body['id'], $body['contextCriteria']);
             http_response_code(201);
+            header("Content-Type: application/json");
+            echo json_encode(Array('id' => $result));
         } else {
             $result = Array("error" => "Missing required data");
             http_response_code(400);
         }
-        header("Content-Type: application/json");
-        echo json_encode($result);
     }
 
     /**

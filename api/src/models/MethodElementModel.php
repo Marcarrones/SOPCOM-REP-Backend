@@ -3,13 +3,13 @@
     class MethodElement extends Model{
         private $getMethodElement = "SELECT me.id as id, me.name as name, me.abstract as abstract, me.description as description, me.figure as figure FROM method_element me WHERE me.id = ?;";
 
-        private $getMethodElementToMeRel = "SELECT msr.fromME, msr.rel, srt.name FROM me_struct_rel msr, struct_rel_type srt WHERE msr.toME = ? AND msr.rel = srt.id AND msr.rel <> 1;"; 
-        private $getMethodElementToActRel = "SELECT actr.fromME, actr.rel, art.name FROM activity_rel actr, activity_rel_type art WHERE actr.toME = ? AND actr.rel = art.id;"; 
-        private $getMethodElementToArtRel = "SELECT artr.fromME, artr.rel, art.name FROM artefact_rel artr, artefact_rel_type art WHERE artr.toME = ? AND artr.rel = art.id;"; 
+        private $getMethodElementToMeRel = "SELECT msr.fromME as id, msr.rel, srt.name FROM me_struct_rel msr, struct_rel_type srt WHERE msr.toME = ? AND msr.rel = srt.id AND msr.rel <> 1;"; 
+        private $getMethodElementToActRel = "SELECT actr.fromME as id, actr.rel, art.name FROM activity_rel actr, activity_rel_type art WHERE actr.toME = ? AND actr.rel = art.id;"; 
+        private $getMethodElementToArtRel = "SELECT artr.fromME as id, artr.rel, art.name FROM artefact_rel artr, artefact_rel_type art WHERE artr.toME = ? AND artr.rel = art.id;"; 
 
-        private $getMethodElementFromMeRel = "SELECT msr.fromME, msr.rel, srt.name FROM me_struct_rel msr, struct_rel_type srt WHERE msr.fromME = ? AND msr.rel = srt.id;"; 
-        private $getMethodElementFromActRel = "SELECT actr.fromME, actr.rel, art.name FROM activity_rel actr, activity_rel_type art WHERE actr.fromME = ? AND actr.rel = art.id;"; 
-        private $getMethodElementFromArtRel = "SELECT artr.fromME, artr.rel, art.name FROM artefact_rel artr, artefact_rel_type art WHERE artr.fromME = ? AND artr.rel = art.id;"; 
+        private $getMethodElementFromMeRel = "SELECT msr.toME as id, msr.rel, srt.name FROM me_struct_rel msr, struct_rel_type srt WHERE msr.fromME = ? AND msr.rel = srt.id;"; 
+        private $getMethodElementFromActRel = "SELECT actr.toME as id, actr.rel, art.name FROM activity_rel actr, activity_rel_type art WHERE actr.fromME = ? AND actr.rel = art.id;"; 
+        private $getMethodElementFromArtRel = "SELECT artr.toME as id, artr.rel, art.name FROM artefact_rel artr, artefact_rel_type art WHERE artr.fromME = ? AND artr.rel = art.id;"; 
 
         private $getAllMethodElements = "SELECT me.id as id, me.name as name, me.description as description FROM method_element me;";
         private $getAllMethodElementsFilter = "SELECT me.id as id, me.name as name, me.description as description FROM method_element me WHERE type = ?;";
