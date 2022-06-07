@@ -216,9 +216,11 @@ CREATE TABLE activity_rel (
 	FOREIGN KEY (rel)
 		REFERENCES activity_rel_type(id),
     FOREIGN KEY (fromME)
-		REFERENCES activity(id),
+		REFERENCES activity(id)
+        ON DELETE CASCADE,
 	FOREIGN KEY (toME)
 		REFERENCES activity(id)
+        ON DELETE CASCADE
 );
 
 CREATE TABLE artefact_rel (
@@ -232,9 +234,11 @@ CREATE TABLE artefact_rel (
 	FOREIGN KEY (rel)
 		REFERENCES artefact_rel_type(id),
     FOREIGN KEY (fromME)
-		REFERENCES artefact(id),
+		REFERENCES artefact(id)
+        ON DELETE CASCADE,
 	FOREIGN KEY (toME)
 		REFERENCES artefact(id)
+        ON DELETE CASCADE
 );
 
 CREATE TABLE chunk_rel (

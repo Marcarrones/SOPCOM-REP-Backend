@@ -41,6 +41,8 @@
         private $getMethodChunkFromActivity = "SELECT id FROM method_chunk WHERE activity = ?;";
         private $queryInsertChunkRel = "INSERT INTO chunk_rel(fromMC, toMC, fromME, toME) VALUES (?, ?, ?, ?);";
 
+        private $deleteAllRelationsFrom = "DELETE FROM me_rel WHERE fromME = ?;";
+
         public function getMethodElementById($id) {
             $statement = $this->conn->prepare($this->getMethodElement);
             $statement->bind_param('s', $id);
@@ -151,7 +153,7 @@
         /*
             Function to check restrictions for method element relations
         */
-        private function checkElementRelation($idFrom, $idTo, $type) {
+        private function checkElementRelation($idFrom, $idTo, $type, $subtype = 0) {
             $statement = $this->conn->prepare($this->checkMethodElementRelation);
             $statement->bind_param('s', $idFrom);
             $from = $this->executeSelectQuery($statement);
@@ -160,7 +162,7 @@
             if(count($from) == 0 || count($to) == 0 || $from[0]['type'] != $to[0]['type']) return false; // Elements are the same type
             if($type == 2 && ($from[0]['type'] != 2 || $to[0]['type'] != 2)) return false; // Artefact rel both elements are type activity
             if($type == 3 && ($from[0]['type'] != 3 || $to[0]['type'] != 3)) return false; // Activity rel both elements are type artefact
-            if($type == 1 && $to[0]['abstract'] != 1) return false; // Struct rel to element must be abstract when specification
+            if($type == 1 && $subtype == 1 && $to[0]['abstract'] != 1) return false; // Struct rel to element must be abstract when specification
             $statementRel = $this->conn->prepare($this->getRelations);
             $statementRel->bind_param('ss', $idFrom, $idTo);
             $relations = $this->executeSelectQuery($statementRel);
@@ -175,7 +177,7 @@
             $statementMeRel = $this->conn->prepare($this->addNewMethodElementMeRel);
             $statementMeStructRel = $this->conn->prepare($this->addNewMethodElementMeStructRel);
             foreach($relations as $relation) {
-                if($this->checkElementRelation($id, $relation['id'], 1)) {
+                if($this->checkElementRelation($id, $relation['id'], 1, $relation['rel'])) {
                     $statementMeRel->bind_param('ss', $id, $relation['id']);
                     $this->executeInsertQuery($statementMeRel);
                     $statementMeStructRel->bind_param('ssi', $id, $relation['id'], $relation['rel']);
