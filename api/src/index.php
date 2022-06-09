@@ -31,7 +31,11 @@
                     break;
                 case 'POST':
                     if(isset($uri[2])) {
-
+                        if(isset($uri[3])) {
+                            if($uri[3] == 'image') {
+                                $controller->addMethodElementImage($uri[2]);
+                            }
+                        }
                     } else {
                         $controller->addNewMethodElement();
                     }

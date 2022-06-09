@@ -1,5 +1,7 @@
 <?php
 
+require $_SERVER['DOCUMENT_ROOT'] . '/config/config.php';
+
     class MethodElement extends Model{
         private $getMethodElement = "SELECT me.id as id, me.name as name, me.abstract as abstract, me.description as description, me.figure as figure FROM method_element me WHERE me.id = ?;";
 
@@ -42,6 +44,8 @@
         private $queryInsertChunkRel = "INSERT INTO chunk_rel(fromMC, toMC, fromME, toME) VALUES (?, ?, ?, ?);";
 
         private $deleteAllRelationsFrom = "DELETE FROM me_rel WHERE fromME = ?;";
+
+        private $updateMethodElementFigure = "UPDATE method_element SET figure = ? WHERE id = ?;";
 
         public function getMethodElementById($id) {
             $statement = $this->conn->prepare($this->getMethodElement);
@@ -253,6 +257,26 @@
                     $statementInsert->bind_param('ssss', $MCFrom, $MCTo, $rel['fromME'], $rel['toME']);
                     $this->executeInsertQuery($statementInsert);
                 }
+            }
+        }
+
+        public function uploadImage($id) {
+            $type = $_FILES["figure"]['type'];
+            global $config;
+            if(array_search($type, $config['acceptedImageTypes']) !== false) {
+                $dir = $config['paths']['docs'] . $config['paths']['method-element-images'];
+                if(!file_exists($_SERVER['DOCUMENT_ROOT'] . $dir)) {
+                    mkdir($_SERVER['DOCUMENT_ROOT'] . $dir, 0777, true);
+                }
+                $pathImage = $dir . '/' . $id . '.png';
+                if(move_uploaded_file($_FILES["figure"]["tmp_name"], $_SERVER['DOCUMENT_ROOT'] . $pathImage)) {
+                    $statement = $this->conn->prepare($this->updateMethodElementFigure);
+                    $statement->bind_param('ss', $pathImage, $id);
+                    $this->executeUpdateQuery($statement);
+                    return $pathImage;
+                }
+            } else {
+                return Array('error' => 'File type not accepted.');
             }
         }
 

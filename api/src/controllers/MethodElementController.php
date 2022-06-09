@@ -1,6 +1,6 @@
 <?php
 
-include $_SERVER['DOCUMENT_ROOT'] . '/models/MethodElementModel.php';
+require $_SERVER['DOCUMENT_ROOT'] . '/models/MethodElementModel.php';
 require $_SERVER['DOCUMENT_ROOT'] . '/views/MethodElementView.php';
 
 class MethodElementController {
@@ -288,6 +288,17 @@ class MethodElementController {
             http_response_code(201);
         } else {
             $result = Array("code" => $result);
+            http_response_code(404);
+            header("Content-Type: application/json");
+            echo json_encode($result);
+        }
+    }
+
+    public function addMethodElementImage($id) {
+        $result = $this->MethodElementModel->uploadImage($id);
+        if(!is_array($result)) {
+            http_response_code(201);
+        } else {
             http_response_code(404);
             header("Content-Type: application/json");
             echo json_encode($result);
