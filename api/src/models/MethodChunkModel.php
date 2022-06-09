@@ -32,7 +32,7 @@
                                                 RIGHT JOIN method_chunk_includes_role mcir ON r.id = mcir.idME
                                                 RIGHT JOIN method_chunk mc ON mcir.idMC = mc.id
                                                 WHERE me.id IS NOT NULL AND mc.id = ?;";
-        private $getMethodChunkContextCriteria = "SELECT c.id as idCriterion, c.name as criterion, v.id as idValue, v.name as value 
+        private $getMethodChunkContextCriteria = "SELECT c.id as criterionId, c.name as criterionName, v.id as id, v.name as name 
                                                 FROM assign_method_chunk_value amcv 
                                                 RIGHT JOIN method_chunk mc ON amcv.idMC = mc.id 
                                                 LEFT JOIN criterion c ON amcv.criterion = c.id
@@ -122,9 +122,11 @@
             $statementActRel = $this->conn->prepare($this->getActRel);
             foreach($relationsFrom as $rel) {
                 $statementMeStructRel->bind_param('ss', $rel['fromME'], $rel['toME']);
-                $result['from']['me_struct_rel'][] = $this->executeSelectQuery($statementMeStructRel);
+                $relsStruct = $this->executeSelectQuery($statementMeStructRel);
+                if(count($relsStruct) > 0) $result['from']['me_struct_rel'][] = $relsStruct[0];
                 $statementActRel->bind_param('ss', $rel['fromME'], $rel['toME']);
-                $result['from']['activity_rel'][] = $this->executeSelectQuery($statementActRel);
+                $relsAct = $this->executeSelectQuery($statementActRel);
+                if(count($relsAct) > 0) $result['from']['activity_rel'][] = $relsAct[0];
             }
 
             $statementRelationsTo = $this->conn->prepare($this->getMethodChunkToRelations);
@@ -133,10 +135,12 @@
             $result['to'] = [];
             foreach($relationsTo as $rel) {
                 $statementMeStructRel->bind_param('ss', $rel['fromME'], $rel['toME']);
-                $rels = $this->executeSelectQuery($statementMeStructRel);
-                $result['to']['me_struct_rel'][] = array_filter($rels, function($rel) { return $rel['rel'] != 1;});
+                $relsStruct = $this->executeSelectQuery($statementMeStructRel);
+                $relsStruct = array_filter($relsStruct, function($rel) { return $rel['rel'] != 1;});
+                if(count($relsStruct) > 0)$result['to']['me_struct_rel'][] =  $relsStruct[0];
                 $statementActRel->bind_param('ss', $rel['fromME'], $rel['toME']);
-                $result['to']['activity_rel'][] = $this->executeSelectQuery($statementActRel);
+                $relsAct = $this->executeSelectQuery($statementActRel);
+                if(count($relsAct) > 0) $result['to']['activity_rel'][] = $relsAct[0];
             }
             return $result;
         }

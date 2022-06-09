@@ -2,7 +2,7 @@
 
 class CriterionView {
 
-    public function buildCriterionsList($criterions) {
+    public function buildCriteriaList($criterions) {
         $result = [];
         foreach($criterions as $criterion) {
             $pos = array_search($criterion['criterionId'], array_column($result, 'criterionId'));
