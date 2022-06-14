@@ -27,6 +27,17 @@ services:
     networks: 
       - database
 
+  frontend:
+    container_name: sopcom-frontend
+    build:
+      context: client
+    ports:
+      - "1027:80"
+    networks:
+      - http
+
 networks:
   database:
+    driver: bridge
+  http:
     driver: bridge
