@@ -66,7 +66,7 @@ class CriterionController {
     */
     public function getAllCriterion() {
         $criterions = $this->CriterionModel->getAllCriterions();
-        $result = $this->CriterionView->buildCriterionsList($criterions);
+        $result = $this->CriterionView->buildCriteriaList($criterions);
         http_response_code(200);
         header("Content-Type: application/json");
         echo json_encode($result);

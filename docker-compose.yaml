@@ -1,4 +1,4 @@
-version: '2.5'
+version: '3.3'
 
 services:
   mysql:
@@ -6,7 +6,7 @@ services:
     image: mysql
     restart: on-failure
     ports:
-      - "3306:3306"
+      - "1025:3306"
     networks: 
       - database
     environment:
@@ -17,33 +17,16 @@ services:
     volumes:
       - ./mysql:/docker-entrypoint-initdb.d
   
-  myadmin:
-    container_name: sopcom-myadmin
-    image: phpmyadmin
-    restart: always
-    depends_on:
-        - mysql
-    ports:
-        - "9090:80"
-    networks: 
-        - database
-    environment: 
-        PMA_HOST: sopcom-mysql
-        PMA_PORT: 3306
-        PMA_USER: admin
-        PMA_PASSWORD: adg6pMtxO
-  
   backend:
     build:
       context: api
     container_name: sopcom-backend
     restart: always
     ports:
-      - 3000:80
+      - "1026:80"
     networks: 
       - database
 
 networks:
   database:
-    name: database
     driver: bridge

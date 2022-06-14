@@ -38,8 +38,8 @@
                                                 LEFT JOIN criterion c ON amcv.criterion = c.id
                                                 LEFT JOIN value v ON amcv.value = v.id
                                                 WHERE c.name IS NOT NULL and v.name IS NOT NULL AND mc.id = ?;";
-        private $getMethodChunkFromRelations = "SELECT cr.fromME, cr.toME FROM chunk_rel cr WHERE cr.fromMC = ?;";
-        private $getMethodChunkToRelations = "SELECT cr.fromME, cr.toME FROM chunk_rel cr WHERE cr.toMC = ?;";
+        private $getMethodChunkFromRelations = "SELECT cr.fromME, cr.toME, cr.fromMC, cr.toMC FROM chunk_rel cr WHERE cr.fromMC = ?;";
+        private $getMethodChunkToRelations = "SELECT cr.fromME, cr.toME, cr.fromMC, cr.toMC FROM chunk_rel cr WHERE cr.toMC = ?;";
         private $getMeStructRel = "SELECT msr.fromME, msr.toME, msr.rel, srt.name FROM me_struct_rel msr, struct_rel_type srt WHERE msr.fromME = ? AND msr.toME = ? AND msr.rel = srt.id;";
         private $getActRel = "SELECT ar.fromME, ar.toME, ar.rel, art.name FROM activity_rel ar, activity_rel_type art WHERE ar.fromME = ? AND ar.toME = ? AND ar.rel = art.id;";
 
@@ -123,10 +123,18 @@
             foreach($relationsFrom as $rel) {
                 $statementMeStructRel->bind_param('ss', $rel['fromME'], $rel['toME']);
                 $relsStruct = $this->executeSelectQuery($statementMeStructRel);
-                if(count($relsStruct) > 0) $result['from']['me_struct_rel'][] = $relsStruct[0];
+                if(count($relsStruct) > 0) {
+                    $relsStruct[0] += ['fromMC'=> $rel['fromMC']];
+                    $relsStruct[0] += ['toMC' => $rel['toMC']];
+                    $result['from']['me_struct_rel'][] = $relsStruct[0];
+                }
                 $statementActRel->bind_param('ss', $rel['fromME'], $rel['toME']);
                 $relsAct = $this->executeSelectQuery($statementActRel);
-                if(count($relsAct) > 0) $result['from']['activity_rel'][] = $relsAct[0];
+                if(count($relsAct) > 0) {
+                    $relsAct[0] += ['fromMC'=> $rel['fromMC']];
+                    $relsAct[0] += ['toMC' => $rel['toMC']];
+                    $result['from']['activity_rel'][] = $relsAct[0];
+                }
             }
 
             $statementRelationsTo = $this->conn->prepare($this->getMethodChunkToRelations);
@@ -137,10 +145,19 @@
                 $statementMeStructRel->bind_param('ss', $rel['fromME'], $rel['toME']);
                 $relsStruct = $this->executeSelectQuery($statementMeStructRel);
                 $relsStruct = array_filter($relsStruct, function($rel) { return $rel['rel'] != 1;});
-                if(count($relsStruct) > 0)$result['to']['me_struct_rel'][] =  $relsStruct[0];
+                if(count($relsStruct) > 0) {
+                    $relsStruct[0] += ['fromMC'=> $rel['fromMC']];
+                    $relsStruct[0] += ['toMC' => $rel['toMC']];
+                    $result['to']['me_struct_rel'][] =  $relsStruct[0];
+                }
                 $statementActRel->bind_param('ss', $rel['fromME'], $rel['toME']);
                 $relsAct = $this->executeSelectQuery($statementActRel);
-                if(count($relsAct) > 0) $result['to']['activity_rel'][] = $relsAct[0];
+                if(count($relsAct) > 0) {
+                    $relsAct[0] += ['fromMC'=> $rel['fromMC']];
+                    $relsAct[0] += ['toMC' => $rel['toMC']];
+                    var_dump($relsAct[0]);
+                    $result['to']['activity_rel'][] = $relsAct[0];
+                }
             }
             return $result;
         }
@@ -250,7 +267,7 @@
             $statement = $this->conn->prepare($this->deleteAllMethodChunkConsumedArtefacts);
             $statement->bind_param('s', $id);
             $this->executeDeleteQuery($statement);
-            $this->addNewMethodChunkProducedArtefacts($id, $artefacts);
+            $this->addNewMethodChunkConsumedArtefacts($id, $artefacts);
         }
 
         public function updateMethodChunkProducedArtefacts($id, $artefacts) {
