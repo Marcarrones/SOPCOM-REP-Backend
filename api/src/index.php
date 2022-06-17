@@ -113,14 +113,41 @@
                     break;
                 case 'DELETE':
                     if(isset($uri[2])) {
-                        $controller->deleteCriterion($uri[2]); #DELETE /criterion/:id
+                        if(isset($uri[3])){
+                            if($uri[3] == 'values' && isset($uri[4])) {
+                                $controller->deleteCriterionValue($uri[2], $uri[4]); #DELETE /criterion/:id/values/:id
+                            } else {
+                                http_response_code(404);
+                            }
+                        } else {
+                            $controller->deleteCriterion($uri[2]); #DELETE /criterion/:id
+                        }
+                    } else {
+                        http_response_code(404);
+                    }
+                    break;
+                case 'PUT':
+                    if(isset($uri[2])) {
+                        if(isset($uri[3])) {
+                            if($uri[3] == 'values' && isset($uri[4])) {
+                                $controller->updateCriterionValue($uri[2], $uri[4]); #PUT /criterion/:id/values/:id
+                            } else {
+                                http_response_code(404);
+                            }
+                        } else {
+                            $controller->updateCriterion($uri[2]); #PUT /criterion/:id
+                        }
                     } else {
                         http_response_code(404);
                     }
                     break;
                 case 'POST':
                     if(isset($uri[2])) {
-
+                        if(isset($uri[3]) && $uri[3] == 'values') {
+                            $controller->addNewCriterionValue($uri[2]); #POST /criterion/:id/values
+                        } else {
+                            http_response_code(404);
+                        }
                     } else {
                         $controller->addNewCriterion(); #POST /criterion
                     }

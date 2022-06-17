@@ -122,6 +122,7 @@ class CriterionController {
      *         @OA\Examples(example="integer", value="1", summary="An integer value."),
      *     ),
      *     @OA\Response(response="204", description="No content"),
+     *     @OA\Response(response="400", description="Bad request"),
      * )
     */
     public function deleteCriterion($id) {
@@ -169,7 +170,7 @@ class CriterionController {
                     }
      *         )
      *     ),
-     *     @OA\Response(response="202", description="Created"),
+     *     @OA\Response(response="201", description="Created"),
      * )
     */
     public function addNewCriterion() {
@@ -191,6 +192,183 @@ class CriterionController {
         } else {
             http_response_code(400);
             echo(json_encode(Array('error' => "Missing data")));
+        }
+    }
+
+    /**
+     * @OA\Put(
+     *     path="/index.php/criterion/{criterionId}", 
+     *     tags={"Criterions"},
+     *     summary="Update criterion",
+     *     description="Update criterion",
+     *     operationId="UpdateCriterion",
+     *     @OA\Parameter(
+     *         description="Id of the criterion",
+     *         in="path",
+     *         name="criterionId",
+     *         required=true,
+     *         @OA\Schema(type="integer"),
+     *         @OA\Examples(example="integer", value="1", summary="An integer value."),
+     *     ),
+     *     @OA\RequestBody(
+     *         @OA\MediaType(
+     *             mediaType="application/json",
+     *             @OA\Schema(
+     *                 @OA\Property(
+     *                     property="name",
+     *                     type="string"
+     *                 ),
+     *             ),
+     *             example={
+                        "name": "Large"
+                    }
+     *         )
+     *     ),
+     *     @OA\Response(response="201", description="Created"),
+     *     @OA\Response(response="404", description="Not found")
+     * )
+    */
+    public function updateCriterion($id) {
+        $body = json_decode(file_get_contents('php://input'), true);
+        $result = $this->CriterionModel->updateCriterion($id, $body['name']);
+        if($result == 0) {
+            http_response_code(201);
+        } else {
+            $result = Array("code" => $result);
+            http_response_code(404);
+            header("Content-Type: application/json");
+            echo json_encode($result);
+        }
+    }
+
+    /**
+     * @OA\Post(
+     *     path="/index.php/criterion/{criterionId}/values", 
+     *     tags={"Criterions"},
+     *     summary="Add new criterion value",
+     *     description="Add new criterion value",
+     *     operationId="AddNewCriterionValue",
+     *     @OA\RequestBody(
+     *         @OA\MediaType(
+     *             mediaType="application/json",
+     *             @OA\Schema(
+     *                 @OA\Property(
+     *                     property="name",
+     *                     type="string"
+     *                 ),
+     *             ),
+     *             example={
+                        "name": "Large"
+                    }
+     *         )
+     *     ),
+     *     @OA\Response(response="201", description="Created"),
+     * )
+    */
+    public function addNewCriterionValue($id) {
+        $body = json_decode(file_get_contents('php://input'), true);
+        if(isset($body['name'])) {
+            $id = $this->CriterionModel->addNewValueToCriterion($id, $body['name']);
+            http_response_code(201);
+            header("Content-Type: application/json");
+            echo(json_encode(Array('id' => $id)));
+        } else {
+            $result = Array("error" => "Missing required data");
+            http_response_code(400);
+            echo json_encode($result);
+        }
+    }
+
+    /**
+     * @OA\Put(
+     *     path="/index.php/criterion/{criterionId}/values/{valueId}", 
+     *     tags={"Criterions"},
+     *     summary="Update criterion value",
+     *     description="Update criterion value",
+     *     operationId="updateCriterionValue",
+     *     @OA\Parameter(
+     *         description="Id of the criterion",
+     *         in="path",
+     *         name="criterionId",
+     *         required=true,
+     *         @OA\Schema(type="integer"),
+     *         @OA\Examples(example="integer", value="1", summary="An integer value."),
+     *     ),
+     *     @OA\Parameter(
+     *         description="Id of the value",
+     *         in="path",
+     *         name="valueId",
+     *         required=true,
+     *         @OA\Schema(type="integer"),
+     *         @OA\Examples(example="integer", value="1", summary="An integer value."),
+     *     ),
+     *     @OA\RequestBody(
+     *         @OA\MediaType(
+     *             mediaType="application/json",
+     *             @OA\Schema(
+     *                 @OA\Property(
+     *                     property="name",
+     *                     type="string"
+     *                 ),
+     *             ),
+     *             example={
+                        "name": "Large"
+                    }
+     *         )
+     *     ),
+     *     @OA\Response(response="201", description="Created"),
+     *     @OA\Response(response="404", description="Not found")
+     * )
+    */
+    public function updateCriterionValue($idC, $idV) {
+        $body = json_decode(file_get_contents('php://input'), true);
+        $result = $this->CriterionModel->updateCriterionValue($idV, $body['name']);
+        if($result == 0) {
+            http_response_code(201);
+        } else {
+            $result = Array("code" => $result);
+            http_response_code(404);
+            header("Content-Type: application/json");
+            echo json_encode($result);
+        }
+    }
+
+    /**
+     * @OA\Delete(
+     *     path="/index.php/criterion/{criterionId}/values/{valueId}", 
+     *     tags={"Criterions"},
+     *     summary="Delete a value by id",
+     *     description="Delete a value by id",
+     *     operationId="deleteCriterionValue",
+     *     @OA\Parameter(
+     *         description="Id of the criterion",
+     *         in="path",
+     *         name="criterionId",
+     *         required=true,
+     *         @OA\Schema(type="integer"),
+     *         @OA\Examples(example="integer", value="1", summary="An integer value."),
+     *     ),
+     *     @OA\Parameter(
+     *         description="Id of the value",
+     *         in="path",
+     *         name="valueId",
+     *         required=true,
+     *         @OA\Schema(type="integer"),
+     *         @OA\Examples(example="integer", value="1", summary="An integer value."),
+     *     ),
+     *     @OA\Response(response="204", description="No content"),
+     *     @OA\Response(response="400", description="Bad request"),
+     * )
+    */
+    public function deleteCriterionValue($idC, $idV) {
+        $result = $this->CriterionModel->deleteCriterionValue($idV);
+        if($result == 0) {
+            http_response_code(204);
+        } else {
+            $result = Array("code" => $result);
+            http_response_code(400);
+            header("Content-Type: application/json");
+            echo json_encode($result);
         }
     }
 

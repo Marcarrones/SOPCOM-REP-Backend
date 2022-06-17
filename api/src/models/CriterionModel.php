@@ -7,7 +7,12 @@
         private $deleteCriterion = "DELETE FROM criterion WHERE id = ?;";
 
         private $addNewCriterion = "INSERT INTO criterion (name) VALUES (?);";
+
+        private $updateCriterion = "UPDATE criterion SET name = ? WHERE id = ?";
+
         private $addNewValueToCriterion = "INSERT INTO value (name, criterion) VALUES (?, ?);";
+        private $updateCriterionValue = "UPDATE value SET name = ? WHERE id = ?;";
+        private $deleteCriterionValue = "DELETE FROM value WHERE id = ?;";
 
         private $getCriterion = "SELECT c.id, c.name FROM criterion c WHERE id = ?;";
         private $getCriterionValues = "SELECT v.id, v.name FROM value v WHERE v.criterion = ?;";
@@ -41,9 +46,27 @@
             return $this->executeInsertQuery($statement);
         }
 
+        public function updateCriterion($id, $name) {
+            $statement = $this->conn->prepare($this->updateCriterion);
+            $statement->bind_param('si', $name, $id);
+            return $this->executeInsertQuery($statement);
+        }
+
         public function addNewValueToCriterion($id, $name) {
             $statement = $this->conn->prepare($this->addNewValueToCriterion);
             $statement->bind_param('si', $name, $id);
+            return $this->executeInsertQuery($statement);
+        }
+
+        public function updateCriterionValue($id, $name) {
+            $statement = $this->conn->prepare($this->updateCriterionValue);
+            $statement->bind_param('si', $name, $id);
+            return $this->executeInsertQuery($statement);
+        }
+
+        public function deleteCriterionValue($id) {
+            $statement = $this->conn->prepare($this->deleteCriterionValue);
+            $statement->bind_param('i', $id);
             return $this->executeInsertQuery($statement);
         }
     }
