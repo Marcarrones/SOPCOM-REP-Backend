@@ -64,16 +64,23 @@
             return $this->executeInsertQuery($statement);
         }
 
-        public function deleteCriterionValue($id) {
-            $statementExists = $this->conn->prepare("SELECT * FROM assign_method_chunk_value WHERE value = ?");
-            $statementExists->bind_param('i', $id);
-            $num = $this->executeSelectQuery($statementExists);
-            if(count($num) > 0) {
+        public function deleteCriterionValue($idC, $idV) {
+            $statementExists = $this->conn->prepare("SELECT * FROM assign_method_chunk_value WHERE value = ?;");
+            $statementExists->bind_param('i', $idV);
+            $numValsMC = $this->executeSelectQuery($statementExists);
+            $statementNumVals = $this->conn->prepare("SELECT * FROM value WHERE criterion = ?;");
+            $statementNumVals->bind_param('i', $idC);
+            $numValsCriterion = $this->executeSelectQuery($statementNumVals);
+            if(count($numValsMC) > 0) {
                 return "Can not delete value. Remove all method chunks assigned to this value.";
             } else {
-                $statement = $this->conn->prepare($this->deleteCriterionValue);
-                $statement->bind_param('i', $id);
-                return $this->executeInsertQuery($statement);
+                if(count($numValsCriterion) > 2){
+                    $statement = $this->conn->prepare($this->deleteCriterionValue);
+                    $statement->bind_param('i', $idV);
+                    return $this->executeInsertQuery($statement);
+                } else {
+                    return "Can not delete value. A criterion must have at least 2 values";
+                }
             }
         }
     }
