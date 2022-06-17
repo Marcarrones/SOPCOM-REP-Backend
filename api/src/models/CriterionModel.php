@@ -65,9 +65,16 @@
         }
 
         public function deleteCriterionValue($id) {
-            $statement = $this->conn->prepare($this->deleteCriterionValue);
-            $statement->bind_param('i', $id);
-            return $this->executeInsertQuery($statement);
+            $statementExists = $this->conn->prepare("SELECT * FROM assign_method_chunk_value WHERE value = ?");
+            $statementExists->bind_param('i', $id);
+            $num = $this->executeSelectQuery($statementExists);
+            if(count($num) > 0) {
+                return "Can not delete value. Remove all method chunks assigned to this value.";
+            } else {
+                $statement = $this->conn->prepare($this->deleteCriterionValue);
+                $statement->bind_param('i', $id);
+                return $this->executeInsertQuery($statement);
+            }
         }
     }
 

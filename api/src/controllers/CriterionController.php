@@ -365,7 +365,7 @@ class CriterionController {
         if($result == 0) {
             http_response_code(204);
         } else {
-            $result = Array("code" => $result);
+            $result = Array("error" => $result);
             http_response_code(400);
             header("Content-Type: application/json");
             echo json_encode($result);
