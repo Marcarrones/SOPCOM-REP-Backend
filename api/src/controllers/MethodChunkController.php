@@ -167,7 +167,7 @@ class MethodChunkController {
      *         @OA\Examples(example="string", value="Chu-ReqEli-01", summary="A string value."),
      *     ),
      *     @OA\Response(response="201", description="Created"),
-     *     @OA\Response(response="404", description="Not found")
+     *     @OA\Response(response="400", description="Not found")
      * )
     */
     public function updateMethodChunk($id) {
@@ -182,7 +182,7 @@ class MethodChunkController {
             http_response_code(201);
         } else {
             $result = Array("code" => $result);
-            http_response_code(404);
+            http_response_code(400);
             header("Content-Type: application/json");
             echo json_encode($result);
         }

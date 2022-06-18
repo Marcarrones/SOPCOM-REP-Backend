@@ -222,6 +222,12 @@ require $_SERVER['DOCUMENT_ROOT'] . '/config/config.php';
             return $this->executeUpdateQuery($statement);
         }
 
+        public function checkIfHasSpecRels($id) {
+            $statement = $this->conn->prepare("SELECT * FROM me_struct_rel WHERE toME = ?;");
+            $statement->bind_param('s', $id);
+            return count($this->executeSelectQuery($statement)) > 0;
+        }
+
         public function deleteAllRelationsFrom($id) {
             $statement = $this->conn->prepare($this->deleteAllRelationsFrom);
             $statement->bind_param('s', $id);

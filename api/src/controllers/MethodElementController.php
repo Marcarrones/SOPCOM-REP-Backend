@@ -268,30 +268,38 @@ class MethodElementController {
      *         @OA\Examples(example="string", value="Chu-ReqEli-01", summary="A string value."),
      *     ),
      *     @OA\Response(response="201", description="Created"),
-     *     @OA\Response(response="404", description="Not found")
+     *     @OA\Response(response="400", description="Not found")
      * )
     */
     public function updateMethodElement($id) {
         $body = json_decode(file_get_contents('php://input'), true);
-        $result = $this->MethodElementModel->updateMethodElement($id, $body['name'], $body['abstract'], $body['description'], $body['figure']);
-        if($result == 0) {
-            $this->MethodElementModel->deleteAllRelationsFrom($id);
-            if(isset($body['me_struct_rel'])) {
-                $this->MethodElementModel->updateMethodElementStructRel($id, $body['me_struct_rel']);
-            }
-            if($body['type'] == 3 && isset($body['activity_rel'])) {
-                $this->MethodElementModel->updateMethodElementActivityRel($id, $body['activity_rel']);
-            }
-            if($body['type'] == 2 && isset($body['artefact_rel'])) {
-                $this->MethodElementModel->updateMethodElementArtefactRel($id, $body['artefact_rel']);
-            }
-            http_response_code(201);
-        } else {
-            $result = Array("code" => $result);
-            http_response_code(404);
+        if($body['abstract'] == false && $this->MethodElementModel->checkIfHasSpecRels($id)) {
+            $result = Array("error" => "Can not set abstract to false while being specialized");
+            http_response_code(400);
             header("Content-Type: application/json");
             echo json_encode($result);
+        } else {
+            $result = $this->MethodElementModel->updateMethodElement($id, $body['name'], $body['abstract'], $body['description'], $body['figure']);
+            if($result == 0) {
+                $res = $this->MethodElementModel->deleteAllRelationsFrom($id);
+                if(isset($body['me_struct_rel'])) {
+                    $this->MethodElementModel->updateMethodElementStructRel($id, $body['me_struct_rel']);
+                }
+                if($body['type'] == 3 && isset($body['activity_rel'])) {
+                    $this->MethodElementModel->updateMethodElementActivityRel($id, $body['activity_rel']);
+                }
+                if($body['type'] == 2 && isset($body['artefact_rel'])) {
+                    $this->MethodElementModel->updateMethodElementArtefactRel($id, $body['artefact_rel']);
+                }
+                http_response_code(201);
+            } else {
+                $result = Array("error" => $result);
+                http_response_code(400);
+                header("Content-Type: application/json");
+                echo json_encode($result);
+            }
         }
+        
     }
 
     public function addMethodElementImage($id) {
@@ -299,7 +307,7 @@ class MethodElementController {
         if(!is_array($result)) {
             http_response_code(201);
         } else {
-            http_response_code(404);
+            http_response_code(400);
             header("Content-Type: application/json");
             echo json_encode($result);
         }
