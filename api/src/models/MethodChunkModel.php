@@ -185,7 +185,7 @@
             $result = $this->executeInsertQuery($statement);
             if($result == 0) {
                 $statementRelations = $this->conn->prepare($this->getProcessPartRelations);
-                $statementRelations->bind_param('ss', $id, $id);
+                $statementRelations->bind_param('ss', $activity, $activity);
                 $relations = $this->executeSelectQuery($statementRelations);
                 $statementIdRel = $this->conn->prepare($this->getMethodChunkIdFromActivity);
                 $statementChunkRel = $this->conn->prepare($this->addChunkRel);
