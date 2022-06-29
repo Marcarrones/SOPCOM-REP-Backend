@@ -11,9 +11,9 @@ services:
       - database
     environment:
       MYSQL_DATABASE: sopcom_mysql
-      MYSQL_USER: admin
-      MYSQL_PASSWORD: adg6pMtxO
-      MYSQL_ROOT_PASSWORD: example
+      MYSQL_USER: 
+      MYSQL_PASSWORD: 
+      MYSQL_ROOT_PASSWORD: 
     volumes:
       - ./mysql:/docker-entrypoint-initdb.d
   

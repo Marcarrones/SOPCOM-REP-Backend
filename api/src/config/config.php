@@ -4,8 +4,8 @@ $config = Array(
     'database' => Array(
         'host' => "mysql",
         'bd' => "sopcom_mysql",
-        'user' => "admin",
-        'pw' => "adg6pMtxO",
+        'user' => "",
+        'pw' => "",
     ),
 
     'paths' => Array(

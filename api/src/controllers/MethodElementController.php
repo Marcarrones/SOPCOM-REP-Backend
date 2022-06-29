@@ -233,23 +233,29 @@ class MethodElementController {
         $body = json_decode(file_get_contents('php://input'), true);
         if(isset($body['id']) && isset($body['name']) && isset($body['abstract']) && isset($body['type']) && $body['type'] <= 4 && $body['type'] >= 1) {
             $id = $this->MethodElementModel->addNewMethodElement($body['id'], $body['name'], $body['abstract'], $body['description'], $body['figure'], $body['type']);
-            if(isset($body['me_struct_rel'])) {
-                $this->MethodElementModel->addMethodElementMeStructRel($id, $body['me_struct_rel']);
+            if(!is_array($id)) {
+                if(isset($body['me_struct_rel'])) {
+                    $this->MethodElementModel->addMethodElementMeStructRel($id, $body['me_struct_rel']);
+                }
+                if($body['type'] == 3 && isset($body['activity_rel'])) {
+                    $this->MethodElementModel->addMethodElementActivityRel($id, $body['activity_rel']);
+                }
+                if($body['type'] == 2 && isset($body['artefact_rel'])) {
+                    $this->MethodElementModel->addMethodElementArtefactRel($id, $body['artefact_rel']);
+                }
+                $result = $id;
+                http_response_code(201);
+                header("Content-Type: application/json");
+                echo json_encode(Array('id' => $result));
+            } else {
+                http_response_code(200);
+                header("Content-Type: application/json");
+                echo json_encode(Array($id));
             }
-            if($body['type'] == 3 && isset($body['activity_rel'])) {
-                $this->MethodElementModel->addMethodElementActivityRel($id, $body['activity_rel']);
-            }
-            if($body['type'] == 2 && isset($body['artefact_rel'])) {
-                $this->MethodElementModel->addMethodElementArtefactRel($id, $body['artefact_rel']);
-            }
-            $result = $id;
-            http_response_code(201);
         } else {
             $result = Array("error" => "Missing required data");
             http_response_code(400);
         }
-        header("Content-Type: application/json");
-        echo json_encode(Array('id' => $result));
     }
 
     /**
