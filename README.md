@@ -1,5 +1,6 @@
 # SOPCOM
 
+
 # Deploy the application
 'docker-compose -f docker-compose.yaml up --remove-orphans -d'
 
