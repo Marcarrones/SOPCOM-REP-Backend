@@ -51,10 +51,35 @@ CREATE TABLE role (
         ON DELETE CASCADE
 );
 
+
+CREATE TABLE map (
+    id VARCHAR(50),
+    name VARCHAR(100) NOT NULL,
+    PRIMARY KEY (id),
+);
+
 CREATE TABLE goal (
     id INT AUTO_INCREMENT,
     name VARCHAR(50) UNIQUE,
-    PRIMARY KEY (id)
+    map INT,
+    PRIMARY KEY (id),
+    FOREIGN KEY (map)
+        REFERENCES map(id)
+        ON DELETE NO ACTION
+);
+
+CREATE TABLE strategy (
+    id VARCHAR(50),
+    name VARCHAR(100) NOT NULL,
+    goal_tgt INT,
+    goal_src INT,
+    PRIMARY KEY (id),
+    FOREIGN KEY (goal_tgt)
+        REFERENCES goal(id)
+        ON DELETE NO ACTION
+     FOREIGN KEY (goal_src)
+        REFERENCES goal(id)
+        ON DELETE NO ACTION
 );
 
 CREATE TABLE method_chunk (
@@ -62,13 +87,17 @@ CREATE TABLE method_chunk (
     name VARCHAR(100) NOT NULL,
     description VARCHAR(200) NOT NULL,
     activity VARCHAR(50) UNIQUE,
-    intention INT NOT NULL,
+    intention INT,
+    strategy INT,
     PRIMARY KEY (id),
-    FOREIGN KEY (activity) 
-		REFERENCES activity(id)
+    FOREIGN KEY (activity)
+        REFERENCES activity(id)
         ON DELETE NO ACTION,
-	FOREIGN KEY (intention)
-		REFERENCES goal(id)
+    FOREIGN KEY (intention)
+        REFERENCES goal(id)
+        ON DELETE NO ACTION
+    FOREIGN KEY (strategy)
+        REFERENCES strategy(id)
         ON DELETE NO ACTION
 );
 
@@ -257,3 +286,6 @@ CREATE TABLE chunk_rel (
 		REFERENCES me_rel(fromME, toME)
         ON DELETE CASCADE
 );
+
+
+
