@@ -55,17 +55,17 @@ CREATE TABLE role (
 CREATE TABLE map (
     id VARCHAR(50),
     name VARCHAR(100) NOT NULL,
-    PRIMARY KEY (id),
+    PRIMARY KEY (id)
 );
 
 CREATE TABLE goal (
     id INT AUTO_INCREMENT,
     name VARCHAR(50) UNIQUE,
-    map INT,
+    map VARCHAR(50),
     PRIMARY KEY (id),
     FOREIGN KEY (map)
         REFERENCES map(id)
-        ON DELETE NO ACTION
+        ON DELETE CASCADE
 );
 
 CREATE TABLE strategy (
@@ -76,10 +76,10 @@ CREATE TABLE strategy (
     PRIMARY KEY (id),
     FOREIGN KEY (goal_tgt)
         REFERENCES goal(id)
-        ON DELETE NO ACTION
+        ON DELETE CASCADE,
      FOREIGN KEY (goal_src)
         REFERENCES goal(id)
-        ON DELETE NO ACTION
+        ON DELETE CASCADE
 );
 
 CREATE TABLE method_chunk (
@@ -88,18 +88,19 @@ CREATE TABLE method_chunk (
     description VARCHAR(200) NOT NULL,
     activity VARCHAR(50) UNIQUE,
     intention INT,
-    strategy INT,
+    strategy VARCHAR(50),
     PRIMARY KEY (id),
     FOREIGN KEY (activity)
         REFERENCES activity(id)
         ON DELETE NO ACTION,
     FOREIGN KEY (intention)
         REFERENCES goal(id)
-        ON DELETE NO ACTION
+        ON DELETE SET NULL,
     FOREIGN KEY (strategy)
         REFERENCES strategy(id)
-        ON DELETE NO ACTION
+        ON DELETE SET NULL
 );
+
 
 CREATE TABLE method_chunk_uses_tool(
     idMC VARCHAR(50),

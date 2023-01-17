@@ -8,6 +8,7 @@
     require $_SERVER['DOCUMENT_ROOT'] . '/controllers/CriterionController.php';
     require $_SERVER['DOCUMENT_ROOT'] . '/controllers/GoalController.php';
     require $_SERVER['DOCUMENT_ROOT'] . '/controllers/MethodChunkController.php';
+    require $_SERVER['DOCUMENT_ROOT'] . '/controllers/MapController.php';
 
     $uri = explode('/', parse_url($_SERVER['PATH_INFO'], PHP_URL_PATH));
 	$method = $_SERVER['REQUEST_METHOD'];
@@ -177,6 +178,25 @@
                     break;
             }
             break;
+
+        case 'maps':
+            $controller = new MapController();
+            switch($method) {
+                case 'GET':
+                    $controller->getAllMaps();
+                    break;
+                case 'POST':
+                    $controller->addNewMap(); 
+                    break;
+                case 'OPTIONS':
+                    http_response_code(200);
+                    break;
+                default:
+                    http_response_code(404);
+                    break;
+            }
+            break;
+
         default:
             http_response_code(404);
             break;
