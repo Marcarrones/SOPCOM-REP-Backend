@@ -183,17 +183,29 @@
             $controller = new MapController();
             switch($method) {
                 case 'GET':
-                    $controller->getAllMaps();
+                    if(isset($uri[2])) {
+                        $controller->getMap($uri[2]);
+                    } else {
+                        $controller->getAllMaps();
+                    }
                     break;
                 case 'POST':
                     $controller->addNewMap(); 
                     break;
+                case 'DELETE':
+                    if(isset($uri[2])) {
+                        $controller->deleteMap($uri[2]);
+                    } else {
+                        http_response_code(404);
+                    }
+                    break;    
                 case 'OPTIONS':
                     http_response_code(200);
                     break;
                 default:
                     http_response_code(404);
                     break;
+                
             }
             break;
 
