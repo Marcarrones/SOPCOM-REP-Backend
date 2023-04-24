@@ -54,13 +54,16 @@ CREATE TABLE role (
 
 CREATE TABLE map (
     id VARCHAR(50),
-    name VARCHAR(100) NOT NULL,
+    name VARCHAR(50) NOT NULL,
+    pruebas json,
     PRIMARY KEY (id)
 );
 
 CREATE TABLE goal (
     id INT AUTO_INCREMENT,
     name VARCHAR(50) UNIQUE,
+    x VARCHAR(50),
+    y VARCHAR(50),
     map VARCHAR(50),
     PRIMARY KEY (id),
     FOREIGN KEY (map)
@@ -70,15 +73,17 @@ CREATE TABLE goal (
 
 CREATE TABLE strategy (
     id VARCHAR(50),
+    x VARCHAR(50),
+    y VARCHAR(50),
     name VARCHAR(100) NOT NULL,
-    goal_tgt INT,
-    goal_src INT,
+    goal_tgt VARCHAR(50),
+    goal_src VARCHAR(50),
     PRIMARY KEY (id),
     FOREIGN KEY (goal_tgt)
-        REFERENCES goal(id)
+        REFERENCES goal(name)
         ON DELETE CASCADE,
      FOREIGN KEY (goal_src)
-        REFERENCES goal(id)
+        REFERENCES goal(name)
         ON DELETE CASCADE
 );
 

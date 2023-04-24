@@ -2,13 +2,15 @@
 
     class Map extends Model {
 
-        private $getAllMaps = "SELECT m.id, m.name FROM map m;";   
+        private $getAllMaps = "SELECT m.id, m.name, m.pruebas FROM map m;";   
 
         private $deleteMap = "DELETE FROM map WHERE id = ?;";
 
-        private $getMap = "SELECT m.id, m.name FROM map m WHERE id = ?;";
+        private $getMap = "SELECT m.id, m.name, m.pruebas FROM map m WHERE id = ?;";
 
-        private $addNewMap = "INSERT INTO map (id, name) VALUES (?, ?);";
+        private $getMapWithGoals = "SELECT g.id, g.name, g.x, g.y, g.map FROM goal g WHERE g.map = ?;";
+
+        private $addNewMap = "INSERT INTO map (id, name, pruebas) VALUES (?, ?, ?);";
 
         
         public function getAllMaps() {
@@ -23,6 +25,12 @@
             return $this->executeSelectQuery($statement);
         }
 
+        public function getMapWithGoals($id) {
+            $statement = $this->conn->prepare($this->getMapWithGoals);
+            $statement->bind_param('s', $id);
+            return $this->executeSelectQuery($statement);
+        }
+
 
         public function deleteMap($id) {
             $statement = $this->conn->prepare($this->deleteMap);
@@ -30,9 +38,9 @@
             return $this->executeDeleteQuery($statement);
         }
 
-        public function addNewMap($id, $name) {
+        public function addNewMap($id, $name, $pruebas) {
             $statement = $this->conn->prepare($this->addNewMap);
-            $statement->bind_param('ss', $id, $name);
+            $statement->bind_param('sss', $id, $name, $pruebas);
             return $this->executeInsertQuery($statement);
         }
     }

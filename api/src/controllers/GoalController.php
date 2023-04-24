@@ -1,6 +1,8 @@
 <?php
 
 include $_SERVER['DOCUMENT_ROOT'] . '/models/GoalModel.php';
+include $_SERVER['DOCUMENT_ROOT'] . '/views/GoalView.php';
+
 
 class GoalController {
 
@@ -9,6 +11,7 @@ class GoalController {
     function __construct()
     {
         $this->GoalModel = new Goal();
+        $this->GoalView  = new GoalView();
     }
 
     /**
@@ -78,13 +81,42 @@ class GoalController {
     */
     public function addNewGoal() {
         $body = json_decode(file_get_contents('php://input'), true);
-        if(isset($body['name'])) {
-            $result = $this->GoalModel->addNewGoal($body['name']);
+        if(isset($body['name']) && isset($body['map']) && isset($body['x']) && isset($body['y'])) {
+            $result = $this->GoalModel->addNewGoalWithCoord($body['name'], $body['map'], $body['x'], $body['y']);
             echo(json_encode(Array('id' => $result)));
+            http_response_code(201);
+        }else if(isset($body['name']) && isset($body['map'])) {
+            $result = $this->GoalModel->addNewGoalWithMap($body['name'], $body['map']);
+            echo(json_encode(Array('id' => $result)));
+            http_response_code(201);
+        }else if(isset($body['name'])){
+            print($body['map']);
+            $result = $this->GoalModel->addNewGoal($body['name']);
+            echo(json_encode(Array('idd' => $result)));
             http_response_code(201);
         } else {
             http_response_code(400);
             echo(json_encode(Array('error' => "Missing name body parameter")));
         }
     }
+
+
+
+    public function getGoal($id) {
+        $goal = $this->GoalModel->getGoal($id);
+        if(count($goal) > 0) {
+            $result = $this->GoalView->buildGoal($goal);
+            http_response_code(200);
+            header("Content-Type: application/json");
+            echo json_encode($result);
+        } else {
+            header("Content-Type: application/json");
+            http_response_code(404);
+            echo json_encode(Array("error" => "No criterion found with id $id."));
+        }
+    }
+
+
+   
+    
 }

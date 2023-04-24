@@ -38,6 +38,20 @@ class MapController {
     }
 
 
+    public function getMapWithGoals($id) {
+        $map = $this->MapModel->getMapWithGoals($id);
+        if(count($map) > 0) {
+            //$result = $this->MapView->buildGoalList($map);
+            http_response_code(200);
+            header("Content-Type: application/json");
+            echo json_encode($map);
+        } else {
+            header("Content-Type: application/json");
+            http_response_code(404);
+            echo json_encode(Array("error" => "No criterion found with id $id."));
+        }
+    }
+
     public function deleteMap($id) {
         $result = $this->MapModel->deleteMap($id);
         if($result == 0) {
@@ -55,7 +69,7 @@ class MapController {
     public function addNewMap() {
         $body = json_decode(file_get_contents('php://input'), true);
         if(isset($body['id']) && isset($body['name'])) {
-            $result = $this->MapModel->addNewMap($body['id'], $body['name']);
+            $result = $this->MapModel->addNewMap($body['id'], $body['name'], $body['pruebas']);
             echo(json_encode(Array('id' => $result)));
             http_response_code(201);
         } else {

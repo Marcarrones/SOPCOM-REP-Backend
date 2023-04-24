@@ -9,6 +9,7 @@
     require $_SERVER['DOCUMENT_ROOT'] . '/controllers/GoalController.php';
     require $_SERVER['DOCUMENT_ROOT'] . '/controllers/MethodChunkController.php';
     require $_SERVER['DOCUMENT_ROOT'] . '/controllers/MapController.php';
+    require $_SERVER['DOCUMENT_ROOT'] . '/controllers/StrategyController.php';
 
     $uri = explode('/', parse_url($_SERVER['PATH_INFO'], PHP_URL_PATH));
 	$method = $_SERVER['REQUEST_METHOD'];
@@ -165,8 +166,14 @@
             $controller = new GoalController();
             switch($method) {
                 case 'GET':
-                    $controller->getAllGoals(); # GET /goal
+                    if(isset($uri[2])) {
+                        $controller->getGoal($uri[2]);
+                    }else{
+                        $controller->getAllGoals(); # GET /goal
+                    }
                     break;
+
+                    
                 case 'POST':
                     $controller->addNewGoal(); #POST /goal
                     break;
@@ -179,11 +186,31 @@
             }
             break;
 
+        case 'strategy':
+            $controller = new StrategyController();
+            switch($method) {
+                case 'GET':
+                    $controller->getAllStrategies(); # GET /goal
+                    break;
+                case 'POST':
+                     $controller->addNewStrategy(); #POST /goal
+                    break;
+                case 'OPTIONS':
+                    http_response_code(200);
+                    break;
+                default:
+                    http_response_code(404);
+                    break;
+                }
+                break;
+
         case 'maps':
             $controller = new MapController();
             switch($method) {
                 case 'GET':
-                    if(isset($uri[2])) {
+                    if(isset($uri[3]) && $uri[3] == 'goals') {
+                        $controller->getMapWithGoals($uri[2]);
+                    }else if(isset($uri[2])) {
                         $controller->getMap($uri[2]);
                     } else {
                         $controller->getAllMaps();
