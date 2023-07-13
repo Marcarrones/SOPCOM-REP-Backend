@@ -117,6 +117,31 @@ class GoalController {
     }
 
 
+
+
+    public function goalStrategies($name) {
+        $result = $this->GoalModel->goalStrategies($name);
+        http_response_code(200);
+        header("Content-Type: application/json");
+        echo json_encode($result);
+
+    }
+
+
+    public function updateGoal($id) {
+        $body = json_decode(file_get_contents('php://input'), true);
+        $result = $this->GoalModel->updateGoal($id, $body['name']);
+        if($result == 0) {
+            http_response_code(201);
+        } else {
+            $result = Array("code" => $result);
+            http_response_code(404);
+            header("Content-Type: application/json");
+            echo json_encode($result);
+        }
+    }
+
+  
    
     
 }

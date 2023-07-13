@@ -80,5 +80,18 @@ class MapController {
     
 
 
+    public function updateMap($id) {
+        $body = json_decode(file_get_contents('php://input'), true);
+        $result = $this->MapModel->updateMap($body['pruebas'], $id);
+        if($result == 0) {
+            http_response_code(201);
+        } else {
+            $result = Array("code" => $result);
+            http_response_code(404);
+            header("Content-Type: application/json");
+            echo json_encode($result);
+        }
+    }
+
     
 }

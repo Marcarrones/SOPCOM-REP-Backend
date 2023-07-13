@@ -6,6 +6,7 @@ include "../controllers/CriterionController.php";
 include "../controllers/GoalController.php";
 include "../controllers/MethodChunkController.php";
 include "../controllers/MapController.php";
+include "../controllers/StrategyController.php";
 
 $openapi = \OpenApi\Generator::scan(['../controllers']);
 

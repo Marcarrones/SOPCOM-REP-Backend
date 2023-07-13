@@ -166,14 +166,19 @@
             $controller = new GoalController();
             switch($method) {
                 case 'GET':
-                    if(isset($uri[2])) {
-                        $controller->getGoal($uri[2]);
+                    if(isset($uri[3]) && $uri[3] == 'strategies') {
+                        //print($uri[2]);
+                        //print(gettype($uri[2]));
+                        $controller->goalStrategies($uri[2]); # GET /goal/:name/strategies
+                    }else if(isset($uri[2])) {
+                        $controller->getGoal($uri[2]); # GET /goal/:name
                     }else{
-                        $controller->getAllGoals(); # GET /goal
+                        $controller->getAllGoals(); #GET /goal
                     }
                     break;
-
-                    
+                case 'PUT':
+                    $controller->updateGoal($uri[2]); #PUT /goal/:name                       
+                    break;              
                 case 'POST':
                     $controller->addNewGoal(); #POST /goal
                     break;
@@ -190,10 +195,10 @@
             $controller = new StrategyController();
             switch($method) {
                 case 'GET':
-                    $controller->getAllStrategies(); # GET /goal
+                    $controller->getAllStrategies(); #GET /strategy
                     break;
                 case 'POST':
-                     $controller->addNewStrategy(); #POST /goal
+                     $controller->addNewStrategy(); #POST /strategy
                     break;
                 case 'OPTIONS':
                     http_response_code(200);
@@ -209,19 +214,22 @@
             switch($method) {
                 case 'GET':
                     if(isset($uri[3]) && $uri[3] == 'goals') {
-                        $controller->getMapWithGoals($uri[2]);
+                        $controller->getMapWithGoals($uri[2]); #GET /maps/:id/goals
                     }else if(isset($uri[2])) {
-                        $controller->getMap($uri[2]);
+                        $controller->getMap($uri[2]); #GET /maps/:id
                     } else {
-                        $controller->getAllMaps();
+                        $controller->getAllMaps(); #GET /maps
                     }
                     break;
                 case 'POST':
-                    $controller->addNewMap(); 
+                    $controller->addNewMap(); #POST /maps
+                    break;
+                case 'PUT':
+                    $controller->updateMap($uri[2]); #PUT /maps/:id                       
                     break;
                 case 'DELETE':
                     if(isset($uri[2])) {
-                        $controller->deleteMap($uri[2]);
+                        $controller->deleteMap($uri[2]); #DELETE /maps/:id
                     } else {
                         http_response_code(404);
                     }
