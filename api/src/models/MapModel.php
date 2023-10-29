@@ -14,7 +14,7 @@
 
         private $addNewMap = "INSERT INTO map (id, name, pruebas) VALUES (?, ?, ?);";
 
-        private $updateMap = "UPDATE map SET pruebas = ? WHERE id = ?";
+        private $updateMap = "UPDATE map SET name = ? WHERE id = ?";
 
 
         
@@ -54,9 +54,9 @@
             return $this->executeInsertQuery($statement);
         }
 
-        public function updateMap($pruebas, $id) {
+        public function updateMap($name, $id) {
             $statement = $this->conn->prepare($this->updateMap);
-            $statement->bind_param('si', $pruebas, $id);
+            $statement->bind_param('si', $name, $id);
             return $this->executeInsertQuery($statement);
         }
     }

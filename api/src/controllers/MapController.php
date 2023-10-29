@@ -62,8 +62,8 @@ class MapController {
             echo json_encode($map);
         } else {
             header("Content-Type: application/json");
-            http_response_code(404);
-            echo json_encode(Array("error" => "No criterion found with id $id."));
+            http_response_code(200);
+            echo json_encode(0);
         }
     }
 
@@ -99,7 +99,7 @@ class MapController {
 
     public function updateMap($id) {
         $body = json_decode(file_get_contents('php://input'), true);
-        $result = $this->MapModel->updateMap($body['pruebas'], $id);
+        $result = $this->MapModel->updateMap($body['name'], $id);
         if($result == 0) {
             http_response_code(201);
         } else {
