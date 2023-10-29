@@ -170,7 +170,9 @@
                         //print($uri[2]);
                         //print(gettype($uri[2]));
                         $controller->goalStrategies($uri[2]); # GET /goal/:name/strategies
-                    }else if(isset($uri[2])) {
+                    }else if(isset($uri[2]) && $uri[2] == "nomap") {
+                        $controller->getGoalsWithoutMap(); # GET /goal/nomap
+                    }else if(isset($uri[2])){
                         $controller->getGoal($uri[2]); # GET /goal/:name
                     }else{
                         $controller->getAllGoals(); #GET /goal
@@ -181,6 +183,13 @@
                     break;              
                 case 'POST':
                     $controller->addNewGoal(); #POST /goal
+                    break;
+                case 'DELETE':
+                    if(isset($uri[2])) {
+                        $controller->deleteGoalfromMap($uri[2]); #DELETE /goal/:id
+                    } else {
+                        http_response_code(404);
+                    }
                     break;
                 case 'OPTIONS':
                     http_response_code(200);
@@ -198,8 +207,11 @@
                     $controller->getAllStrategies(); #GET /strategy
                     break;
                 case 'POST':
-                     $controller->addNewStrategy(); #POST /strategy
+                    $controller->addNewStrategy(); #POST /strategy
                     break;
+                case 'PUT':
+                    $controller->updateStrategy($uri[2]); #PUT /strategy/:id                       
+                    break; 
                 case 'OPTIONS':
                     http_response_code(200);
                     break;
@@ -215,6 +227,8 @@
                 case 'GET':
                     if(isset($uri[3]) && $uri[3] == 'goals') {
                         $controller->getMapWithGoals($uri[2]); #GET /maps/:id/goals
+                    }else if(isset($uri[3]) && $uri[3] == 'strategies'){
+                        $controller->getMapStrategies($uri[2]);
                     }else if(isset($uri[2])) {
                         $controller->getMap($uri[2]); #GET /maps/:id
                     } else {

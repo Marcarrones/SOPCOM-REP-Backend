@@ -3,6 +3,8 @@
     class Goal extends Model {
 
         private $getAllGoals = "SELECT g.id, g.name, g.map, g.x, g.y FROM goal g;";
+        
+        private $getGoalsWithoutMap = "SELECT g.id, g.name FROM goal g WHERE g.map IS null;";
 
         private $addNewGoal = "INSERT INTO goal (name) VALUES (?);";
 
@@ -14,7 +16,12 @@
         
         private $goalStrategies = "SELECT s.id, s.name, s.x, s.y, s.goal_tgt, s.goal_src FROM strategy s WHERE goal_src = ?;";
 
-        private $updateGoal = "UPDATE goal SET name = ? WHERE name = ?";
+        private $updateGoal = "UPDATE goal SET name = ?, x = ?, y = ? WHERE id = ?";
+
+        private $updatePos = "UPDATE goal SET x = ?, y = ? WHERE id = ?";
+
+        private $deleteGoalfromMap = "DELETE FROM goal WHERE id = ?;";
+
 
 
         
@@ -58,13 +65,28 @@
         }
 
 
-        public function updateGoal($name_actual, $name_nou) {
+        public function updateGoal($id, $name_nou, $x, $y) {
             $statement = $this->conn->prepare($this->updateGoal);
-            $statement->bind_param('si', $name_nou, $name_actual);
+            $statement->bind_param('sssi', $name_nou, $x, $y, $id);
             return $this->executeInsertQuery($statement);
         }
 
+        public function updatePos($id, $x, $y) {
+            $statement = $this->conn->prepare($this->updatePos);
+            $statement->bind_param('ssi', $x, $y, $id);
+            return $this->executeInsertQuery($statement);
+        }
 
+        public function deleteGoalfromMap($id) {
+            $statement = $this->conn->prepare($this->deleteGoalfromMap);
+            $statement->bind_param('i', $id);
+            return $this->executeDeleteQuery($statement);
+        }
+
+        public function getGoalsWithoutMap() {
+            $statement = $this->conn->prepare($this->getGoalsWithoutMap);
+            return $this->executeSelectQuery($statement);
+        }
 
 
     }

@@ -52,6 +52,23 @@ class MapController {
         }
     }
 
+
+    public function getMapStrategies($id) {
+        $map = $this->MapModel->getMapStrategies($id);
+        if(count($map) > 0) {
+            //$result = $this->MapView->buildGoalList($map);
+            http_response_code(200);
+            header("Content-Type: application/json");
+            echo json_encode($map);
+        } else {
+            header("Content-Type: application/json");
+            http_response_code(404);
+            echo json_encode(Array("error" => "No criterion found with id $id."));
+        }
+    }
+
+
+
     public function deleteMap($id) {
         $result = $this->MapModel->deleteMap($id);
         if($result == 0) {

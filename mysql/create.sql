@@ -61,7 +61,7 @@ CREATE TABLE map (
 
 CREATE TABLE goal (
     id INT AUTO_INCREMENT,
-    name VARCHAR(50) UNIQUE,
+    name VARCHAR(50),
     x VARCHAR(50),
     y VARCHAR(50),
     map VARCHAR(50),
@@ -76,14 +76,14 @@ CREATE TABLE strategy (
     x VARCHAR(50),
     y VARCHAR(50),
     name VARCHAR(100) NOT NULL,
-    goal_tgt VARCHAR(50),
-    goal_src VARCHAR(50),
+    goal_tgt INT,
+    goal_src INT,
     PRIMARY KEY (id),
     FOREIGN KEY (goal_tgt)
-        REFERENCES goal(name)
+        REFERENCES goal(id)
         ON DELETE CASCADE,
      FOREIGN KEY (goal_src)
-        REFERENCES goal(name)
+        REFERENCES goal(id)
         ON DELETE CASCADE
 );
 

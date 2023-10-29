@@ -51,10 +51,12 @@ class GoalController {
      * )
     */
     public function getAllGoals() {
+        
         $result = $this->GoalModel->getAllGoals();
         http_response_code(200);
         header("Content-Type: application/json");
-        echo json_encode($result);
+        echo json_encode($result);        
+
     }
 
     /**
@@ -130,7 +132,13 @@ class GoalController {
 
     public function updateGoal($id) {
         $body = json_decode(file_get_contents('php://input'), true);
-        $result = $this->GoalModel->updateGoal($id, $body['name']);
+        if($body['name'] == null){
+            $result = $this->GoalModel->updatePos($id, $body['x'], $body['y']);
+        }else{
+            $result = $this->GoalModel->updateGoal($id, $body['name'], $body['x'], $body['y']);
+        }
+
+
         if($result == 0) {
             http_response_code(201);
         } else {
@@ -142,6 +150,27 @@ class GoalController {
     }
 
   
+    public function deleteGoalfromMap($id) {
+        $result = $this->GoalModel->deleteGoalfromMap($id);
+        if($result == 0) {
+            http_response_code(204);
+        } else {
+            $result = Array("code" => $result);
+            http_response_code(400);
+            header("Content-Type: application/json");
+            echo json_encode($result);
+        }
+    }
+
+
+
+
+    public function getGoalsWithoutMap() {
+        $result = $this->GoalModel->getGoalsWithoutMap();
+        http_response_code(200);
+        header("Content-Type: application/json");
+        echo json_encode($result);
+    }
    
     
 }

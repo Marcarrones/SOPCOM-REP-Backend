@@ -10,6 +10,8 @@
 
         private $getMapWithGoals = "SELECT g.id, g.name, g.x, g.y, g.map FROM goal g WHERE g.map = ?;";
 
+        private $getMapStrategies = "SELECT s.id, s.x, s.y, s.name, s.goal_tgt, s.goal_src FROM strategy s, goal g WHERE s.goal_tgt = g.id AND g.map = ?;";
+
         private $addNewMap = "INSERT INTO map (id, name, pruebas) VALUES (?, ?, ?);";
 
         private $updateMap = "UPDATE map SET pruebas = ? WHERE id = ?";
@@ -34,6 +36,11 @@
             return $this->executeSelectQuery($statement);
         }
 
+        public function getMapStrategies($id) {
+            $statement = $this->conn->prepare($this->getMapStrategies);
+            $statement->bind_param('s', $id);
+            return $this->executeSelectQuery($statement);
+        }
 
         public function deleteMap($id) {
             $statement = $this->conn->prepare($this->deleteMap);
@@ -49,7 +56,7 @@
 
         public function updateMap($pruebas, $id) {
             $statement = $this->conn->prepare($this->updateMap);
-            $statement->bind_param('pi', $pruebas, $id);
+            $statement->bind_param('si', $pruebas, $id);
             return $this->executeInsertQuery($statement);
         }
     }
