@@ -2,8 +2,9 @@
 
     class MethodChunk extends Model{
 
-        private $getMethodChunk = "SELECT mc.id, mc.name, mc.description, g.name as intention FROM method_chunk mc LEFT JOIN goal g ON mc.intention = g.id WHERE mc.id = ?;";
+        private $getMethodChunk = "SELECT mc.id, mc.name, mc.description, mc.intention FROM method_chunk mc WHERE mc.id = ?;";
         private $getMethodChunkIntention = "SELECT g.id, g.name FROM goal g, method_chunk mc WHERE mc.id = ? AND mc.intention = g.id;";
+        //private $getMethodChunkIntention = "SELECT g.id, g.name FROM method_chunk mc RIGHT JOIN goal g ON mc.intention = g.id WHERE mc.id = ? AND mc.intention = g.id;";
         private $getMethodChunkTools = "SELECT me.id, me.name, me.description, me.figure 
                                             FROM method_element me
                                             RIGHT JOIN tool t ON me.id = t.id 
@@ -47,7 +48,7 @@
 
         private $updateMethodChunk = "UPDATE method_chunk SET name = ?, description = ?, activity = ?, intention = ? WHERE id = ?;";
 
-        private $addNewMethodChunk = "INSERT INTO method_chunk (id, name, description, activity, intention) VALUES (?, ?, ?, ?, ?);";
+        private $addNewMethodChunk = "INSERT INTO method_chunk (id, name, description, activity) VALUES (?, ?, ?, ?);";
         private $addNewMethodChunkTool = "INSERT INTO method_chunk_uses_tool (idMC, idME) VALUES (?, ?);";
         private $addNewMethodChunkConsumedArtefact = "INSERT INTO method_chunk_consumes_artefact (idMC, idME) VALUES (?, ?);";
         private $addNewMethodChunkProducedArtefact = "INSERT INTO method_chunk_produces_artefact (idMC, idME) VALUES (?, ?);";
@@ -179,9 +180,9 @@
             return $this->executeUpdateQuery($statement);
         }
 
-        public function addNewMethodChunk($id, $name, $description, $activity, $intention) {
+        public function addNewMethodChunk($id, $name, $description, $activity) {
             $statement = $this->conn->prepare($this->addNewMethodChunk);
-            $statement->bind_param('ssssi', $id, $name, $description, $activity, $intention);
+            $statement->bind_param('ssss', $id, $name, $description, $activity);
             $result = $this->executeInsertQuery($statement);
             if($result == 0) {
                 $statementRelations = $this->conn->prepare($this->getProcessPartRelations);

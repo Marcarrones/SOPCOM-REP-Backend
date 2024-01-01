@@ -10,6 +10,8 @@
 
         private $updateStrategyPos = "UPDATE strategy SET x = ?, y = ? WHERE id = ?";
         
+        private $deleteStrategyfromMap = "DELETE FROM strategy WHERE id = ?;";
+
 
 
         public function addNewStrategy($id, $x, $y, $name, $goal_tgt, $goal_src) {
@@ -34,6 +36,12 @@
             $statement = $this->conn->prepare($this->updateStrategyPos);
             $statement->bind_param('sss', $x, $y, $id);
             return $this->executeInsertQuery($statement);
+        }
+
+        public function deleteStrategyfromMap($id) {
+            $statement = $this->conn->prepare($this->deleteStrategyfromMap);
+            $statement->bind_param('s', $id);
+            return $this->executeDeleteQuery($statement);
         }
 
 

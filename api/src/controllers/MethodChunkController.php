@@ -49,7 +49,8 @@ class MethodChunkController {
     public function getMethodChunk($id) {
         $methodChunk = $this->MethodChunkModel->getMethodChunk($id);
         if(count($methodChunk) > 0) {
-            $intention = $this->MethodChunkModel->getMethodChunkIntention($id);
+            //$intention = $this->MethodChunkModel->getMethodChunkIntention($id);
+            $intention = [];
             $tools = $this->MethodChunkModel->getMethodChunkTools($id);
             $artefacts = $this->MethodChunkModel->getMethodChunkArtefacts($id);
             $activity = $this->MethodChunkModel->getMethodChunkActivity($id);
@@ -135,8 +136,8 @@ class MethodChunkController {
     */
     public function addNewMethodChunk() {
         $body = json_decode(file_get_contents('php://input'), true);
-        if(isset($body['id']) && isset($body['name']) && isset($body['activity']) && $body['intention']) {
-            $result = $this->MethodChunkModel->addNewMethodChunk($body['id'], $body['name'], $body['description'], $body['activity'], $body['intention']);
+        if(isset($body['id']) && isset($body['name']) && isset($body['activity'])) {
+            $result = $this->MethodChunkModel->addNewMethodChunk($body['id'], $body['name'], $body['description'], $body['activity']);
             if(!is_array($result)) {
                 if(isset($body['tools'])) $this->MethodChunkModel->addNewMethodChunkTools($body['id'], $body['tools']);
                 if(isset($body['consumedArtefacts'])) $this->MethodChunkModel->addNewMethodChunkConsumedArtefacts($body['id'], $body['consumedArtefacts']);

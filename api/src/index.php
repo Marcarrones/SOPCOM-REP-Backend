@@ -75,7 +75,7 @@
                     }
                     break;
                 case 'POST':
-                    if(isset($ur[2])){
+                    if(isset($uri[2])){
 
                     } else {
                         $controller->addNewMethodChunk(); #POST /method-chunk
@@ -208,6 +208,13 @@
                     break;
                 case 'POST':
                     $controller->addNewStrategy(); #POST /strategy
+                    break;
+                case 'DELETE':
+                    if(isset($uri[2])) {
+                        $controller->deleteStrategyfromMap($uri[2]); #DELETE /strategy/:id
+                    } else {
+                        http_response_code(404);
+                    }
                     break;
                 case 'PUT':
                     $controller->updateStrategy($uri[2]); #PUT /strategy/:id                       

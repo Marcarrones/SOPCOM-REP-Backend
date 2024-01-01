@@ -6,7 +6,8 @@
             $criterionView = new CriterionView();
             $response = $methodChunk[0];
             $response['abstract'] = $activity[0]['abstract'];
-            $response['Intention'] = $intention[0];
+           //$response['Intention'] = $intention[0];
+            $response['Intention'] = $intention;
             $response['Tools'] = $tools;
             $response['Situation'] = $artefacts['consumed'];
             $response['Product part'] = $artefacts['produced'];
