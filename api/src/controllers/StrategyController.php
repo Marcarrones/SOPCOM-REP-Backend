@@ -33,6 +33,12 @@ class StrategyController {
         echo json_encode($result);
     }
 
+    public function getAllStrategieswithMaps() {
+        $result = $this->StrategyModel->getAllStrategieswithMaps();
+        http_response_code(200);
+        header("Content-Type: application/json");
+        echo json_encode($result);
+    }
 
 
 

@@ -68,7 +68,9 @@
             $controller = new MethodChunkController();
             switch($method) {
                 case 'GET':
-                    if(isset($uri[2])){
+                    if(isset($uri[2]) && $uri[2] == 'maps'){
+                        $controller->getAllMethodChunkwithMap(); #GET /method-chunk/maps
+                    } else if(isset($uri[2])){
                         $controller->getMethodChunk($uri[2]); #GET /method-chunk/:id
                     } else {
                         $controller->getAllMethodChunk(); #GET /method-chunk
@@ -204,7 +206,11 @@
             $controller = new StrategyController();
             switch($method) {
                 case 'GET':
-                    $controller->getAllStrategies(); #GET /strategy
+                    if(isset($uri[2]) && $uri[2] == 'maps'){
+                        $controller->getAllStrategieswithMaps(); #GET /strategy/maps
+                    }else{
+                        $controller->getAllStrategies(); #GET /strategy
+                    }
                     break;
                 case 'POST':
                     $controller->addNewStrategy(); #POST /strategy

@@ -8,6 +8,7 @@
             $response['abstract'] = $activity[0]['abstract'];
            //$response['Intention'] = $intention[0];
             $response['Intention'] = $intention;
+            //$response['Strategy'] = $strategy;
             $response['Tools'] = $tools;
             $response['Situation'] = $artefacts['consumed'];
             $response['Product part'] = $artefacts['produced'];

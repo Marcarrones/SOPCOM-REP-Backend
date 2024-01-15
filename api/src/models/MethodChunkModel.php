@@ -2,8 +2,10 @@
 
     class MethodChunk extends Model{
 
-        private $getMethodChunk = "SELECT mc.id, mc.name, mc.description, mc.intention FROM method_chunk mc WHERE mc.id = ?;";
+        private $getMethodChunk = "SELECT mc.id, mc.name, mc.description, mc.intention, mc.strategy, mc.intention FROM method_chunk mc WHERE mc.id = ?;";
         private $getMethodChunkIntention = "SELECT g.id, g.name FROM goal g, method_chunk mc WHERE mc.id = ? AND mc.intention = g.id;";
+        private $getMethodChunkStrategy = "SELECT mc.strategy FROM method_chunk mc WHERE mc.id = ?;";
+        private $getStrategyTarget = "SELECT s.goal_tgt FROM strategy s WHERE s.id = ?;";
         //private $getMethodChunkIntention = "SELECT g.id, g.name FROM method_chunk mc RIGHT JOIN goal g ON mc.intention = g.id WHERE mc.id = ? AND mc.intention = g.id;";
         private $getMethodChunkTools = "SELECT me.id, me.name, me.description, me.figure 
                                             FROM method_element me
@@ -46,9 +48,11 @@
 
         private $deleteMethodChunk = "DELETE FROM method_chunk WHERE id = ?;";
 
-        private $updateMethodChunk = "UPDATE method_chunk SET name = ?, description = ?, activity = ?, intention = ? WHERE id = ?;";
+        private $updateMethodChunk = "UPDATE method_chunk SET name = ?, description = ?, activity = ?, strategy = ? WHERE id = ?;";
 
         private $addNewMethodChunk = "INSERT INTO method_chunk (id, name, description, activity) VALUES (?, ?, ?, ?);";
+        private $addNewMethodChunkStrategy = "UPDATE method_chunk SET strategy = ? WHERE id = ?;";
+        private $assignNewIntention = "UPDATE method_chunk SET intention = ? WHERE id = ?;";
         private $addNewMethodChunkTool = "INSERT INTO method_chunk_uses_tool (idMC, idME) VALUES (?, ?);";
         private $addNewMethodChunkConsumedArtefact = "INSERT INTO method_chunk_consumes_artefact (idMC, idME) VALUES (?, ?);";
         private $addNewMethodChunkProducedArtefact = "INSERT INTO method_chunk_produces_artefact (idMC, idME) VALUES (?, ?);";
@@ -59,7 +63,8 @@
         private $getProcessPartRelations = "SELECT mr.fromME, mr.toME FROM me_rel mr WHERE mr.fromME = ? OR mr.toME = ?;";
         private $getMethodChunkIdFromActivity = "SELECT mc.id FROM method_chunk mc WHERE mc.activity = ?;";
 
-        private $getAllMethodChunks = "SELECT mc.id, mc.name, mc.description, mc.activity, mc.intention FROM method_chunk mc;";
+        private $getAllMethodChunks = "SELECT mc.id, mc.name, mc.description, mc.activity, mc.intention, mc.strategy FROM method_chunk mc;";
+        private $getAllMethodChunkwithMap = "SELECT mc.id, mc.name, mc.description, mc.activity, mc.intention, mc.strategy, g.map FROM method_chunk mc, goal g, strategy s WHERE mc.strategy = s.id AND s.goal_tgt = g.id;";
 
         private $deleteAllMethodChunkTools = "DELETE FROM method_chunk_uses_tool WHERE idMC = ?;";
         private $deleteAllMethodChunkConsumedArtefacts = "DELETE FROM method_chunk_consumes_artefact WHERE idMC = ?;";
@@ -75,6 +80,12 @@
 
         public function getMethodChunkIntention($id) {
             $statement = $this->conn->prepare($this->getMethodChunkIntention);
+            $statement->bind_param('s', $id);
+            return $this->executeSelectQuery($statement);
+        }
+
+        public function getMethodChunkStrategy($id) {
+            $statement = $this->conn->prepare($this->getMethodChunkStrategy);
             $statement->bind_param('s', $id);
             return $this->executeSelectQuery($statement);
         }
@@ -105,6 +116,12 @@
         public function getMethodChunkRoles($id) {
             $statement = $this->conn->prepare($this->getMethodChunkRoles);
             $statement->bind_param('s', $id);
+            return $this->executeSelectQuery($statement);
+        }
+
+        public function getStrategyTarget($strategy) {
+            $statement = $this->conn->prepare($this->getStrategyTarget);
+            $statement->bind_param('s', $strategy);
             return $this->executeSelectQuery($statement);
         }
 
@@ -168,15 +185,20 @@
             return $this->executeSelectQuery($statement);
         }
 
+        public function getAllMethodChunkwithMap() {
+            $statement = $this->conn->prepare($this->getAllMethodChunkwithMap);
+            return $this->executeSelectQuery($statement);
+        }
+
         public function deleteMethodChunk($id) {
             $statement = $this->conn->prepare($this->deleteMethodChunk);
             $statement->bind_param('s', $id);
             return $this->executeDeleteQuery($statement);
         }
 
-        public function updateMethodChunk($id, $name, $description, $activity, $intention) {
+        public function updateMethodChunk($id, $name, $description, $activity, $strategy) {
             $statement = $this->conn->prepare($this->updateMethodChunk);
-            $statement->bind_param('sssis', $name, $description, $activity, $intention, $id);
+            $statement->bind_param('sssss', $name, $description, $activity, $strategy, $id);
             return $this->executeUpdateQuery($statement);
         }
 
@@ -216,6 +238,19 @@
             }
             return;
         }
+
+        public function addNewMethodChunkStrategy($strategy, $id) {
+            $statement = $this->conn->prepare($this->addNewMethodChunkStrategy);
+            $statement->bind_param('ss', $strategy, $id);
+            return $this->executeInsertQuery($statement);
+        }
+
+        public function assignNewIntention($id, $target) {
+            $statement = $this->conn->prepare($this->assignNewIntention);
+            $statement->bind_param('is', $target, $id);
+            return $this->executeInsertQuery($statement);
+        }
+        
 
         public function addNewMethodChunkConsumedArtefacts($id, $artefacts) {
             $statement = $this->conn->prepare($this->addNewMethodChunkConsumedArtefact);
