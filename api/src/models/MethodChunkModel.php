@@ -64,7 +64,8 @@
         private $getMethodChunkIdFromActivity = "SELECT mc.id FROM method_chunk mc WHERE mc.activity = ?;";
 
         private $getAllMethodChunks = "SELECT mc.id, mc.name, mc.description, mc.activity, mc.intention, mc.strategy FROM method_chunk mc;";
-        private $getAllMethodChunkwithMap = "SELECT mc.id, mc.name, mc.description, mc.activity, mc.intention, mc.strategy, g.map FROM method_chunk mc, goal g, strategy s WHERE mc.strategy = s.id AND s.goal_tgt = g.id;";
+        private $getAllMethodChunkwithMap = "SELECT mc.id, mc.name, mc.description, mc.activity, mc.intention, mc.strategy, g.map FROM method_chunk mc, strategy s, goal g WHERE mc.id IS NOT NULL AND mc.strategy = s.id AND s.goal_tgt = g.id;";
+        //private $getAllMethodChunkwithMap = "SELECT mc.id, mc.name, mc.description, mc.activity, mc.intention, mc.strategy, g.map FROM method_chunk mc LEFT OUTER JOIN strategy s ON mc.strategy = s.id LEFT OUTER JOIN goal g ON s.goal_tgt = g.id;";
 
         private $deleteAllMethodChunkTools = "DELETE FROM method_chunk_uses_tool WHERE idMC = ?;";
         private $deleteAllMethodChunkConsumedArtefacts = "DELETE FROM method_chunk_consumes_artefact WHERE idMC = ?;";
