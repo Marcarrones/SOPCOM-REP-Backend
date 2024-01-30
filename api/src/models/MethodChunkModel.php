@@ -3,10 +3,9 @@
     class MethodChunk extends Model{
 
         private $getMethodChunk = "SELECT mc.id, mc.name, mc.description, mc.intention, mc.strategy, mc.intention FROM method_chunk mc WHERE mc.id = ?;";
-        private $getMethodChunkIntention = "SELECT g.id, g.name FROM goal g, method_chunk mc WHERE mc.id = ? AND mc.intention = g.id;";
+        private $getMethodChunkIntention = "SELECT g.name FROM goal g, method_chunk mc WHERE mc.id = ? AND mc.intention = g.id;";
         private $getMethodChunkStrategy = "SELECT mc.strategy FROM method_chunk mc WHERE mc.id = ?;";
         private $getStrategyTarget = "SELECT s.goal_tgt FROM strategy s WHERE s.id = ?;";
-        //private $getMethodChunkIntention = "SELECT g.id, g.name FROM method_chunk mc RIGHT JOIN goal g ON mc.intention = g.id WHERE mc.id = ? AND mc.intention = g.id;";
         private $getMethodChunkTools = "SELECT me.id, me.name, me.description, me.figure 
                                             FROM method_element me
                                             RIGHT JOIN tool t ON me.id = t.id 
@@ -65,7 +64,6 @@
 
         private $getAllMethodChunks = "SELECT mc.id, mc.name, mc.description, mc.activity, mc.intention, mc.strategy FROM method_chunk mc;";
         private $getAllMethodChunkwithMap = "SELECT mc.id, mc.name, mc.description, mc.activity, mc.intention, mc.strategy, g.map FROM method_chunk mc, strategy s, goal g WHERE mc.id IS NOT NULL AND mc.strategy = s.id AND s.goal_tgt = g.id;";
-        //private $getAllMethodChunkwithMap = "SELECT mc.id, mc.name, mc.description, mc.activity, mc.intention, mc.strategy, g.map FROM method_chunk mc LEFT OUTER JOIN strategy s ON mc.strategy = s.id LEFT OUTER JOIN goal g ON s.goal_tgt = g.id;";
 
         private $deleteAllMethodChunkTools = "DELETE FROM method_chunk_uses_tool WHERE idMC = ?;";
         private $deleteAllMethodChunkConsumedArtefacts = "DELETE FROM method_chunk_consumes_artefact WHERE idMC = ?;";
@@ -81,7 +79,7 @@
 
         public function getMethodChunkIntention($id) {
             $statement = $this->conn->prepare($this->getMethodChunkIntention);
-            $statement->bind_param('s', $id);
+            $statement->bind_param('i', $id);
             return $this->executeSelectQuery($statement);
         }
 

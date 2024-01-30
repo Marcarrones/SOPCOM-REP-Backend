@@ -3,7 +3,7 @@
     class Strategy extends Model {
 
         private $getAllStrategies = "SELECT s.id, s.name, s.goal_tgt, goal_src, s.x, s.y FROM strategy s;";
-        private $getAllStrategieswithMaps = "SELECT s.id AS 'st_id', s.name AS 'st_name', m.id, m.name, s.goal_tgt FROM strategy s, map m, goal g WHERE s.goal_tgt = g.id AND g.map = m.id;";
+        private $getAllStrategieswithMaps = "SELECT s.id AS 'st_id', s.name AS 'st_name', m.id, m.name, s.goal_tgt, g.name AS 'g_name' FROM strategy s, map m, goal g WHERE s.goal_tgt = g.id AND g.map = m.id;";
 
 
         private $addNewStrategy = "INSERT INTO strategy (id, x, y, name, goal_tgt, goal_src) VALUES (?, ?, ?, ?, ?, ?);";

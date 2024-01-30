@@ -86,7 +86,7 @@ class MapController {
     public function addNewMap() {
         $body = json_decode(file_get_contents('php://input'), true);
         if(isset($body['id']) && isset($body['name'])) {
-            $result = $this->MapModel->addNewMap($body['id'], $body['name'], $body['pruebas']);
+            $result = $this->MapModel->addNewMap($body['id'], $body['name']);
             echo(json_encode(Array('id' => $result)));
             http_response_code(201);
         } else {

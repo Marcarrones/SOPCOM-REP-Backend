@@ -2,17 +2,17 @@
 
     class Map extends Model {
 
-        private $getAllMaps = "SELECT m.id, m.name, m.pruebas FROM map m;";   
+        private $getAllMaps = "SELECT m.id, m.name FROM map m;";   
 
         private $deleteMap = "DELETE FROM map WHERE id = ?;";
 
-        private $getMap = "SELECT m.id, m.name, m.pruebas FROM map m WHERE id = ?;";
+        private $getMap = "SELECT m.id, m.name FROM map m WHERE id = ?;";
 
         private $getMapWithGoals = "SELECT g.id, g.name, g.x, g.y, g.map FROM goal g WHERE g.map = ?;";
 
         private $getMapStrategies = "SELECT s.id, s.x, s.y, s.name, s.goal_tgt, s.goal_src FROM strategy s, goal g WHERE s.goal_tgt = g.id AND g.map = ?;";
 
-        private $addNewMap = "INSERT INTO map (id, name, pruebas) VALUES (?, ?, ?);";
+        private $addNewMap = "INSERT INTO map (id, name) VALUES (?, ?);";
 
         private $updateMap = "UPDATE map SET name = ? WHERE id = ?";
 
@@ -48,9 +48,9 @@
             return $this->executeDeleteQuery($statement);
         }
 
-        public function addNewMap($id, $name, $pruebas) {
+        public function addNewMap($id, $name) {
             $statement = $this->conn->prepare($this->addNewMap);
-            $statement->bind_param('sss', $id, $name, $pruebas);
+            $statement->bind_param('ss', $id, $name);
             return $this->executeInsertQuery($statement);
         }
 
