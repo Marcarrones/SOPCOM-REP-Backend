@@ -232,7 +232,7 @@ class MethodElementController {
     public function addNewMethodElement() {
         $body = json_decode(file_get_contents('php://input'), true);
         if(isset($body['id']) && isset($body['name']) && isset($body['abstract']) && isset($body['type']) && $body['type'] <= 4 && $body['type'] >= 1) {
-            $id = $this->MethodElementModel->addNewMethodElement($body['id'], $body['name'], $body['abstract'], $body['description'], $body['figure'], $body['type']);
+            $id = $this->MethodElementModel->addNewMethodElement($body['id'], $body['name'], $body['abstract'], $body['description'], $body['figure'], $body['type'], $body['repository']);
             if(!is_array($id)) {
                 if(isset($body['me_struct_rel'])) {
                     $this->MethodElementModel->addMethodElementMeStructRel($id, $body['me_struct_rel']);
@@ -285,7 +285,7 @@ class MethodElementController {
             header("Content-Type: application/json");
             echo json_encode($result);
         } else {
-            $result = $this->MethodElementModel->updateMethodElement($id, $body['name'], $body['abstract'], $body['description'], $body['figure']);
+            $result = $this->MethodElementModel->updateMethodElement($id, $body['name'], $body['abstract'], $body['description'], $body['figure'], $body['repository']);
             if($result == 0) {
                 $res = $this->MethodElementModel->deleteAllRelationsFrom($id);
                 if(isset($body['me_struct_rel'])) {

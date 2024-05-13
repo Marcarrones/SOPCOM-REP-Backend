@@ -5,6 +5,7 @@ include $_SERVER['DOCUMENT_ROOT'] . '/models/GoalModel.php';
 class GoalController {
 
     private $GoalModel;
+    private $GoalView;
 
     function __construct()
     {
@@ -26,7 +27,7 @@ class GoalController {
      *                      type="array",
      *                      @OA\Items(
      *                          type="object",
-*                               @OA\Property(
+     *                               @OA\Property(
      *                              property="id",
      *                              type="integer",
      *                          ),
@@ -87,4 +88,69 @@ class GoalController {
             echo(json_encode(Array('error' => "Missing name body parameter")));
         }
     }
+<<<<<<< Updated upstream
+=======
+
+    public function getGoal($id) {
+        $goal = $this->GoalModel->getGoal($id);
+        if(count($goal) > 0) {
+            $result = $this->GoalView->buildGoal($goal);
+            http_response_code(200);
+            header("Content-Type: application/json");
+            echo json_encode($result);
+        } else {
+            header("Content-Type: application/json");
+            http_response_code(404);
+            echo json_encode(Array("error" => "No criterion found with id $id."));
+        }
+    }
+
+    public function goalStrategies($name) {
+        $result = $this->GoalModel->goalStrategies($name);
+        http_response_code(200);
+        header("Content-Type: application/json");
+        echo json_encode($result);
+
+    }
+
+    public function updateGoal($id) {
+        $body = json_decode(file_get_contents('php://input'), true);
+        if($body['name'] == null){
+            $result = $this->GoalModel->updatePos($id, $body['x'], $body['y']);
+        }else{
+            $result = $this->GoalModel->updateGoal($id, $body['name'], $body['x'], $body['y']);
+        }
+
+
+        if($result == 0) {
+            http_response_code(201);
+        } else {
+            $result = Array("code" => $result);
+            http_response_code(404);
+            header("Content-Type: application/json");
+            echo json_encode($result);
+        }
+    }
+
+    public function deleteGoalfromMap($id) {
+        $result = $this->GoalModel->deleteGoalfromMap($id);
+        if($result == 0) {
+            http_response_code(204);
+        } else {
+            $result = Array("code" => $result);
+            http_response_code(400);
+            header("Content-Type: application/json");
+            echo json_encode($result);
+        }
+    }
+
+    public function getGoalsWithoutMap() {
+        $result = $this->GoalModel->getGoalsWithoutMap();
+        http_response_code(200);
+        header("Content-Type: application/json");
+        echo json_encode($result);
+    }
+   
+    
+>>>>>>> Stashed changes
 }

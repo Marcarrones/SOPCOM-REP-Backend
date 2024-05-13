@@ -1,5 +1,7 @@
 <?php
 
+use OpenApi\Loggers\ConsoleLogger;
+
     require $_SERVER['DOCUMENT_ROOT'] . '/config/config.php';
 
     class Model {
@@ -11,7 +13,7 @@
             global $config;
             $credentials = $config['database'];
             try{
-                $this->conn = new mysqli($credentials['host'], $credentials['user'], $credentials['pw'], $credentials['bd']);
+                $this->conn = new mysqli($credentials['host'], $credentials['user'], $credentials['pw'], $credentials['bd'], $credentials['port']);
             } catch (Exception $e) {
                 echo(json_encode(Array('error' => "Database connection failed")));
                 header("Content-Type: application/json");

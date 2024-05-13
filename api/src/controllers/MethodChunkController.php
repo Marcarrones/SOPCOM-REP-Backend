@@ -135,8 +135,15 @@ class MethodChunkController {
     */
     public function addNewMethodChunk() {
         $body = json_decode(file_get_contents('php://input'), true);
-        if(isset($body['id']) && isset($body['name']) && isset($body['activity']) && $body['intention']) {
-            $result = $this->MethodChunkModel->addNewMethodChunk($body['id'], $body['name'], $body['description'], $body['activity'], $body['intention']);
+        if(isset($body['id']) && isset($body['name']) && isset($body['activity'])) {
+            $result = $this->MethodChunkModel->addNewMethodChunk($body['id'], $body['name'], $body['description'], $body['activity'], $body['repository']);
+            if(isset($body['strategy'])){
+                $this->MethodChunkModel->addNewMethodChunkStrategy($body['strategy'], $body['id']);
+                //$target = Array();
+                //$target['goal_tgt'] = $this->MethodChunkModel->getStrategyTarget($body['strategy']);
+                //$this->MethodChunkModel->assignNewIntention($body['id'], $target['goal_tgt']);
+                $this->MethodChunkModel->assignNewIntention($body['id'], $body['target']);
+            }
             if(!is_array($result)) {
                 if(isset($body['tools'])) $this->MethodChunkModel->addNewMethodChunkTools($body['id'], $body['tools']);
                 if(isset($body['consumedArtefacts'])) $this->MethodChunkModel->addNewMethodChunkConsumedArtefacts($body['id'], $body['consumedArtefacts']);
@@ -178,7 +185,7 @@ class MethodChunkController {
     */
     public function updateMethodChunk($id) {
         $body = json_decode(file_get_contents('php://input'), true);
-        $result = $this->MethodChunkModel->updateMethodChunk($id, $body['name'], $body['description'], $body['activity'], $body['intention']);
+        $result = $this->MethodChunkModel->updateMethodChunk($id, $body['name'], $body['description'], $body['activity'], $body['repository'],$body['strategy']);
         if($result == 0) {
             if(isset($body['tools'])) $this->MethodChunkModel->updateMethodChunkTools($id, $body['tools']);
             if(isset($body['consumedArtefacts'])) $this->MethodChunkModel->updateMethodChunkConsumedArtefacts($id, $body['consumedArtefacts']);

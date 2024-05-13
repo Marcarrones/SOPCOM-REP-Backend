@@ -45,9 +45,11 @@
 
         private $deleteMethodChunk = "DELETE FROM method_chunk WHERE id = ?;";
 
-        private $updateMethodChunk = "UPDATE method_chunk SET name = ?, description = ?, activity = ?, intention = ? WHERE id = ?;";
+        private $updateMethodChunk = "UPDATE method_chunk SET name = ?, description = ?, activity = ?, strategy = ?, repository = ? WHERE id = ?;";
 
-        private $addNewMethodChunk = "INSERT INTO method_chunk (id, name, description, activity, intention) VALUES (?, ?, ?, ?, ?);";
+        private $addNewMethodChunk = "INSERT INTO method_chunk (id, name, description, activity, repository) VALUES (?, ?, ?, ?, ?);";
+        private $addNewMethodChunkStrategy = "UPDATE method_chunk SET strategy = ? WHERE id = ?;";
+        private $assignNewIntention = "UPDATE method_chunk SET intention = ? WHERE id = ?;";
         private $addNewMethodChunkTool = "INSERT INTO method_chunk_uses_tool (idMC, idME) VALUES (?, ?);";
         private $addNewMethodChunkConsumedArtefact = "INSERT INTO method_chunk_consumes_artefact (idMC, idME) VALUES (?, ?);";
         private $addNewMethodChunkProducedArtefact = "INSERT INTO method_chunk_produces_artefact (idMC, idME) VALUES (?, ?);";
@@ -173,15 +175,15 @@
             return $this->executeDeleteQuery($statement);
         }
 
-        public function updateMethodChunk($id, $name, $description, $activity, $intention) {
+        public function updateMethodChunk($id, $name, $description, $activity, $repository, $strategy) {
             $statement = $this->conn->prepare($this->updateMethodChunk);
-            $statement->bind_param('sssis', $name, $description, $activity, $intention, $id);
+            $statement->bind_param('sssss', $name, $description, $activity, $strategy, $repository,$id);
             return $this->executeUpdateQuery($statement);
         }
 
-        public function addNewMethodChunk($id, $name, $description, $activity, $intention) {
+        public function addNewMethodChunk($id, $name, $description, $activity, $repository) {
             $statement = $this->conn->prepare($this->addNewMethodChunk);
-            $statement->bind_param('ssssi', $id, $name, $description, $activity, $intention);
+            $statement->bind_param('sssss', $id, $name, $description, $activity, $repository);
             $result = $this->executeInsertQuery($statement);
             if($result == 0) {
                 $statementRelations = $this->conn->prepare($this->getProcessPartRelations);

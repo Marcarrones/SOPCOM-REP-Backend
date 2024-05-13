@@ -176,7 +176,7 @@ class CriterionController {
     public function addNewCriterion() {
         $body = json_decode(file_get_contents('php://input'), true);
         if(isset($body['name']) && isset($body['values']) && count($body['values']) >= 2) {
-            $id = $this->CriterionModel->addNewCriterion($body['name']);
+            $id = $this->CriterionModel->addNewCriterion($body['name'], $body['repository']);
             foreach($body['values'] as $value) {
                 $this->CriterionModel->addNewValueToCriterion($id, $value);
             }
@@ -230,7 +230,7 @@ class CriterionController {
     */
     public function updateCriterion($id) {
         $body = json_decode(file_get_contents('php://input'), true);
-        $result = $this->CriterionModel->updateCriterion($id, $body['name']);
+        $result = $this->CriterionModel->updateCriterion($id, $body['name'], $body['repository']);
         if($result == 0) {
             http_response_code(201);
         } else {

@@ -20,13 +20,13 @@ require $_SERVER['DOCUMENT_ROOT'] . '/config/config.php';
 
         private $deleteMethodElement = "DELETE FROM method_element WHERE id = ?;";
 
-        private $updateMethodElement = "UPDATE method_element SET name = ?, abstract = ?, description = ?, figure = ? WHERE id = ?;";
+        private $updateMethodElement = "UPDATE method_element SET name = ?, abstract = ?, description = ?, figure = ?, repository = ? WHERE id = ?;";
 
         private $getAllMeStructRelTypes = "SELECT id, name FROM struct_rel_type;";
         private $getAllActivityRelTypes = "SELECT id, name FROM activity_rel_type;";
         private $getAllArtefactRelTypes = "SELECT id, name FROM artefact_rel_type;";
 
-        private $addNewMethodElement = "INSERT INTO method_element (id, name, abstract, description, figure, type) VALUES (?, ?, ?, ?, ?, ?);";
+        private $addNewMethodElement = "INSERT INTO method_element (id, name, abstract, description, figure, type, repository) VALUES (?, ?, ?, ?, ?, ?, ?);";
 
         private $addNewMethodElementMeRel = "INSERT INTO me_rel (fromME, toME) VALUES (?, ?);";
         private $addNewMethodElementMeStructRel = "INSERT INTO me_struct_rel (fromME, toME, rel) VALUES (?, ?, ?);";
@@ -122,9 +122,9 @@ require $_SERVER['DOCUMENT_ROOT'] . '/config/config.php';
             return $types;
         }
 
-        public function addNewMethodElement($id, $name, $abstract, $description, $figure, $type) {
+        public function addNewMethodElement($id, $name, $abstract, $description, $figure, $type, $repository) {
             $statement = $this->conn->prepare($this->addNewMethodElement);
-            $statement->bind_param('ssissi', $id, $name, $abstract, $description, $figure, $type);
+            $statement->bind_param('ssissis', $id, $name, $abstract, $description, $figure, $type, $repository);
             $result = $this->executeInsertQuery($statement);
             if($result == 0) {
                 switch($type) {
@@ -216,9 +216,9 @@ require $_SERVER['DOCUMENT_ROOT'] . '/config/config.php';
             }
         }
 
-        public function updateMethodElement($id, $name, $abstract, $description, $figure) {
+        public function updateMethodElement($id, $name, $abstract, $description, $figure, $repository) {
             $statement = $this->conn->prepare($this->updateMethodElement);
-            $statement->bind_param('sisss', $name, $abstract, $description, $figure, $id);
+            $statement->bind_param('sissss', $name, $abstract, $description, $figure, $repository, $id);
             return $this->executeUpdateQuery($statement);
         }
 
