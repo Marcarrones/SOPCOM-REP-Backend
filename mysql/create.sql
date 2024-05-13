@@ -1,3 +1,21 @@
+# Repository
+CREATE TABLE repository_status (
+    id INT AUTO_INCREMENT,
+    name VARCHAR(100) UNIQUE,
+    PRIMARY KEY(id)
+);
+
+CREATE TABLE repository (
+    id VARCHAR (50),
+    name VARCHAR(100),
+    description VARCHAR(200),
+    status INT NOT NULL,
+    PRIMARY KEY(id),
+    FOREIGN KEY (status)
+        REFERENCES repository_status(id)
+        ON DELETE NO ACTION,
+);
+
 #Method Element
 
 CREATE TABLE method_element_type (
@@ -13,9 +31,13 @@ CREATE TABLE method_element (
     description VARCHAR(200),
     figure VARCHAR(100),
     type INT,
+    repository VARCHAR(50) NOT NULL,
     PRIMARY KEY (id),
     FOREIGN KEY (type)
         REFERENCES method_element_type(id)
+        ON DELETE NO ACTION,
+    FOREIGN KEY (repository)
+        REFERENCES repository(id)
         ON DELETE NO ACTION
 );
 
@@ -51,6 +73,20 @@ CREATE TABLE role (
         ON DELETE CASCADE
 );
 
+<<<<<<< Updated upstream
+=======
+CREATE TABLE map (
+    id VARCHAR(50),
+    name VARCHAR(50) NOT NULL,
+    repository VARCHAR(50) NOT NULL,
+    pruebas json,
+    PRIMARY KEY (id),
+    FOREIGN KEY (repository)
+        REFERENCES repository(id)
+        ON DELETE NO ACTION
+);
+
+>>>>>>> Stashed changes
 CREATE TABLE goal (
     id INT AUTO_INCREMENT,
     name VARCHAR(50) UNIQUE,
@@ -62,13 +98,30 @@ CREATE TABLE method_chunk (
     name VARCHAR(100) NOT NULL,
     description VARCHAR(200) NOT NULL,
     activity VARCHAR(50) UNIQUE,
+<<<<<<< Updated upstream
     intention INT NOT NULL,
+=======
+    intention INT,
+    strategy VARCHAR(50),
+    repository VARCHAR(50) NOT NULL,
+>>>>>>> Stashed changes
     PRIMARY KEY (id),
     FOREIGN KEY (activity) 
 		REFERENCES activity(id)
         ON DELETE NO ACTION,
+<<<<<<< Updated upstream
 	FOREIGN KEY (intention)
 		REFERENCES goal(id)
+=======
+    FOREIGN KEY (intention)
+        REFERENCES goal(id)
+        ON DELETE SET NULL,
+    FOREIGN KEY (strategy)
+        REFERENCES strategy(id)
+        ON DELETE SET NULL,
+    FOREIGN KEY (repository)
+        REFERENCES repository(id)
+>>>>>>> Stashed changes
         ON DELETE NO ACTION
 );
 
@@ -123,8 +176,13 @@ CREATE TABLE method_chunk_includes_role(
 
 CREATE TABLE  criterion (
     id INT AUTO_INCREMENT,
-    name VARCHAR(100) UNIQUE,
-    PRIMARY KEY (id)
+    name VARCHAR(100),
+    repository VARCHAR(50) NOT NULL,
+    PRIMARY KEY (id),
+    UNIQUE(name, repository),
+    FOREIGN KEY (repository)
+        REFERENCES repository(id)
+        ON DELETE NO ACTION
 );
 
 CREATE TABLE value (
