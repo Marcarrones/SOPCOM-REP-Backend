@@ -77,12 +77,15 @@ CREATE TABLE role (
 CREATE TABLE map (
     id VARCHAR(50),
     name VARCHAR(50) NOT NULL,
+    repository VARCHAR(50) NOT NULL,
     pruebas json,
-    PRIMARY KEY (id)
+    PRIMARY KEY (id),
+    FOREIGN KEY (repository)
+        REFERENCES repository(id)
+        ON DELETE NO ACTION
 );
 
-<<<<<<< Updated upstream
-=======
+
 CREATE TABLE map (
     id VARCHAR(50),
     name VARCHAR(50) NOT NULL,
@@ -94,7 +97,6 @@ CREATE TABLE map (
         ON DELETE NO ACTION
 );
 
->>>>>>> Stashed changes
 CREATE TABLE goal (
     id INT AUTO_INCREMENT,
     name VARCHAR(50),
@@ -128,21 +130,13 @@ CREATE TABLE method_chunk (
     name VARCHAR(100) NOT NULL,
     description VARCHAR(200) NOT NULL,
     activity VARCHAR(50) UNIQUE,
-<<<<<<< Updated upstream
-    intention INT NOT NULL,
-=======
     intention INT,
     strategy VARCHAR(50),
     repository VARCHAR(50) NOT NULL,
->>>>>>> Stashed changes
     PRIMARY KEY (id),
     FOREIGN KEY (activity)
         REFERENCES activity(id)
         ON DELETE NO ACTION,
-<<<<<<< Updated upstream
-	FOREIGN KEY (intention)
-		REFERENCES goal(id)
-=======
     FOREIGN KEY (intention)
         REFERENCES goal(id)
         ON DELETE SET NULL,
@@ -151,7 +145,6 @@ CREATE TABLE method_chunk (
         ON DELETE SET NULL,
     FOREIGN KEY (repository)
         REFERENCES repository(id)
->>>>>>> Stashed changes
         ON DELETE NO ACTION
 );
 

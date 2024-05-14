@@ -30,7 +30,7 @@ class GoalController {
      *                      type="array",
      *                      @OA\Items(
      *                          type="object",
-     *                               @OA\Property(
+*                               @OA\Property(
      *                              property="id",
      *                              type="integer",
      *                          ),
@@ -52,12 +52,10 @@ class GoalController {
      * )
     */
     public function getAllGoals() {
-        
         $result = $this->GoalModel->getAllGoals();
         http_response_code(200);
         header("Content-Type: application/json");
-        echo json_encode($result);        
-
+        echo json_encode($result);
     }
 
     /**
@@ -102,13 +100,6 @@ class GoalController {
             echo(json_encode(Array('error' => "Missing name body parameter")));
         }
     }
-<<<<<<< HEAD
-<<<<<<< Updated upstream
-=======
-=======
-
-
->>>>>>> main
 
     public function getGoal($id) {
         $goal = $this->GoalModel->getGoal($id);
@@ -124,24 +115,13 @@ class GoalController {
         }
     }
 
-<<<<<<< HEAD
-=======
-
-
-
->>>>>>> main
     public function goalStrategies($name) {
         $result = $this->GoalModel->goalStrategies($name);
         http_response_code(200);
         header("Content-Type: application/json");
         echo json_encode($result);
-
     }
 
-<<<<<<< HEAD
-=======
-
->>>>>>> main
     public function updateGoal($id) {
         $body = json_decode(file_get_contents('php://input'), true);
         if($body['name'] == null){
@@ -149,7 +129,6 @@ class GoalController {
         }else{
             $result = $this->GoalModel->updateGoal($id, $body['name'], $body['x'], $body['y']);
         }
-
 
         if($result == 0) {
             http_response_code(201);
@@ -161,10 +140,6 @@ class GoalController {
         }
     }
 
-<<<<<<< HEAD
-=======
-  
->>>>>>> main
     public function deleteGoalfromMap($id) {
         $result = $this->GoalModel->deleteGoalfromMap($id);
         if($result == 0) {
@@ -177,12 +152,6 @@ class GoalController {
         }
     }
 
-<<<<<<< HEAD
-=======
-
-
-
->>>>>>> main
     public function getGoalsWithoutMap() {
         $result = $this->GoalModel->getGoalsWithoutMap();
         http_response_code(200);
@@ -191,8 +160,4 @@ class GoalController {
     }
    
     
-<<<<<<< HEAD
->>>>>>> Stashed changes
-=======
->>>>>>> main
 }
