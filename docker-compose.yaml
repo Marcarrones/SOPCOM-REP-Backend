@@ -2,40 +2,40 @@ version: '3.3'
 
 services:
   mysql:
-    container_name: sopcom-mysql
+    container_name: sopcom-mysql-v2
     image: mysql
     restart: on-failure
     ports:
-      - "1025:3306"
+      - "1030:3306"
     networks: 
       - database
     environment:
       MYSQL_DATABASE: sopcom_mysql
-      MYSQL_USER: 
+      MYSQL_USER: admin
       MYSQL_PASSWORD: 
-      MYSQL_ROOT_PASSWORD: 
+      MYSQL_ROOT_PASSWORD: example
     volumes:
       - ./mysql:/docker-entrypoint-initdb.d
   
   backend:
     build:
       context: api
-    container_name: sopcom-backend
+    container_name: sopcom-backend-v2
     restart: always
     ports:
-      - "1026:80"
+      - "1031:80"
     networks: 
       - database
 
   frontend:
-    container_name: sopcom-frontend
+    container_name: sopcom-frontend-v2
     build:
       context: client
     ports:
-      - "1027:80"
+      - "1032:80"
     networks:
       - http
-
+  
 networks:
   database:
     driver: bridge

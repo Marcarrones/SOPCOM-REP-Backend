@@ -70,14 +70,16 @@
             $controller = new MethodChunkController();
             switch($method) {
                 case 'GET':
-                    if(isset($uri[2])){
+                    if(isset($uri[2]) && $uri[2] == 'maps'){
+                        $controller->getAllMethodChunkwithMap(); #GET /method-chunk/maps
+                    } else if(isset($uri[2])){
                         $controller->getMethodChunk($uri[2]); #GET /method-chunk/:id
                     } else {
                         $controller->getAllMethodChunk(); #GET /method-chunk
                     }
                     break;
                 case 'POST':
-                    if(isset($ur[2])){
+                    if(isset($uri[2])){
 
                     } else {
                         $controller->addNewMethodChunk(); #POST /method-chunk
@@ -168,10 +170,30 @@
             $controller = new GoalController();
             switch($method) {
                 case 'GET':
-                    $controller->getAllGoals(); # GET /goal
+                    if(isset($uri[3]) && $uri[3] == 'strategies') {
+                        //print($uri[2]);
+                        //print(gettype($uri[2]));
+                        $controller->goalStrategies($uri[2]); # GET /goal/:name/strategies
+                    }else if(isset($uri[2]) && $uri[2] == "nomap") {
+                        $controller->getGoalsWithoutMap(); # GET /goal/nomap
+                    }else if(isset($uri[2])){
+                        $controller->getGoal($uri[2]); # GET /goal/:name
+                    }else{
+                        $controller->getAllGoals(); #GET /goal
+                    }
                     break;
+                case 'PUT':
+                    $controller->updateGoal($uri[2]); #PUT /goal/:name                       
+                    break;              
                 case 'POST':
                     $controller->addNewGoal(); #POST /goal
+                    break;
+                case 'DELETE':
+                    if(isset($uri[2])) {
+                        $controller->deleteGoalfromMap($uri[2]); #DELETE /goal/:id
+                    } else {
+                        http_response_code(404);
+                    }
                     break;
                 case 'OPTIONS':
                     http_response_code(200);

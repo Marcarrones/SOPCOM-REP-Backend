@@ -1,6 +1,8 @@
 <?php
 
 include $_SERVER['DOCUMENT_ROOT'] . '/models/GoalModel.php';
+include $_SERVER['DOCUMENT_ROOT'] . '/views/GoalView.php';
+
 
 class GoalController {
 
@@ -10,6 +12,7 @@ class GoalController {
     function __construct()
     {
         $this->GoalModel = new Goal();
+        $this->GoalView  = new GoalView();
     }
 
     /**
@@ -49,10 +52,12 @@ class GoalController {
      * )
     */
     public function getAllGoals() {
+        
         $result = $this->GoalModel->getAllGoals();
         http_response_code(200);
         header("Content-Type: application/json");
-        echo json_encode($result);
+        echo json_encode($result);        
+
     }
 
     /**
@@ -79,17 +84,31 @@ class GoalController {
     */
     public function addNewGoal() {
         $body = json_decode(file_get_contents('php://input'), true);
-        if(isset($body['name'])) {
-            $result = $this->GoalModel->addNewGoal($body['name']);
+        if(isset($body['name']) && isset($body['map']) && isset($body['x']) && isset($body['y'])) {
+            $result = $this->GoalModel->addNewGoalWithCoord($body['name'], $body['map'], $body['x'], $body['y']);
             echo(json_encode(Array('id' => $result)));
+            http_response_code(201);
+        }else if(isset($body['name']) && isset($body['map'])) {
+            $result = $this->GoalModel->addNewGoalWithMap($body['name'], $body['map']);
+            echo(json_encode(Array('id' => $result)));
+            http_response_code(201);
+        }else if(isset($body['name'])){
+            print($body['map']);
+            $result = $this->GoalModel->addNewGoal($body['name']);
+            echo(json_encode(Array('idd' => $result)));
             http_response_code(201);
         } else {
             http_response_code(400);
             echo(json_encode(Array('error' => "Missing name body parameter")));
         }
     }
+<<<<<<< HEAD
 <<<<<<< Updated upstream
 =======
+=======
+
+
+>>>>>>> main
 
     public function getGoal($id) {
         $goal = $this->GoalModel->getGoal($id);
@@ -105,6 +124,12 @@ class GoalController {
         }
     }
 
+<<<<<<< HEAD
+=======
+
+
+
+>>>>>>> main
     public function goalStrategies($name) {
         $result = $this->GoalModel->goalStrategies($name);
         http_response_code(200);
@@ -113,6 +138,10 @@ class GoalController {
 
     }
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> main
     public function updateGoal($id) {
         $body = json_decode(file_get_contents('php://input'), true);
         if($body['name'] == null){
@@ -132,6 +161,10 @@ class GoalController {
         }
     }
 
+<<<<<<< HEAD
+=======
+  
+>>>>>>> main
     public function deleteGoalfromMap($id) {
         $result = $this->GoalModel->deleteGoalfromMap($id);
         if($result == 0) {
@@ -144,6 +177,12 @@ class GoalController {
         }
     }
 
+<<<<<<< HEAD
+=======
+
+
+
+>>>>>>> main
     public function getGoalsWithoutMap() {
         $result = $this->GoalModel->getGoalsWithoutMap();
         http_response_code(200);
@@ -152,5 +191,8 @@ class GoalController {
     }
    
     
+<<<<<<< HEAD
 >>>>>>> Stashed changes
+=======
+>>>>>>> main
 }

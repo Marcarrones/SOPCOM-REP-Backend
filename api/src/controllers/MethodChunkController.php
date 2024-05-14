@@ -49,14 +49,16 @@ class MethodChunkController {
     public function getMethodChunk($id) {
         $methodChunk = $this->MethodChunkModel->getMethodChunk($id);
         if(count($methodChunk) > 0) {
-            $intention = $this->MethodChunkModel->getMethodChunkIntention($id);
+            $intention = [];
+            $int_name = $this->MethodChunkModel->getMethodChunkIntention($id);
+            //$strategy = $this->MethodChunkModel->getMethodChunkStrategy($id);
             $tools = $this->MethodChunkModel->getMethodChunkTools($id);
             $artefacts = $this->MethodChunkModel->getMethodChunkArtefacts($id);
             $activity = $this->MethodChunkModel->getMethodChunkActivity($id);
             $roles = $this->MethodChunkModel->getMethodChunkRoles($id);
             $contextCriteria = $this->MethodChunkModel->getMethodChunkContextCriteria($id);
             $relations = $this->MethodChunkModel->getMethodChunkRelations($id);
-            $response = $this->MethodChunkView->buildMethodChunk($methodChunk, $intention, $tools, $artefacts, $activity, $roles, $contextCriteria, $relations);
+            $response = $this->MethodChunkView->buildMethodChunk($methodChunk, $intention, $tools, $artefacts, $activity, $roles, $contextCriteria, $relations, $int_name);
             http_response_code(200);
             header("Content-Type: application/json");
             echo json_encode($response);
@@ -187,6 +189,8 @@ class MethodChunkController {
         $body = json_decode(file_get_contents('php://input'), true);
         $result = $this->MethodChunkModel->updateMethodChunk($id, $body['name'], $body['description'], $body['activity'], $body['repository'],$body['strategy']);
         if($result == 0) {
+            if($body['strategy'] == null) $this->MethodChunkModel->assignNewIntention($id, null);
+            if(isset($body['target'])) $this->MethodChunkModel->assignNewIntention($id, $body['target']);
             if(isset($body['tools'])) $this->MethodChunkModel->updateMethodChunkTools($id, $body['tools']);
             if(isset($body['consumedArtefacts'])) $this->MethodChunkModel->updateMethodChunkConsumedArtefacts($id, $body['consumedArtefacts']);
             if(isset($body['producedArtefacts'])) $this->MethodChunkModel->updateMethodChunkProducedArtefacts($id, $body['producedArtefacts']);
@@ -213,6 +217,13 @@ class MethodChunkController {
     */
     public function getAllMethodChunk() {
         $result = $this->MethodChunkModel->getAllMethodChunk();
+        http_response_code(200);
+        header("Content-Type: application/json");
+        echo json_encode($result);
+    }
+
+    public function getAllMethodChunkwithMap() {
+        $result = $this->MethodChunkModel->getAllMethodChunkwithMap();
         http_response_code(200);
         header("Content-Type: application/json");
         echo json_encode($result);

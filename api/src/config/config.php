@@ -4,7 +4,7 @@ $config = Array(
     'database' => Array(
         'host' => "mysql",
         'bd' => "sopcom_mysql",
-        'user' => "",
+        'user' => "admin",
         'pw' => "",
     ),
 
