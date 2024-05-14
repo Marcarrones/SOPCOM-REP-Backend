@@ -2,10 +2,12 @@
 
 $config = Array(
     'database' => Array(
-        'host' => "mysql",
-        'bd' => "sopcom_mysql",
+
+        'host' => "gessi3.essi.upc.edu",
+        'bd' => "sopcomV3",
         'user' => "admin",
-        'pw' => "",
+        'pw' => "jRX4bWp6g",
+        'port' => "1025"
     ),
 
     'paths' => Array(

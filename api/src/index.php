@@ -11,7 +11,7 @@
     require $_SERVER['DOCUMENT_ROOT'] . '/controllers/MapController.php';
     require $_SERVER['DOCUMENT_ROOT'] . '/controllers/StrategyController.php';
     require $_SERVER['DOCUMENT_ROOT'] . '/controllers/RepositoryController.php';
-    
+
     # $uri[0] index.php / $uri[1] / $uri[2] ...
     $uri = explode('/', parse_url($_SERVER['PATH_INFO'], PHP_URL_PATH));
 	$method = $_SERVER['REQUEST_METHOD'];
