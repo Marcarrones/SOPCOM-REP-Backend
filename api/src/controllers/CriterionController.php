@@ -44,28 +44,29 @@ class CriterionController {
      *              ),
      *              example={
      *                  {
-                            "name": "Stakeholders expertise",
-                            "values": {
-                                "High",
-                                "Medium",
-                                "Basic"
-                            }
-                        },
-                        {
-                            "name": "Stakeholders other things",
-                            "values": {
-                                "High",
-                                "Medium",
-                                "Basic"
-                            }
-                        }
-                    }
+     *                      "name": "Stakeholders expertise",
+     *                      "values": {
+     *                          "High",
+     *                          "Medium",
+     *                          "Basic"
+     *                      }
+     *                  },
+     *                  {
+     *                      "name": "Stakeholders other things",
+     *                      "values": {
+     *                          "High",
+     *                          "Medium",
+     *                          "Basic"
+     *                      }
+     *                  }
+     *              }
      *          )
      *     ),
      * )
     */
     public function getAllCriterion() {
-        $criterions = $this->CriterionModel->getAllCriterions();
+        $repository = isset($_GET['repository']) ? $_GET['repository'] : ""; # or null
+        $criterions = $this->CriterionModel->getAllCriterions($repository);
         $result = $this->CriterionView->buildCriteriaList($criterions);
         http_response_code(200);
         header("Content-Type: application/json");
@@ -248,6 +249,14 @@ class CriterionController {
      *     summary="Add new criterion value",
      *     description="Add new criterion value",
      *     operationId="AddNewCriterionValue",
+     *     @OA\Parameter(
+     *         description="Id of the criterion",
+     *         in="path",
+     *         name="criterionId",
+     *         required=true,
+     *         @OA\Schema(type="integer"),
+     *         @OA\Examples(example="integer", value="1", summary="An integer value."),
+     *     ),
      *     @OA\RequestBody(
      *         @OA\MediaType(
      *             mediaType="application/json",
@@ -258,8 +267,8 @@ class CriterionController {
      *                 ),
      *             ),
      *             example={
-                        "name": "Large"
-                    }
+     *                  "name": "Large"
+     *              }
      *         )
      *     ),
      *     @OA\Response(response="201", description="Created"),
@@ -371,7 +380,6 @@ class CriterionController {
             echo json_encode($result);
         }
     }
-
 }
 
 ?>

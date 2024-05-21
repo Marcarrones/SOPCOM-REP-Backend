@@ -2,7 +2,7 @@
 
     class Map extends Model {
 
-        private $getAllMaps = "SELECT m.id, m.name FROM map m;";   
+        private $getAllMaps = "SELECT m.id, m.name FROM map m WHERE m.repository = ?;";   
 
         private $deleteMap = "DELETE FROM map WHERE id = ?;";
 
@@ -18,8 +18,9 @@
 
 
         
-        public function getAllMaps() {
+        public function getAllMaps($repository) {
             $statement = $this->conn->prepare($this->getAllMaps);
+            $statement->bind_param('s', $repository);
             return $this->executeSelectQuery($statement);
         }
 

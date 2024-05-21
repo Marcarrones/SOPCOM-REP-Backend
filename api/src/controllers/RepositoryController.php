@@ -11,6 +11,13 @@ class RepositoryController {
         $this->RepositoryModel = new Repository();
     }
 
+    public function getRepositoryStatus() {
+        $result = $this->RepositoryModel->getRepositoryStatus();
+        http_response_code(200);
+        header("Content-Type: application/json");
+        echo json_encode($result);
+    }
+
     /**
      * @OA\Get(
      *     path="/index.php/repository", 
@@ -58,20 +65,38 @@ class RepositoryController {
         } else {
             header("Content-Type: application/json");
             http_response_code(404);
-            echo json_encode(Array("error" => "No criterion found with id $id."));
+            echo json_encode(Array("error" => "No repository found with id $id."));
         }
     }
 
+     /**
+     * @OA\Delete(
+     *     path="/index.php/repository/{repositoryId}", 
+     *     tags={"Repository"},
+     *     summary="Delete a repository by id",
+     *     description="Delete a repository by id",
+     *     operationId="deleteRepository",
+     *     @OA\Parameter(
+     *         description="Id of the repository to delete",
+     *         in="path",
+     *         name="repositoryId",
+     *         required=true,
+     *         @OA\Schema(type="string"),
+     *         @OA\Examples(example="string", value="Repository_1", summary="A string value."),
+     *     ),
+     *     @OA\Response(response="204"),
+     * )
+    */
     public function deleteRepository($id) {
         $result = $this->RepositoryModel->deleteRepository($id);
         if($result == 0) {
-            http_response_code(204);
+            http_response_code(204);    
         } else {
             $result = Array("code" => $result);
             http_response_code(400);
             header("Content-Type: application/json");
-            echo json_encode($result);
         }
+        echo json_encode($result);
     }
 
     public function addNewRepository() {

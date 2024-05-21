@@ -16,7 +16,8 @@ class MapController {
     }
 
     public function getAllMaps() {
-        $result = $this->MapModel->getAllMaps();
+        $repository = $_GET['repository'];
+        $result = $this->MapModel->getAllMaps($repository);
         http_response_code(200);
         header("Content-Type: application/json");
         echo json_encode($result);

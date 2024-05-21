@@ -62,8 +62,8 @@
         private $getProcessPartRelations = "SELECT mr.fromME, mr.toME FROM me_rel mr WHERE mr.fromME = ? OR mr.toME = ?;";
         private $getMethodChunkIdFromActivity = "SELECT mc.id FROM method_chunk mc WHERE mc.activity = ?;";
 
-        private $getAllMethodChunks = "SELECT mc.id, mc.name, mc.description, mc.activity, mc.intention, mc.strategy FROM method_chunk mc;";
-        private $getAllMethodChunkwithMap = "SELECT mc.id, mc.name, mc.description, mc.activity, mc.intention, mc.strategy, g.map FROM method_chunk mc, strategy s, goal g WHERE mc.id IS NOT NULL AND mc.strategy = s.id AND s.goal_tgt = g.id;";
+        private $getAllMethodChunks = "SELECT mc.id, mc.name, mc.description, mc.activity, mc.intention, mc.strategy FROM method_chunk mc WHERE mc.repository = ?;";
+        private $getAllMethodChunkwithMap = "SELECT mc.id, mc.name, mc.description, mc.activity, mc.intention, mc.strategy, g.map FROM method_chunk mc, strategy s, goal g WHERE mc.id IS NOT NULL AND mc.strategy = s.id AND s.goal_tgt = g.id AND mc.repository = ?;";
 
         private $deleteAllMethodChunkTools = "DELETE FROM method_chunk_uses_tool WHERE idMC = ?;";
         private $deleteAllMethodChunkConsumedArtefacts = "DELETE FROM method_chunk_consumes_artefact WHERE idMC = ?;";
@@ -179,13 +179,15 @@
             return $result;
         }
 
-        public function getAllMethodChunk() {
+        public function getAllMethodChunk($repository) {
             $statement = $this->conn->prepare($this->getAllMethodChunks);
+            $statement->bind_param('s', $repository);
             return $this->executeSelectQuery($statement);
         }
 
-        public function getAllMethodChunkwithMap() {
+        public function getAllMethodChunkwithMap($repository) {
             $statement = $this->conn->prepare($this->getAllMethodChunkwithMap);
+            $statement->bind_param('s', $repository);
             return $this->executeSelectQuery($statement);
         }
 

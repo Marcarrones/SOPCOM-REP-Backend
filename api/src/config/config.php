@@ -7,7 +7,7 @@ $config = Array(
         'bd' => "sopcomV3",
         'user' => "admin",
         'pw' => "jRX4bWp6g",
-        'port' => "1025"
+        'port' => "1025",
     ),
 
     'paths' => Array(

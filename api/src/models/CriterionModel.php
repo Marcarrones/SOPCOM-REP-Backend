@@ -2,7 +2,7 @@
 
     class Criterion extends Model{
         
-        private $getAllCriterion = "SELECT c.id as criterionId, c.name as criterionName, v.id, v.name FROM criterion c, value v WHERE c.id = v.criterion;";
+        private $getAllCriterion = "SELECT c.id as criterionId, c.name as criterionName, v.id, v.name FROM criterion c, value v WHERE c.id = v.criterion AND c.repository = ?;";
 
         private $deleteCriterion = "DELETE FROM criterion WHERE id = ?;";
 
@@ -17,8 +17,9 @@
         private $getCriterion = "SELECT c.id, c.name FROM criterion c WHERE id = ?;";
         private $getCriterionValues = "SELECT v.id, v.name FROM value v WHERE v.criterion = ?;";
 
-        public function getAllCriterions() {
+        public function getAllCriterions($repository) {
             $statement = $this->conn->prepare($this->getAllCriterion);
+            $statement->bind_param('s', $repository);
             return $this->executeSelectQuery($statement);
         }
 

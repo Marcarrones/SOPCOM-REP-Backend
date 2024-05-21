@@ -13,8 +13,8 @@ require $_SERVER['DOCUMENT_ROOT'] . '/config/config.php';
         private $getMethodElementFromActRel = "SELECT actr.toME as id, actr.rel, art.name FROM activity_rel actr, activity_rel_type art WHERE actr.fromME = ? AND actr.rel = art.id;"; 
         private $getMethodElementFromArtRel = "SELECT artr.toME as id, artr.rel, art.name FROM artefact_rel artr, artefact_rel_type art WHERE artr.fromME = ? AND artr.rel = art.id;"; 
 
-        private $getAllMethodElements = "SELECT me.id as id, me.name as name, me.description as description FROM method_element me;";
-        private $getAllMethodElementsFilter = "SELECT me.id as id, me.name as name, me.description as description FROM method_element me WHERE type = ?;";
+        private $getAllMethodElements = "SELECT me.id as id, me.name as name, me.description as description FROM method_element me WHERE me.repository = ?;";
+        private $getAllMethodElementsFilter = "SELECT me.id as id, me.name as name, me.description as description FROM method_element me WHERE type = ? AND repository = ?;";
 
         private $getAllMethodElementTypes = "SELECT met.id, met.name FROM method_element_type met;";
 
@@ -88,11 +88,15 @@ require $_SERVER['DOCUMENT_ROOT'] . '/config/config.php';
             return $relationsTo;
         }
 
-        public function getAllMethodElements($type) {
+        public function getAllMethodElements($type, $repository) {
             if(isset($type)) {
                 $statement = $this->conn->prepare($this->getAllMethodElementsFilter);
-                $statement->bind_param('i', $type);
-            } else $statement = $this->conn->prepare($this->getAllMethodElements);
+                $statement->bind_param('is', $type, $repository);
+            } else {
+                $statement = $this->conn->prepare($this->getAllMethodElements);
+                $statement->bind_param('s', $repository);
+            }
+
             return $this->executeSelectQuery($statement);
         }
 

@@ -216,14 +216,16 @@ class MethodChunkController {
      * )
     */
     public function getAllMethodChunk() {
-        $result = $this->MethodChunkModel->getAllMethodChunk();
+        $repository = isset($_GET['repository']) ? $_GET['repository'] : ""; # or null
+        $result = $this->MethodChunkModel->getAllMethodChunk($repository);
         http_response_code(200);
         header("Content-Type: application/json");
         echo json_encode($result);
     }
 
     public function getAllMethodChunkwithMap() {
-        $result = $this->MethodChunkModel->getAllMethodChunkwithMap();
+        $repository = isset($_GET['repository']) ? $_GET['repository'] : ""; # or null
+        $result = $this->MethodChunkModel->getAllMethodChunkwithMap($repository);
         http_response_code(200);
         header("Content-Type: application/json");
         echo json_encode($result);

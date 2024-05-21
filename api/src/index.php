@@ -13,11 +13,19 @@
     require $_SERVER['DOCUMENT_ROOT'] . '/controllers/RepositoryController.php';
 
     # $uri[0] index.php / $uri[1] / $uri[2] ...
-    $uri = explode('/', parse_url($_SERVER['PATH_INFO'], PHP_URL_PATH));
 	$method = $_SERVER['REQUEST_METHOD'];
+    $uri = explode('/', parse_url($_SERVER['PATH_INFO'], PHP_URL_PATH));
 
+    // Handle preflight requests
+    /*
+    if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
+        // Return a 200 response with the appropriate CORS headers
+        http_response_code(200);
+        exit();
+    }
+    */
     switch($uri[1]) {
-        case 'method-element':
+         case 'method-element':
             $controller = new MethodElementController();
             switch($method) {
                 case 'GET':
@@ -275,8 +283,15 @@
             $controller = new RepositoryController();
             switch ($method) {
                 case 'GET':
-                    if (isset($uri[2])) { # GET /repository/:id
-                        $controller->getRepository($uri[2]);
+                    if (isset($uri[2])) { 
+                        switch($uri[2]){
+                            case 'status': # GET /repository/status
+                                $controller->getRepositoryStatus();
+                                break;
+                            default: # GET /repository/:id
+                                $controller->getRepository($uri[2]);
+                                break;
+                        }
                     } else {
                         $controller->getAllRepositories(); # GET /repository
                     }
@@ -292,7 +307,12 @@
                 case 'DELETE':
                     if (isset($uri[2])) {
                         $controller->deleteRepository($uri[2]); # DELETE /repository/:id
+                    } else {
+                        echo "No repository id provided";
                     }
+                    break;
+                case 'OPTIONS':
+                    http_response_code(200);
                     break;
                 default:
                     http_response_code(404);

@@ -2,6 +2,8 @@
 
     class Repository extends Model {
 
+        private $getRepositoryStatus = "SELECT s.id, s.name FROM repository_status s;";
+
         private $getAllRepositories = "SELECT r.id, r.name, r.description, r.status FROM repository r;";   
 
         private $getRepository = "SELECT r.id, r.name, r.description, r.status FROM repository r WHERE id = ?;";
@@ -12,13 +14,15 @@
 
         private $updateRepository = "UPDATE repository SET name = ?, description = ?, status = ? WHERE id = ?";
 
-
+        public function getRepositoryStatus() {
+            $statement = $this->conn->prepare($this->getRepositoryStatus);
+            return $this->executeSelectQuery($statement);
+        }
         
         public function getAllRepositories() {
             $statement = $this->conn->prepare($this->getAllRepositories);
             return $this->executeSelectQuery($statement);
         }
-
 
         public function getRepository($id) {
             $statement = $this->conn->prepare($this->getRepository);
