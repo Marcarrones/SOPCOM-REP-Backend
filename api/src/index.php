@@ -25,7 +25,7 @@
     }
     */
     switch($uri[1]) {
-         case 'method-element':
+        case 'method-element':
             $controller = new MethodElementController();
             switch($method) {
                 case 'GET':
@@ -247,7 +247,7 @@
             $controller = new MapController();
             switch($method) {
                 case 'GET':
-                    if(isset($uri[3]) && $uri[3] == 'goals') {
+                    if(isset($uri[3]) && $uri[3] == 'goal') {
                         $controller->getMapWithGoals($uri[2]); #GET /maps/:id/goals
                     }else if(isset($uri[3]) && $uri[3] == 'strategies'){
                         $controller->getMapStrategies($uri[2]);
