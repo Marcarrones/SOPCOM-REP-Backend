@@ -11,6 +11,7 @@
     require $_SERVER['DOCUMENT_ROOT'] . '/controllers/MapController.php';
     require $_SERVER['DOCUMENT_ROOT'] . '/controllers/StrategyController.php';
     require $_SERVER['DOCUMENT_ROOT'] . '/controllers/RepositoryController.php';
+    require $_SERVER['DOCUMENT_ROOT'] . '/controllers/ContextController.php';
 
     # $uri[0] index.php / $uri[1] / $uri[2] ...
 	$method = $_SERVER['REQUEST_METHOD'];
@@ -319,8 +320,45 @@
                     break;
             }
             break;
+        case 'context':
+            $controller = new ContextController();
+            switch($method){
+                case 'GET':
+                    if(isset($uri[2])){
+                        $controller->getContext($uri[2]); #GET /context/:id
+                    } else {
+                        $controller->getAllContexts(); #GET /context
+                    }
+                    break;
+                case 'POST':
+                    if(isset($uri[2]) && isset($uri[3])) {
+                        if($uri[3] == 'criterion') {
+                            if (isset($uri[4])){
+                                $controller->assignCriterionValue($uri[2],$uri[4]); #POST /context/:id/criterion/:criterionId
+                            }
+                            else {
+                                $controller->assignCriterion($uri[2]); #POST /context/:id/criterion
+                            }
+                        }
+                    }
+                    else {    
+                        $controller->addContext(); #POST /context
+                    }
+                    break;
+                case 'OPTIONS':
+                    http_response_code(200);
+                    break;
+                default:
+                    http_response_code(404);
+                    break;
+            }
+            break;
         default:
-            http_response_code(404);
+            if ($method ==  'OPTIONS')
+                http_response_code(200);
+            else
+                http_response_code(404);
+            
             break;
     }
     exit;
