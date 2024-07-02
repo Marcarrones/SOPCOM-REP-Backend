@@ -4,9 +4,10 @@
 
         private $getRepositoryStatus = "SELECT s.id, s.name FROM repository_status s;";
 
-        private $getAllRepositories = "SELECT r.id, r.name, r.description, r.status FROM repository r;";   
+        private $getAllRepositories = "SELECT r.id, r.name, r.description, JSON_OBJECT('id', rs.id, 'name', rs.name) as 'status' FROM repository r JOIN repository_status rs ON r.status = rs.id;" ;
+        //"SELECT r.id, r.name, r.description, r.status FROM repository r;";   
 
-        private $getRepository = "SELECT r.id, r.name, r.description, r.status FROM repository r WHERE id = ?;";
+        private $getRepository = "SELECT r.id, r.name, r.description, JSON_OBJECT('id', rs.id, 'name', rs.name) as 'status' FROM repository r JOIN repository_status rs ON r.status = rs.id WHERE r.id = ?;";
         
         private $deleteRepository = "DELETE FROM repository WHERE id = ?;";
 

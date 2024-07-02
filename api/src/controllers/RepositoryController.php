@@ -49,16 +49,24 @@ class RepositoryController {
      * )
     */
     public function getAllRepositories() {
-        $result = $this->RepositoryModel->getAllRepositories();
+        $results = $this->RepositoryModel->getAllRepositories();
+        foreach ($results as &$result) {
+            if (isset($result['status'])) {
+                $result['status'] = json_decode($result['status'], true);
+            }
+        }
         http_response_code(200);
         header("Content-Type: application/json");
-        echo json_encode($result);
+        echo json_encode($results);
     } 
 
     public function getRepository($id) {
         $repository = $this->RepositoryModel->getRepository($id);
         if(count($repository) > 0) {
             $result = $repository[0];
+            if (isset($result['status'])) {
+                $result['status'] = json_decode($result['status'], true);
+            }            
             http_response_code(200);
             header("Content-Type: application/json");
             echo json_encode($result);
