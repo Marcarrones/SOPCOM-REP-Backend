@@ -84,16 +84,16 @@ class GoalController {
         $body = json_decode(file_get_contents('php://input'), true);
         if(isset($body['name']) && isset($body['map']) && isset($body['x']) && isset($body['y'])) {
             $result = $this->GoalModel->addNewGoalWithCoord($body['name'], $body['map'], $body['x'], $body['y']);
-            echo(json_encode(Array('id' => $result)));
+            echo(json_encode($this->GoalModel->getGoal($result)[0]));
             http_response_code(201);
         }else if(isset($body['name']) && isset($body['map'])) {
             $result = $this->GoalModel->addNewGoalWithMap($body['name'], $body['map']);
-            echo(json_encode(Array('id' => $result)));
+            echo(json_encode($this->GoalModel->getGoal($result)[0]));
             http_response_code(201);
         }else if(isset($body['name'])){
             print($body['map']);
             $result = $this->GoalModel->addNewGoal($body['name']);
-            echo(json_encode(Array('idd' => $result)));
+            echo(json_encode($this->GoalModel->getGoal($result)[0]));
             http_response_code(201);
         } else {
             http_response_code(400);
@@ -124,7 +124,7 @@ class GoalController {
 
     public function updateGoal($id) {
         $body = json_decode(file_get_contents('php://input'), true);
-        if($body['name'] == null){
+        if(!isset($body['name'])){
             $result = $this->GoalModel->updatePos($id, $body['x'], $body['y']);
         }else{
             $result = $this->GoalModel->updateGoal($id, $body['name'], $body['x'], $body['y']);
@@ -132,6 +132,7 @@ class GoalController {
 
         if($result == 0) {
             http_response_code(201);
+            echo(json_encode($this->GoalModel->getGoal($id)[0]));
         } else {
             $result = Array("code" => $result);
             http_response_code(404);

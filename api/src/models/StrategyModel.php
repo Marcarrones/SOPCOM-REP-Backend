@@ -2,9 +2,37 @@
 
     class Strategy extends Model {
 
-        private $getAllStrategies = "SELECT s.id, s.name, s.goal_tgt, goal_src, s.x, s.y FROM strategy s;";
-        private $getAllStrategieswithMaps = "SELECT s.id AS 'st_id', s.name AS 'st_name', m.id, m.name, s.goal_tgt, g.name AS 'g_name' FROM strategy s, map m, goal g WHERE s.goal_tgt = g.id AND g.map = m.id;";
+        private $getStrategy = "SELECT s.id, s.name, s.goal_tgt, goal_src, s.x, s.y,
+            JSON_MERGE_PRESERVE(
+                (	-- Aggregate method chunks directly related to the strategy
+                    SELECT IFNULL(JSON_ARRAYAGG(mc.id), '[]') 
+                    FROM method_chunk mc 
+                    WHERE mc.strategy = s.id
+                ),
+                ( 	-- Aggregate method chunks found via specialization relations
+                    SELECT IFNULL(JSON_ARRAYAGG(mcsr.mch_to), '[]') 
+                    FROM mch_specialization_relations mcsr
+                    WHERE mcsr.mch_from IN (SELECT mc.id FROM method_chunk mc WHERE mc.strategy = s.id)
+                )
+            ) as methodChunkIds
+        FROM strategy s WHERE id = ?";
 
+        private $getAllStrategies = "SELECT s.id, s.name, s.goal_tgt, goal_src, s.x, s.y,
+            JSON_MERGE_PRESERVE(
+                (	-- Aggregate method chunks directly related to the strategy
+                    SELECT IFNULL(JSON_ARRAYAGG(mc.id), '[]') 
+                    FROM method_chunk mc 
+                    WHERE mc.strategy = s.id
+                ),
+                ( 	-- Aggregate method chunks found via specialization relations
+                    SELECT IFNULL(JSON_ARRAYAGG(mcsr.mch_to), '[]') 
+                    FROM mch_specialization_relations mcsr
+                    WHERE mcsr.mch_from IN (SELECT mc.id FROM method_chunk mc WHERE mc.strategy = s.id)
+                )
+            ) as methodChunkIds
+        FROM strategy s;";
+
+        private $getAllStrategieswithMaps = "SELECT s.id AS 'st_id', s.name AS 'st_name', m.id, m.name, s.goal_tgt, g.name AS 'g_name' FROM strategy s, map m, goal g WHERE s.goal_tgt = g.id AND g.map = m.id;";
 
         private $addNewStrategy = "INSERT INTO strategy (id, x, y, name, goal_tgt, goal_src) VALUES (?, ?, ?, ?, ?, ?);";
 
@@ -22,6 +50,11 @@
             return $this->executeInsertQuery($statement);
         }
 
+        public function getStrategy($id) {
+            $statement = $this->conn->prepare($this->getStrategy);
+            $statement->bind_param('s', $id);
+            return $this->executeSelectQuery($statement);
+        }
     
         public function getAllStrategies() {
             $statement = $this->conn->prepare($this->getAllStrategies);
@@ -33,9 +66,9 @@
             return $this->executeSelectQuery($statement);
         }
         
-        public function updateStrategy($id, $name_nou) {
+        public function updateStrategy($id, $newName) {
             $statement = $this->conn->prepare($this->updateStrategy);
-            $statement->bind_param('ss', $name_nou, $id);
+            $statement->bind_param('ss', $newName, $id);
             return $this->executeInsertQuery($statement);
         }
 

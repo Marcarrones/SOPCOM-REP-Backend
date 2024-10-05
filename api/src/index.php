@@ -1,5 +1,7 @@
 <?php
 
+use OpenApi\Annotations\JsonContent;
+
     header('Access-Control-Allow-Origin: *');
     header("Access-Control-Allow-Methods: GET, PUT, POST, DELETE, OPTIONS");
     header("Access-Control-Allow-Headers: Origin, X-API-KEY, X-Requested-With, Content-Type, Accept, Access-Control-Request-Method, Access-Control-Allow-Headers, Authorization, observe, enctype, Content-Length, X-Csrf-Token");
@@ -120,8 +122,8 @@
             $controller = new CriterionController();
             switch($method) {
                 case 'GET':
-                    if(isset($uri[2])) {
-                        $controller->getCriterion($uri[2]);
+                    if(isset($uri[2])) { 
+                        $controller->getCriterion($uri[2]); #GET /criterion/:id
                     } else {
                         $controller->getAllCriterion(); #GET /criterion
                     }
@@ -289,6 +291,9 @@
                             case 'status': # GET /repository/status
                                 $controller->getRepositoryStatus();
                                 break;
+                                case 'public': # GET /repository/public
+                                $controller->getPublicRepositories();
+                                break;
                             default: # GET /repository/:id
                                 $controller->getRepository($uri[2]);
                                 break;
@@ -325,24 +330,92 @@
             switch($method){
                 case 'GET':
                     if(isset($uri[2])){
-                        $controller->getContext($uri[2]); #GET /context/:id
+                        switch ($uri[2]) {
+                            case 'types':
+                                $controller->getContextTypes(); #GET /context/types
+                                break;
+                            default: #GET /context/:id
+                                if (isset($uri[3])){
+                                    switch ($uri[3]) {
+                                        case 'criterion':
+                                            $controller->getContextCriterion($uri[2]); #GET /context/:id/criterion
+                                            break;
+                                        case 'assignedCriterion':
+                                            $controller->getAssignedCriterion($uri[2]); #GET /context/:id/assignedCriterion
+                                            break;
+                                        case 'canApply':
+                                            $controller->getCanApply($uri[2]); #GET /context/:id/canApply
+                                            break;
+                                        case 'selectedMethodChunks':
+                                            $controller->getSelectedMethodChunks($uri[2]); #GET /context/:id/selectedMethodChunks
+                                            break;
+                                    }
+                                } else {
+                                    $controller->getContext($uri[2]); #GET /context/:id
+                                }
+                                break;
+                        }
                     } else {
                         $controller->getAllContexts(); #GET /context
                     }
                     break;
                 case 'POST':
-                    if(isset($uri[2]) && isset($uri[3])) {
-                        if($uri[3] == 'criterion') {
-                            if (isset($uri[4])){
-                                $controller->assignCriterionValue($uri[2],$uri[4]); #POST /context/:id/criterion/:criterionId
-                            }
-                            else {
-                                $controller->assignCriterion($uri[2]); #POST /context/:id/criterion
+                    if(isset($uri[2])) {
+                        if(isset($uri[3])){
+                            switch($uri[3]){
+                                case 'criterion':
+                                    if (isset($uri[4])){
+                                        $controller->assignCriterionValue($uri[2],$uri[4]); #POST /context/:id/criterion/:criterionId
+                                    }
+                                    else {
+                                        $controller->assignCriterion($uri[2]); #POST /context/:id/criterion
+                                    }
+                                break;
+                                case 'selectedMethodChunks':
+                                    $controller->insertSelectedMethodChunk($uri[2]); #POST /context/:id/selectedMethodChunks
+                                break;
+                                default:
+                                    http_response_code(404);
+                                    header("Content-Type: application/json");
+                                    echo json_encode($uri);
+                                break;
                             }
                         }
-                    }
-                    else {    
+                        else {
+                            http_response_code(404);
+                            header("Content-Type: application/json");
+                            echo json_encode($uri);
+                        }
+                    } else {    
                         $controller->addContext(); #POST /context
+                    }
+                    break;
+                case 'PUT':
+                    if(isset($uri[2])) {
+                        $controller->updateContext($uri[2]); #PUT /context/:id
+                    }
+                    break;
+                case 'DELETE':
+                    if(isset($uri[2])) {
+                        if(isset($uri[3])){
+                            switch($uri[3]){
+                                case 'criterion':
+                                    if (isset($uri[4]) && isset($uri[5])){
+                                        $controller->removeCriterionValue($uri[2],$uri[4],$uri[5]); #DELETE /context/:id/criterion/:criterionId/:valueId
+                                    } else if (isset($uri[4])){
+                                        #DELETE /context/:id/criterion/:criterionId
+                                    }
+                                break;
+                                case 'selectedMethodChunks':
+                                    if (isset($uri[4])){
+                                        $controller->deleteSelectedMethodChunk($uri[2],$uri[4]); #DELETE /context/:id/selectedMethodChunks/:id
+                                    }
+                                break;
+                            }
+                        }
+                        else {
+                            $controller->deleteContext($uri[2]); #DELETE /context/:id
+                        }                            
                     }
                     break;
                 case 'OPTIONS':

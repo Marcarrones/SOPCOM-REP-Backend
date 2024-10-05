@@ -15,7 +15,8 @@ class StrategyController {
         $body = json_decode(file_get_contents('php://input'), true);
         if(isset($body['id']) && isset($body['name']) && isset($body['goal_tgt']) && isset($body['goal_src']) && isset($body['x']) && isset($body['y'])) {
             $result = $this->StrategyModel->addNewStrategy($body['id'], $body['x'], $body['y'], $body['name'], $body['goal_tgt'], $body['goal_src']);
-            echo(json_encode(Array('id' => $result)));
+            $result = $this->StrategyModel->getStrategy($body['id']);
+            echo(json_encode($result[0]));
             http_response_code(201);
         } else {
             http_response_code(400);
@@ -40,13 +41,15 @@ class StrategyController {
     public function updateStrategy($id) {
         $body = json_decode(file_get_contents('php://input'), true);
             
-        if($body['name'] == null){
+        if(!isset($body['name'])){
             $result = $this->StrategyModel->updateStrategyPos($id, $body['x'], $body['y']);
         }else{
             $result = $this->StrategyModel->updateStrategy($id, $body['name']);
         }
-        if($result == 0) {
+        
+        if(true) {
             http_response_code(201);
+            echo json_encode($this->StrategyModel->getStrategy($id));
         } else {
             $result = Array("code" => $result);
             http_response_code(404);

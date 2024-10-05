@@ -3,11 +3,12 @@
     class Repository extends Model {
 
         private $getRepositoryStatus = "SELECT s.id, s.name FROM repository_status s;";
+        private $getPublicRepositories = "SELECT r.id, r.name, r.description, JSON_OBJECT('id', rs.id, 'name', rs.name) as 'status' FROM repository r JOIN repository_status rs ON r.status = rs.id WHERE rs.name = 'Public';";
 
-        private $getAllRepositories = "SELECT r.id, r.name, r.description, JSON_OBJECT('id', rs.id, 'name', rs.name) as 'status' FROM repository r JOIN repository_status rs ON r.status = rs.id;" ;
+        private $getAllRepositories = "SELECT r.id, r.name, r.description, JSON_OBJECT('id', rs.id, 'name', rs.name) as 'status',  CASE WHEN EXISTS (SELECT 1 FROM context c WHERE c.repository = r.id ) THEN 'true' ELSE 'false' END as 'inUse' FROM repository r JOIN repository_status rs ON r.status = rs.id;" ;
         //"SELECT r.id, r.name, r.description, r.status FROM repository r;";   
 
-        private $getRepository = "SELECT r.id, r.name, r.description, JSON_OBJECT('id', rs.id, 'name', rs.name) as 'status' FROM repository r JOIN repository_status rs ON r.status = rs.id WHERE r.id = ?;";
+        private $getRepository = "SELECT r.id, r.name, r.description, JSON_OBJECT('id', rs.id, 'name', rs.name) as 'status',  CASE WHEN EXISTS (SELECT 1 FROM context c WHERE c.repository = r.id ) THEN 'true' ELSE 'false' END as 'inUse' FROM repository r JOIN repository_status rs ON r.status = rs.id WHERE r.id = ?;";
         
         private $deleteRepository = "DELETE FROM repository WHERE id = ?;";
 
@@ -17,6 +18,11 @@
 
         public function getRepositoryStatus() {
             $statement = $this->conn->prepare($this->getRepositoryStatus);
+            return $this->executeSelectQuery($statement);
+        }
+
+        public function getPublicRepositories() {
+            $statement = $this->conn->prepare($this->getPublicRepositories);
             return $this->executeSelectQuery($statement);
         }
         

@@ -18,6 +18,13 @@ class RepositoryController {
         echo json_encode($result);
     }
 
+    public function getPublicRepositories() {
+        $result = $this->RepositoryModel->getPublicRepositories();
+        http_response_code(200);
+        header("Content-Type: application/json");
+        echo json_encode($result);
+    }
+
     /**
      * @OA\Get(
      *     path="/index.php/repository", 

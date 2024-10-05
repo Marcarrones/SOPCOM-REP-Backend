@@ -199,7 +199,7 @@
 
         public function updateMethodChunk($id, $name, $description, $activity, $repository, $strategy) {
             $statement = $this->conn->prepare($this->updateMethodChunk);
-            $statement->bind_param('sssss', $name, $description, $activity, $strategy, $repository,$id);
+            $statement->bind_param('ssssss', $name, $description, $activity, $strategy, $repository, $id);
             return $this->executeUpdateQuery($statement);
         }
 
