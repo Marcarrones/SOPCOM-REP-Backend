@@ -15,7 +15,7 @@ CREATE TABLE repository (
         REFERENCES repository_status(id)
         ON DELETE NO ACTION,
 );
-
+#===================================
 #Method Element
 
 CREATE TABLE method_element_type (
@@ -72,8 +72,8 @@ CREATE TABLE role (
 		REFERENCES method_element(id)
         ON DELETE CASCADE
 );
-
-
+#===================================
+# Map
 CREATE TABLE map (
     id VARCHAR(50),
     name VARCHAR(50) NOT NULL,
@@ -124,7 +124,31 @@ CREATE TABLE strategy (
         REFERENCES goal(id)
         ON DELETE CASCADE
 );
+#===================================
+# Criterion
+CREATE TABLE  criterion (
+    id INT AUTO_INCREMENT,
+    name VARCHAR(100),
+    repository VARCHAR(50) NOT NULL,
+    PRIMARY KEY (id),
+    UNIQUE(name, repository),
+    FOREIGN KEY (repository)
+        REFERENCES repository(id)
+        ON DELETE NO ACTION
+);
 
+CREATE TABLE value (
+    id INT AUTO_INCREMENT,
+    name VARCHAR(50),
+    criterion INT,
+    UNIQUE (name, criterion),
+    PRIMARY KEY (id),
+    FOREIGN KEY (criterion)
+		REFERENCES criterion(id)
+        ON DELETE CASCADE
+);
+#===================================
+# Method Chunk
 CREATE TABLE method_chunk (
     id VARCHAR(50),
     name VARCHAR(100) NOT NULL,
@@ -194,29 +218,7 @@ CREATE TABLE method_chunk_includes_role(
 		REFERENCES method_chunk(id)
         ON DELETE CASCADE,
     FOREIGN KEY (idME) 
-		REFERENCES role(id)
-        ON DELETE CASCADE
-);
-
-CREATE TABLE  criterion (
-    id INT AUTO_INCREMENT,
-    name VARCHAR(100),
-    repository VARCHAR(50) NOT NULL,
-    PRIMARY KEY (id),
-    UNIQUE(name, repository),
-    FOREIGN KEY (repository)
-        REFERENCES repository(id)
-        ON DELETE NO ACTION
-);
-
-CREATE TABLE value (
-    id INT AUTO_INCREMENT,
-    name VARCHAR(50),
-    criterion INT,
-    UNIQUE (name, criterion),
-    PRIMARY KEY (id),
-    FOREIGN KEY (criterion)
-		REFERENCES criterion(id)
+		REFERENCES role(uuid)
         ON DELETE CASCADE
 );
 
@@ -339,6 +341,62 @@ CREATE TABLE chunk_rel (
 		REFERENCES me_rel(fromME, toME)
         ON DELETE CASCADE
 );
+#===================================
+# Context
+CREATE TABLE context_type (
+	id INT AUTO_INCREMENT,
+	name VARCHAR (50) UNIQUE,
+	PRIMARY KEY (id)
+);
 
+CREATE TABLE context (
+	id VARCHAR (50),
+	name VARCHAR (100),
+	context_type INT,
+	repository VARCHAR (50),
+    PRIMARY KEY(id),
+    FOREIGN KEY (context_type)
+        REFERENCES context_type(id)
+        ON DELETE NO ACTION,
+    FOREIGN KEY (repository)
+    	REFERENCES repository(id)
+    	ON DELETE CASCADE
+);
+# todo:  change to context_criterion
+CREATE TABLE assign_criterion(
+    idContext VARCHAR(50),
+    criterion INT,
+    PRIMARY KEY (idContext, criterion),
+    FOREIGN KEY (idContext)
+		REFERENCES context(id)
+        ON DELETE CASCADE,
+	FOREIGN KEY (criterion)
+		REFERENCES criterion(id)
+        ON DELETE CASCADE
+);
+# todo: change to assign_context_value
+CREATE TABLE assign_criterion_value(
+    idContext VARCHAR(50),
+    criterion INT, 
+    value INT,
+    PRIMARY KEY(idContext, criterion, value),
+    FOREIGN KEY (idContext, criterion)
+		REFERENCES assign_context(idContext, criterion)
+        ON DELETE CASCADE,
+	FOREIGN KEY (value)
+		REFERENCES value(id)
+        ON DELETE CASCADE
+);
 
+CREATE TABLE selected_method_chunks (
+	idMC VARCHAR (50),
+	idContext VARCHAR(50),
+	PRIMARY KEY (idMC, idContext),
+	FOREIGN KEY (idMC)
+		REFERENCES method_chunk(id)
+		ON DELETE CASCADE,
+	FOREIGN KEY (idContext)
+		REFERENCES context(id)
+		ON DELETE CASCADE
+);
 
