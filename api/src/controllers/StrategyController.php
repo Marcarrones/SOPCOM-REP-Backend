@@ -41,17 +41,18 @@ class StrategyController {
     public function updateStrategy($id) {
         $body = json_decode(file_get_contents('php://input'), true);
             
-        if(!isset($body['name'])){
-            $result = $this->StrategyModel->updateStrategyPos($id, $body['x'], $body['y']);
-        }else{
-            $result = $this->StrategyModel->updateStrategy($id, $body['name']);
-        }
-        
-        if(true) {
+        try {
+
+            if(!isset($body['name'])){
+                $result = $this->StrategyModel->updateStrategyPos($id, $body['x'], $body['y']);
+            }else{
+                $result = $this->StrategyModel->updateStrategy($id, $body['name']);
+            }
+               
             http_response_code(201);
-            echo json_encode($this->StrategyModel->getStrategy($id));
-        } else {
-            $result = Array("code" => $result);
+            echo json_encode($this->StrategyModel->getStrategy($id)[0]);
+        } catch (Exception $e) {
+            $result['error'] = $e->getMessage();
             http_response_code(404);
             header("Content-Type: application/json");
             echo json_encode($result);

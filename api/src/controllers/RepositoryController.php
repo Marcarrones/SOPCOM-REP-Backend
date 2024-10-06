@@ -118,7 +118,7 @@ class RepositoryController {
         $body = json_decode(file_get_contents('php://input'), true);
         if(isset($body['id']) && isset($body['name'])) {
             $result = $this->RepositoryModel->addNewRepository($body['id'], $body['name'], $body['description'], $body['status']);
-            echo(json_encode(Array('id' => $result)));
+            echo(json_encode($this->RepositoryModel->getRepository($body['id'])[0]));
             http_response_code(201);
         } else {
             http_response_code(400);
@@ -127,15 +127,15 @@ class RepositoryController {
     }
     
     public function updateRepository($id) {
-        $body = json_decode(file_get_contents('php://input'), true);
-        $result = $this->RepositoryModel->updateRepository($id, $body['name'], $body['description'], $body['status']);
-        if($result == 0) {
+        try{
+            $body = json_decode(file_get_contents('php://input'), true);
+            $this->RepositoryModel->updateRepository($id, $body['name'], $body['description'], $body['status']);
             http_response_code(201);
-        } else {
-            $result = Array("code" => $result);
+            echo json_encode($this->RepositoryModel->getRepository($id)[0]);
+        } catch (Exception $e) {
             http_response_code(404);
             header("Content-Type: application/json");
-            echo json_encode($result);
+            echo json_encode(Array('error' => $e->getMessage()));
         }
     }
     
