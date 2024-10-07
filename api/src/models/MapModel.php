@@ -76,7 +76,10 @@
                 
                     // START
                 $statement = $this->conn->prepare($this->addGoal);
-                $statement->bind_param('ssss', 'Start', '-200', '0', $id);
+                $start = 'Start';
+                $x = '-200';
+                $y = '0';
+                $statement->bind_param('ssss', $start, $x, $y, $id);
                 if (!$statement->execute()) 
                     throw new Exception("Error creating 'Start' goal");
                 
@@ -87,7 +90,9 @@
                     
                 // STOP
                 $statement = $this->conn->prepare($this->addGoal);
-                $statement->bind_param('ssss', 'Stop', '200', '0', $id);
+                $stop = 'Stop';
+                $x = '200';
+                $statement->bind_param('ssss', $stop, $x, $y, $id);
                 if (!$statement->execute()) 
                     throw new Exception("Error creating 'Stop' goal");
                 
@@ -95,12 +100,12 @@
                 $statement->bind_param('ss', $id, $id);
                 if (!$statement->execute()) 
                     throw new Exception("Error updating map's 'Stop' goal");
+                
+                $this->conn->commit();
 
-
-                $statement = $this->conn->prepare($this->getMap);
+                $statement = $this->conn->prepare($this->getFullMap);
                 $statement->bind_param('s', $id);
                 $result = $this->executeSelectQuery($statement)[0];
-                
             }
             catch(Exception $e) {
                 $this->conn->rollback();
