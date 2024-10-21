@@ -10,7 +10,7 @@
         private $getFullMap = "SELECT m.id, m.name, m.repository, 
             (SELECT JSON_OBJECT('id', g.id,'name', g.name,'x', g.x, 'y', g.y, 'map', g.`map`) FROM goal g WHERE g.id = m.start) as 'start',
             (SELECT JSON_OBJECT('id', g.id,'name', g.name,'x', g.x, 'y', g.y, 'map', g.`map`) FROM goal g WHERE g.id = m.stop) as 'stop',
-            (SELECT IFNULL( JSON_ARRAYAGG(JSON_OBJECT('id', s.id, 'name', s.name, 'x', s.x, 'y', s.y, 'goal_tgt', s.goal_tgt, 'goal_src', s.goal_src, 'methodChunkIds',(SELECT IFNULL(JSON_ARRAY(mc.id), '[]') FROM method_chunk mc WHERE mc.strategy = s.id))), '[]') FROM strategy s WHERE EXISTS (SELECT * FROM goal g WHERE (s.goal_tgt = g.id or s.goal_src  = g.id) and g.map = m.id ) ) as 'strategies',
+            (SELECT IFNULL( JSON_ARRAYAGG(JSON_OBJECT('id', s.id, 'name', s.name, 'x', s.x, 'y', s.y, 'goal_tgt', s.goal_tgt, 'goal_src', s.goal_src, 'methodChunkIds',(SELECT IFNULL(JSON_ARRAYAGG(mc.id), '[]') FROM method_chunk mc WHERE mc.strategy = s.id))), '[]') FROM strategy s WHERE EXISTS (SELECT * FROM goal g WHERE (s.goal_tgt = g.id or s.goal_src  = g.id) and g.map = m.id ) ) as 'strategies',
             (SELECT IFNULL( JSON_ARRAYAGG(JSON_OBJECT('id', g.id,'name', g.name,'x', g.x, 'y', g.y, 'map', g.`map`) ), '[]') FROM goal g WHERE g.`map` = m.id)as 'goals'
 		FROM `map` m
 	        WHERE m.id= ?;";

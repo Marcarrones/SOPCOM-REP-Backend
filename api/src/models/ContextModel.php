@@ -6,10 +6,10 @@
         private $getContextTypes = "SELECT c.id, c.name FROM context_type c;";
         private $addContext = "INSERT INTO context (id, name, context_type, repository) VALUES (?, ?, ?, ?);";
         // Context methodchunks
-        private $canApply = "SELECT a.context_id, JSON_OBJECT('id', s.id, 'name', s.name , 'x', s.x, 'y', s.y, 'goal_tgt', s.goal_tgt, 'goal_src', s.goal_src, 'methodChunkIds',(SELECT IFNULL(JSON_ARRAY(mc.id), '[]') FROM method_chunk mc WHERE mc.strategy = s.id)) as 'strategy', IFNULL(JSON_ARRAYAGG(
+        private $canApply = "SELECT a.context_id, JSON_OBJECT('id', s.id, 'name', s.name , 'x', s.x, 'y', s.y, 'goal_tgt', s.goal_tgt, 'goal_src', s.goal_src, 'methodChunkIds',(SELECT IFNULL(JSON_ARRAYAGG(mc.id), '[]') FROM method_chunk mc WHERE mc.strategy = s.id)) as 'strategy', IFNULL(JSON_ARRAYAGG(
             JSON_OBJECT('id', mc.id, 'name', mc.name, 'description', mc.description, 'activity', mc.activity,
                 'goal', JSON_OBJECT('id', g.id, 'name', g.name, 'x', g.x, 'y', g.y, 'map', g.`map`),
-                'strategy', JSON_OBJECT('id', s.id, 'name', s.name , 'x', s.x, 'y', s.y, 'goal_tgt', s.goal_tgt, 'goal_src', s.goal_src, 'methodChunkIds',(SELECT IFNULL(JSON_ARRAY(mc.id), '[]') FROM method_chunk mc WHERE mc.strategy = s.id)),
+                'strategy', JSON_OBJECT('id', s.id, 'name', s.name , 'x', s.x, 'y', s.y, 'goal_tgt', s.goal_tgt, 'goal_src', s.goal_src, 'methodChunkIds',(SELECT IFNULL(JSON_ARRAYAGG(mc.id), '[]') FROM method_chunk mc WHERE mc.strategy = s.id)),
                 'repository_id', a.repository_id, 'canApply', a.application ) ), '[]') as 'methodChunks'
             FROM apply a 
                 INNER JOIN strategy s  on s.id = a.strategy_id 
@@ -20,7 +20,7 @@
 
         private $getSelectedMethodChunks = "SELECT mc.id, mc.name, mc.description, mc.activity, mc.repository as 'repository_id', a.application as 'canApply',
                 JSON_OBJECT('id', g.id, 'name', g.name, 'x', g.x, 'y', g.y, 'map', g.`map`) as 'goal',
-                JSON_OBJECT('id', s.id, 'name', s.name , 'x', s.x, 'y', s.y, 'goal_tgt', s.goal_tgt, 'goal_src', s.goal_src, 'methodChunkIds', (SELECT IFNULL(JSON_ARRAY(mc.id), '[]') FROM method_chunk mc WHERE mc.strategy = s.id)) as 'strategy'
+                JSON_OBJECT('id', s.id, 'name', s.name , 'x', s.x, 'y', s.y, 'goal_tgt', s.goal_tgt, 'goal_src', s.goal_src, 'methodChunkIds', (SELECT IFNULL(JSON_ARRAYAGG(mc.id), '[]') FROM method_chunk mc WHERE mc.strategy = s.id)) as 'strategy'
             FROM selected_method_chunks smc INNER JOIN method_chunk mc on mc.id = smc.idMC INNER JOIN strategy s on s.id = mc.strategy INNER JOIN goal g on g.id = mc.intention INNER JOIN apply a on a.method_chunk_id = smc.idMC AND a.context_id = smc.idContext WHERE smc.idContext = ?";
         
         private $insertSelectedMethodChunk = "INSERT INTO selected_method_chunks (idContext, idMC) VALUES (?, ?)";
